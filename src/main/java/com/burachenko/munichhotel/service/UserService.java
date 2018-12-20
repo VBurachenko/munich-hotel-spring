@@ -42,7 +42,7 @@ public class UserService {
         return !user.isPresent();
     }
 
-    public boolean updateUser(User user, final long id){
+    public boolean updateUser(final User user, final long id){
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()){
             user.setUserId(id);

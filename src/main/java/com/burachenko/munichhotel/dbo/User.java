@@ -1,9 +1,18 @@
 package com.burachenko.munichhotel.dbo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.Type;
-import org.joda.time.LocalDate;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -16,7 +25,7 @@ public class User implements EntityDbo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="user_id", unique = true, nullable = false, updatable = false, insertable = false)
+    @Column(name="user_id", unique = true, nullable = false, insertable = false)
     private Long userId;
 
     @Column(name="email", unique = true, nullable = false, length = 60)
@@ -31,11 +40,12 @@ public class User implements EntityDbo {
     @Column(name="surname", nullable = false, length = 100)
     private String surname;
 
-    @Column(name="telNum", unique = true, nullable = false, length = 20)
+    @Column(name="tel_num", unique = true, nullable = false, length = 20)
     private String telNum;
 
     @Column(name="birthday", nullable = false)
     @Type(type = "org.hibernate.type.LocalDateType")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
     @Column(name="discount", nullable = false, precision = 2)
@@ -43,7 +53,7 @@ public class User implements EntityDbo {
 
     @Type(type = "org.hibernate.type.NumericBooleanType")
     @Column(name="gender_male", nullable = false, precision = 1, columnDefinition = "TINYINT")
-    private Boolean genderMale;
+    private Boolean genderMale = true;
 
     @Column(name="blocking", nullable = false, precision = 1, columnDefinition = "TINYINT")
     private Integer blocking = 0;
@@ -149,10 +159,30 @@ public class User implements EntityDbo {
         this.role = role;
     }
 
+    public Set<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(Set<Booking> bookings) {
+        this.bookings = bookings;
+    }
+
+    public Set<Invoice> getInvoices() {
+        return invoices;
+    }
+
+    public void setInvoices(Set<Invoice> invoices) {
+        this.invoices = invoices;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         User user = (User) o;
         return Objects.equals(userId, user.userId) &&
                 Objects.equals(email, user.email) &&
@@ -164,12 +194,14 @@ public class User implements EntityDbo {
                 Objects.equals(discount, user.discount) &&
                 Objects.equals(genderMale, user.genderMale) &&
                 Objects.equals(blocking, user.blocking) &&
-                role == user.role;
+                role == user.role &&
+                Objects.equals(bookings, user.bookings) &&
+                Objects.equals(invoices, user.invoices);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, email, password, name, surname, telNum, birthday, discount, genderMale, blocking, role);
+        return Objects.hash(userId, email, password, name, surname, telNum, birthday, discount, genderMale, blocking, role, bookings, invoices);
     }
 
     @Override
@@ -186,6 +218,8 @@ public class User implements EntityDbo {
                 ", genderMale=" + genderMale +
                 ", blocking=" + blocking +
                 ", role=" + role +
+                ", bookings=" + bookings +
+                ", invoices=" + invoices +
                 '}';
     }
 }

@@ -1,7 +1,9 @@
 package com.burachenko.munichhotel.dbo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.Type;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +21,7 @@ public class Invoice implements EntityDbo {
     private static final long serialVersionUID = 1892861816293848970L;
 
     @Id
-    @Column(name="invoice_id", nullable = false, updatable = false, unique = true)
+    @Column(name="invoice_id", nullable = false, unique = true)
     private Long invoiceId;
 
     @ManyToOne
@@ -28,6 +30,7 @@ public class Invoice implements EntityDbo {
 
     @Type(type = "org.hibernate.type.LocalDateType")
     @Column(name="appointment", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate appointment = LocalDate.now();
 
     @Column(name="nights_count", nullable = false)
@@ -43,4 +46,40 @@ public class Invoice implements EntityDbo {
     @Type(type = "org.hibernate.type.NumericBooleanType")
     @Column(name="payed", nullable = false, precision = 1, columnDefinition = "TINYINT")
     private Boolean isPayed = false;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Invoice invoice = (Invoice) o;
+        return Objects.equals(invoiceId, invoice.invoiceId) &&
+                Objects.equals(user, invoice.user) &&
+                Objects.equals(appointment, invoice.appointment) &&
+                Objects.equals(nightsCount, invoice.nightsCount) &&
+                Objects.equals(totalPayment, invoice.totalPayment) &&
+                status == invoice.status &&
+                Objects.equals(isPayed, invoice.isPayed);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(invoiceId, user, appointment, nightsCount, totalPayment, status, isPayed);
+    }
+
+    @Override
+    public String toString() {
+        return "Invoice{" +
+                "invoiceId=" + invoiceId +
+                ", user=" + user +
+                ", appointment=" + appointment +
+                ", nightsCount=" + nightsCount +
+                ", totalPayment=" + totalPayment +
+                ", status=" + status +
+                ", isPayed=" + isPayed +
+                '}';
+    }
 }
