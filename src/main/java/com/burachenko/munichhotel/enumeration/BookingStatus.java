@@ -1,6 +1,6 @@
-package com.burachenko.munichhotel.dbo;
+package com.burachenko.munichhotel.enumeration;
 
-public enum BookingStatus implements EntityDbo {
+public enum BookingStatus {
 
     REGISTERED, CONFIRMED, PERFORMING, COMPLETED, REJECTED;
 

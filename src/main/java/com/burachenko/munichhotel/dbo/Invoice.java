@@ -1,5 +1,6 @@
 package com.burachenko.munichhotel.dbo;
 
+import com.burachenko.munichhotel.enumeration.InvoiceStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.Type;
 import java.time.LocalDate;
@@ -46,6 +47,62 @@ public class Invoice implements EntityDbo {
     @Type(type = "org.hibernate.type.NumericBooleanType")
     @Column(name="payed", nullable = false, precision = 1, columnDefinition = "TINYINT")
     private Boolean isPayed = false;
+
+    public Long getInvoiceId() {
+        return invoiceId;
+    }
+
+    public void setInvoiceId(Long invoiceId) {
+        this.invoiceId = invoiceId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public LocalDate getAppointment() {
+        return appointment;
+    }
+
+    public void setAppointment(LocalDate appointment) {
+        this.appointment = appointment;
+    }
+
+    public Integer getNightsCount() {
+        return nightsCount;
+    }
+
+    public void setNightsCount(Integer nightsCount) {
+        this.nightsCount = nightsCount;
+    }
+
+    public Double getTotalPayment() {
+        return totalPayment;
+    }
+
+    public void setTotalPayment(Double totalPayment) {
+        this.totalPayment = totalPayment;
+    }
+
+    public InvoiceStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(InvoiceStatus status) {
+        this.status = status;
+    }
+
+    public Boolean getPayed() {
+        return isPayed;
+    }
+
+    public void setPayed(Boolean payed) {
+        isPayed = payed;
+    }
 
     @Override
     public boolean equals(Object o) {

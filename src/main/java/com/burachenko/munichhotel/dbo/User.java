@@ -1,5 +1,6 @@
 package com.burachenko.munichhotel.dbo;
 
+import com.burachenko.munichhotel.enumeration.UserRole;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.Type;
 
@@ -20,8 +21,6 @@ import java.util.Set;
 @Entity
 @Table(name = "user")
 public class User implements EntityDbo {
-
-    private static final long serialVersionUID = 7327946027644103279L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

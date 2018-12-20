@@ -1,5 +1,6 @@
 package com.burachenko.munichhotel.dbo;
 
+import com.burachenko.munichhotel.enumeration.BookingStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.Type;
 
@@ -22,8 +23,6 @@ import java.util.Set;
 @Entity
 @Table(name = "booking")
 public class Booking implements EntityDbo {
-
-    private static final long serialVersionUID = -3208736046194083051L;
 
     @Id
     @Column(name="booking_id", unique = true, nullable = false)

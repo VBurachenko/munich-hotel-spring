@@ -2,5 +2,44 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="1.0" author="burachenko">
+
+        <createTable tableName="booking">
+
+            <column name="booking_id" type="BIGINT(19)">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="PK_booking_id"/>
+            </column>
+
+            <column name="check_in" type="DATE" >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="check_out" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="adult_count" type="TINYINT(2)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="child_count" type="TINYINT(2)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="user_id" type="BIGINT(19)">
+                <constraints nullable="false" foreignKeyName="fk_booking_user_id" references="user(user_id)"/>
+            </column>
+
+            <column name="invoice_id" type="BIGINT(19)">
+                <constraints foreignKeyName="fk_invoice_invoice_id" references="invoice(invoice_id)"/>
+            </column>
+
+            <column name="status" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+    </changeSet>
 
 </databaseChangeLog>

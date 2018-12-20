@@ -1,4 +1,4 @@
-package com.burachenko.munichhotel.dbo;
+package com.burachenko.munichhotel.enumeration;
 
 public enum InvoiceStatus {
 

@@ -2,5 +2,34 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="1.0" author="burachenko">
 
+        <createTable tableName="room">
+
+            <column autoIncrement="false" name="room_id" type="INT" >
+                <constraints nullable="false" unique="true" primaryKeyName="PK_room_id" primaryKey="true"/>
+            </column>
+
+            <column name="berth_count" type="TINYINT(1)" >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="comfort_level" type="TINYINT(1)" >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="price_per_night" type="DECIMAL(10, 2)" >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="picture_link" type="VARCHAR(255)" >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="available" type="TINYINT(1)" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
 </databaseChangeLog>

@@ -2,7 +2,7 @@ package com.burachenko.munichhotel.dto;
 
 import org.joda.time.LocalDate;
 
-public class SearchUnit {
+public class SearchUnitDto {
 
     private LocalDate checkIn;
 
