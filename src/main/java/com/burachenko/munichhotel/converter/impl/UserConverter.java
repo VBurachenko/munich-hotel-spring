@@ -49,13 +49,13 @@ public class UserConverter implements DtoDboConverter<User, UserDto> {
     }
 
     private void setBookingSetToDto(final User dbo, final UserDto dto){
-        final Set<Booking> dboBookingSet = dbo.getBookingSet();
-        if (dboBookingSet != null){
-            for (Booking booking : dboBookingSet) {
+        final Set<Booking> bookingSet = dbo.getBookingSet();
+        if (bookingSet != null){
+            for (Booking booking : bookingSet) {
                 booking.setUser(null);
             }
         }
-        final Set<BookingDto> bookingSet = bookingConverter.convertToDto(dboBookingSet);
-        dto.getBookingSet().addAll(bookingSet);
+        final Set<BookingDto> dtoBookingSet = bookingConverter.convertToDto(bookingSet);
+        dto.getBookingSet().addAll(dtoBookingSet);
     }
 }
