@@ -42,10 +42,10 @@ public class Booking implements EntityDbo {
     @Column(name="check_out", nullable = false)
     private LocalDate checkOut;
 
-    @Column(name="adult_count", nullable = false, precision = 2)
+    @Column(name="adult_count", nullable = false)
     private Integer adultCount;
 
-    @Column(name="child_count", nullable = false, precision = 2)
+    @Column(name="child_count", nullable = false)
     private Integer childCount;
 
     @ManyToOne
@@ -55,6 +55,7 @@ public class Booking implements EntityDbo {
     private User user;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "invoice_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Invoice invoice;
@@ -64,6 +65,6 @@ public class Booking implements EntityDbo {
     private BookingStatus status;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-                mappedBy = "bookings")
+                mappedBy = "bookingSet")
     private Set<Room> roomSet = new HashSet<>();
 }

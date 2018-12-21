@@ -18,15 +18,12 @@ import java.util.Set;
 @Service
 public class BookingConverter implements DtoDboConverter<Booking, BookingDto> {
 
-    private final UserConverter userConverter;
     private final InvoiceConverter invoiceConverter;
     private final RoomConverter roomConverter;
 
     @Autowired
-    public BookingConverter(UserConverter userConverter,
-                            InvoiceConverter invoiceConverter,
+    public BookingConverter(InvoiceConverter invoiceConverter,
                             RoomConverter roomConverter) {
-        this.userConverter = userConverter;
         this.invoiceConverter = invoiceConverter;
         this.roomConverter = roomConverter;
     }
@@ -34,8 +31,8 @@ public class BookingConverter implements DtoDboConverter<Booking, BookingDto> {
     @Override
     public BookingDto convertToDto(Booking booking) {
         final BookingDto bookingDto = new BookingDto();
+        removeBookingsFromUserDto(bookingDto);
         BeanUtils.copyProperties(booking, bookingDto, "invoice", "user", "bookingSet");
-        setUserToDto(booking, bookingDto);
         setInvoiceToDto(booking, bookingDto);
         setRoomSetToDto(booking, bookingDto);
         return bookingDto;
@@ -44,29 +41,25 @@ public class BookingConverter implements DtoDboConverter<Booking, BookingDto> {
     @Override
     public Booking convertToDbo(BookingDto bookingDto) {
         final Booking booking = new Booking();
+        removeBookingsFromUserDbo(booking);
         BeanUtils.copyProperties(bookingDto, booking, "invoice", "user", "bookingSet");
-        setUserToDbo(bookingDto, booking);
         setInvoiceToDbo(bookingDto, booking);
         setRoomSetToDbo(bookingDto, booking);
         return booking;
     }
 
-    private void setUserToDbo(final BookingDto dto, final Booking dbo){
+    private void removeBookingsFromUserDto(final BookingDto dto){
         final UserDto userDto = dto.getUser();
         if (userDto != null){
             userDto.setBookingSet(null);
         }
-        final User user = userConverter.convertToDbo(userDto);
-        dbo.setUser(user);
     }
 
-    private void setUserToDto(final Booking dbo, final BookingDto dto){
+    private void removeBookingsFromUserDbo(final Booking dbo){
         final User user = dbo.getUser();
         if (user != null){
             user.setBookingSet(null);
         }
-        final UserDto userDto = userConverter.convertToDto(user);
-        dto.setUser(userDto);
     }
 
     private void setInvoiceToDbo(final BookingDto dto, final Booking dbo){

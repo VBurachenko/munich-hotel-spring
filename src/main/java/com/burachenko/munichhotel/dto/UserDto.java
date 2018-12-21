@@ -42,8 +42,4 @@ public class UserDto implements EntityDto{
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<BookingDto> bookingSet = new HashSet<>();
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Set<InvoiceDto> invoiceSet = new HashSet<>();
 }

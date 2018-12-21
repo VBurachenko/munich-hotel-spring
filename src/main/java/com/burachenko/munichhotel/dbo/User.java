@@ -73,9 +73,4 @@ public class User implements EntityDbo {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Booking> bookingSet = new HashSet<>();
-
-    @OneToMany(mappedBy = "user")
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Set<Invoice> invoiceSet = new HashSet<>();
 }

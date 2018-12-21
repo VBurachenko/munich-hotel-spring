@@ -28,12 +28,6 @@ public class Invoice implements EntityDbo {
     @Column(name="invoice_id", nullable = false, unique = true)
     private Long invoiceId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private User user;
-
     @Type(type = "org.hibernate.type.LocalDateType")
     @Column(name="appointment", nullable = false)
     private LocalDate appointment = LocalDate.now();

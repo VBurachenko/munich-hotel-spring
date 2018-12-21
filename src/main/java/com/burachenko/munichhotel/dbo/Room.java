@@ -29,10 +29,10 @@ public class Room implements EntityDbo {
     @Column(name="room_id", nullable = false, unique = true, updatable = false)
     private Integer roomId;
 
-    @Column(name="berth_count", nullable = false, columnDefinition = "TINYINT", precision = 1)
+    @Column(name="berth_count", nullable = false, columnDefinition = "TINYINT")
     private Integer berthCount;
 
-    @Column(name="comfort_level", nullable = false, columnDefinition = "TINYINT", precision = 1)
+    @Column(name="comfort_level", nullable = false, columnDefinition = "TINYINT")
     private Integer comfortLevel;
 
     @Column(name="price_per_night", nullable = false)

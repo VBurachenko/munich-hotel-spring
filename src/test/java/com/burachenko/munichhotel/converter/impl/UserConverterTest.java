@@ -1,9 +1,9 @@
 package com.burachenko.munichhotel.converter.impl;
 
-import static org.junit.Assert.*;
-
 public class UserConverterTest {
 
-
+    private final UserConverter userConverter = new UserConverter(
+                                                        new BookingConverter(
+                                                                    new InvoiceConverter(), new RoomConverter()));
 
 }
