@@ -13,7 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>munich-hotel</name>
-	<description>Hotel's rooms booking system</description>
+	<description>Hotel's roomsDto booking system</description>
 
 	<properties>
 		<java.version>1.8</java.version>

@@ -1,6 +1,6 @@
 package com.burachenko.munichhotel.controller;
 
-import com.burachenko.munichhotel.dbo.User;
+import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,26 +26,26 @@ public class UserController {
     }
 
     @GetMapping("/list")
-    public List<User> getAllUsers(){
+    public List<UserDto> getAllUsers(){
         return userService.getUsersList();
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable final long id){
+    public UserDto getUser(@PathVariable final long id){
         return userService.getUser(id);
     }
 
     @PostMapping("/create")
-    public String createUser(@RequestBody final User user){
-        if (userService.createUser(user)){
+    public String createUser(@RequestBody final UserDto userDto){
+        if (userService.createUser(userDto)){
             return "User was created.";
         }
         return "Fail of user creation.";
     }
 
     @PutMapping("/update/{id}")
-    public String updateUser(@RequestBody final User user, @PathVariable final long id){
-        if (userService.updateUser(user, id)){
+    public String updateUser(@RequestBody final UserDto userDto, @PathVariable final long id){
+        if (userService.updateUser(userDto, id)){
             return "User with id " + id + " was updated.";
         }
         return "Fail of user update.";

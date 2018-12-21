@@ -1,7 +1,10 @@
 package com.burachenko.munichhotel.dbo;
 
 import com.burachenko.munichhotel.enumeration.UserRole;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
@@ -15,210 +18,64 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode
 @Entity
 @Table(name = "user")
 public class User implements EntityDbo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="user_id", unique = true, nullable = false, insertable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="user_id",
+            unique = true,
+            nullable = false,
+            insertable = false,
+            updatable = false)
     private Long userId;
 
-    @Column(name="email", unique = true, nullable = false, length = 60)
+    @Column(name="email", unique = true, nullable = false)
     private String email;
 
-    @Column(name="password", nullable = false, length = 32)
+    @Column(name="password", nullable = false)
     private String password;
 
-    @Column(name="name", nullable = false, length = 100)
+    @Column(name="name", nullable = false)
     private String name;
 
-    @Column(name="surname", nullable = false, length = 100)
+    @Column(name="surname", nullable = false)
     private String surname;
 
-    @Column(name="tel_num", unique = true, nullable = false, length = 20)
+    @Column(name="tel_num", unique = true, nullable = false)
     private String telNum;
 
     @Column(name="birthday", nullable = false)
     @Type(type = "org.hibernate.type.LocalDateType")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
-    @Column(name="discount", nullable = false, precision = 2)
-    private Integer discount = 0;
+    @Column(name="discount", nullable = false)
+    private Integer discount;
 
     @Type(type = "org.hibernate.type.NumericBooleanType")
-    @Column(name="gender_male", nullable = false, precision = 1, columnDefinition = "TINYINT")
-    private Boolean genderMale = true;
+    @Column(name="gender_male", nullable = false, columnDefinition = "TINYINT")
+    private Boolean genderMale;
 
-    @Column(name="blocking", nullable = false, precision = 1, columnDefinition = "TINYINT")
-    private Integer blocking = 0;
+    @Column(name="blocking", nullable = false, columnDefinition = "TINYINT")
+    private Integer blocking;
 
-    @Column(name="role", nullable = false, length = 10)
+    @Column(name="role", nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private UserRole role = UserRole.CUSTOMER;
+    private UserRole role;
 
     @OneToMany(mappedBy = "user")
-    private Set<Booking> bookings = new HashSet<>();
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Booking> bookingSet = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
-    private Set<Invoice> invoices = new HashSet<>();
-
-    public User() {
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getTelNum() {
-        return telNum;
-    }
-
-    public void setTelNum(String telNum) {
-        this.telNum = telNum;
-    }
-
-    public LocalDate getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(LocalDate birthday) {
-        this.birthday = birthday;
-    }
-
-    public Integer getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(Integer discount) {
-        this.discount = discount;
-    }
-
-    public Boolean getGenderMale() {
-        return genderMale;
-    }
-
-    public void setGenderMale(Boolean genderMale) {
-        this.genderMale = genderMale;
-    }
-
-    public Integer getBlocking() {
-        return blocking;
-    }
-
-    public void setBlocking(Integer blocking) {
-        this.blocking = blocking;
-    }
-
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
-    }
-
-    public Set<Booking> getBookings() {
-        return bookings;
-    }
-
-    public void setBookings(Set<Booking> bookings) {
-        this.bookings = bookings;
-    }
-
-    public Set<Invoice> getInvoices() {
-        return invoices;
-    }
-
-    public void setInvoices(Set<Invoice> invoices) {
-        this.invoices = invoices;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        User user = (User) o;
-        return Objects.equals(userId, user.userId) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(name, user.name) &&
-                Objects.equals(surname, user.surname) &&
-                Objects.equals(telNum, user.telNum) &&
-                Objects.equals(birthday, user.birthday) &&
-                Objects.equals(discount, user.discount) &&
-                Objects.equals(genderMale, user.genderMale) &&
-                Objects.equals(blocking, user.blocking) &&
-                role == user.role &&
-                Objects.equals(bookings, user.bookings) &&
-                Objects.equals(invoices, user.invoices);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, email, password, name, surname, telNum, birthday, discount, genderMale, blocking, role, bookings, invoices);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", telNum='" + telNum + '\'' +
-                ", birthday=" + birthday +
-                ", discount=" + discount +
-                ", genderMale=" + genderMale +
-                ", blocking=" + blocking +
-                ", role=" + role +
-                ", bookings=" + bookings +
-                ", invoices=" + invoices +
-                '}';
-    }
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Invoice> invoiceSet = new HashSet<>();
 }
