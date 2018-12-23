@@ -1,6 +1,6 @@
 package com.burachenko.munichhotel.service;
 
-import com.burachenko.munichhotel.dbo.Booking;
+import com.burachenko.munichhotel.entity.Booking;
 import com.burachenko.munichhotel.repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

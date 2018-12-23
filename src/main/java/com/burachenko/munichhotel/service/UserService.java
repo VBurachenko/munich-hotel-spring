@@ -1,10 +1,10 @@
 package com.burachenko.munichhotel.service;
 
 import com.burachenko.munichhotel.converter.impl.UserConverter;
-import com.burachenko.munichhotel.dbo.User;
 import com.burachenko.munichhotel.dto.UserDto;
+import com.burachenko.munichhotel.entity.User;
+import com.burachenko.munichhotel.exception.ServiceException;
 import com.burachenko.munichhotel.repository.UserRepository;
-import com.burachenko.munichhotel.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class UserService {
     }
 
     public List<UserDto> getUsersList(){
-        List<UserDto> list = new ArrayList<>();
+        final List<UserDto> list = new ArrayList<>();
         for (User user : userRepository.findAll()) {
             UserDto userDto = userConverter.convertToDto(user);
             list.add(userDto);
@@ -34,7 +34,7 @@ public class UserService {
     }
 
     public UserDto getUser(final long id){
-        Optional<User> user = userRepository.findById(id);
+        final Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()){
             throw new ServiceException("user with id " + id + " is absent");
         }
@@ -42,18 +42,18 @@ public class UserService {
     }
 
     public boolean createUser(final UserDto userDto){
-        User createdUser = userRepository.save(userConverter.convertToDbo(userDto));
+        final User createdUser = userRepository.save(userConverter.convertToDbo(userDto));
         return createdUser != null;
     }
 
     public boolean deleteUser(final long id){
         userRepository.deleteById(id);
-        Optional <User> user = userRepository.findById(id);
+        final Optional <User> user = userRepository.findById(id);
         return !user.isPresent();
     }
 
     public boolean updateUser(final UserDto userDto, final long id){
-        Optional<User> optionalUser = userRepository.findById(id);
+        final Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()){
             userDto.setUserId(id);
             return userRepository.save(userConverter.convertToDbo(userDto)) != null;

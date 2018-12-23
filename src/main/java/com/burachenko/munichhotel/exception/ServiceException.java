@@ -1,4 +1,4 @@
-package com.burachenko.munichhotel.service.exception;
+package com.burachenko.munichhotel.exception;
 
 public class ServiceException extends RuntimeException{
 

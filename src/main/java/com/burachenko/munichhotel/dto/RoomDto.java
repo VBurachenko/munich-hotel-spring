@@ -9,11 +9,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@EqualsAndHashCode
-public class RoomDto implements EntityDto{
-
-    private Integer roomId;
+public class RoomDto extends IdentifiableDto {
 
     private Integer berthCount = 1;
 

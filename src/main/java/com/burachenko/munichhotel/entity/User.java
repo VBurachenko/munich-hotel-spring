@@ -1,9 +1,8 @@
-package com.burachenko.munichhotel.dbo;
+package com.burachenko.munichhotel.entity;
 
 import com.burachenko.munichhotel.enumeration.UserRole;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
 
@@ -11,9 +10,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
@@ -21,20 +17,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "user")
-public class User implements EntityDbo {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id",
-            unique = true,
-            nullable = false,
-            insertable = false,
-            updatable = false)
-    private Long userId;
+public class User extends IdentifiableEntity {
 
     @Column(name="email", unique = true, nullable = false)
     private String email;

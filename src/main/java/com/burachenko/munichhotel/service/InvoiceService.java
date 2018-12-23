@@ -1,6 +1,6 @@
 package com.burachenko.munichhotel.service;
 
-import com.burachenko.munichhotel.dbo.Invoice;
+import com.burachenko.munichhotel.entity.Invoice;
 import com.burachenko.munichhotel.repository.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

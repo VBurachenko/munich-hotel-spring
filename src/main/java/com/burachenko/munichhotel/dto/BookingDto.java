@@ -12,11 +12,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class BookingDto implements EntityDto{
-
-    private Long bookingId;
+public class BookingDto extends IdentifiableDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate checkIn;

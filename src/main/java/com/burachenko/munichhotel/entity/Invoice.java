@@ -1,32 +1,22 @@
-package com.burachenko.munichhotel.dbo;
+package com.burachenko.munichhotel.entity;
 
 import com.burachenko.munichhotel.enumeration.InvoiceStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "invoice")
-public class Invoice implements EntityDbo {
-
-    @Id
-    @Column(name="invoice_id", nullable = false, unique = true)
-    private Long invoiceId;
+public class Invoice extends IdentifiableEntity {
 
     @Type(type = "org.hibernate.type.LocalDateType")
     @Column(name="appointment", nullable = false)

@@ -1,9 +1,8 @@
-package com.burachenko.munichhotel.dbo;
+package com.burachenko.munichhotel.entity;
 
 import com.burachenko.munichhotel.enumeration.BookingStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
 
@@ -13,7 +12,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -24,15 +22,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "booking")
-public class Booking implements EntityDbo {
-
-    @Id
-    @Column(name="booking_id", unique = true, nullable = false)
-    private Long bookingId;
+public class Booking extends IdentifiableEntity {
 
     @Type(type = "org.hibernate.type.LocalDateType")
     @Column(name="check_in", nullable = false)
@@ -64,7 +57,10 @@ public class Booking implements EntityDbo {
     @Enumerated(value = EnumType.STRING)
     private BookingStatus status;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+    @ManyToMany(fetch = FetchType.LAZY,
+                cascade = {CascadeType.PERSIST, CascadeType.MERGE},
                 mappedBy = "bookingSet")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<Room> roomSet = new HashSet<>();
 }

@@ -1,12 +1,12 @@
 package com.burachenko.munichhotel.converter;
 
-import com.burachenko.munichhotel.dbo.EntityDbo;
-import com.burachenko.munichhotel.dto.EntityDto;
+import com.burachenko.munichhotel.dto.IdentifiableDto;
+import com.burachenko.munichhotel.entity.IdentifiableEntity;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public interface DtoDboConverter <B extends EntityDbo, T extends EntityDto>{
+public interface DtoDboConverter <B extends IdentifiableEntity, T extends IdentifiableDto>{
 
     T convertToDto(final B dbo);
 

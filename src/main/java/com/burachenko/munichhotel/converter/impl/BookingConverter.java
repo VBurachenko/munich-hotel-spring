@@ -1,14 +1,14 @@
 package com.burachenko.munichhotel.converter.impl;
 
 import com.burachenko.munichhotel.converter.DtoDboConverter;
-import com.burachenko.munichhotel.dbo.Booking;
-import com.burachenko.munichhotel.dbo.Invoice;
-import com.burachenko.munichhotel.dbo.Room;
-import com.burachenko.munichhotel.dbo.User;
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.dto.InvoiceDto;
 import com.burachenko.munichhotel.dto.RoomDto;
 import com.burachenko.munichhotel.dto.UserDto;
+import com.burachenko.munichhotel.entity.Booking;
+import com.burachenko.munichhotel.entity.Invoice;
+import com.burachenko.munichhotel.entity.Room;
+import com.burachenko.munichhotel.entity.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -12,11 +12,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class UserDto implements EntityDto{
-
-    private Long userId;
+public class UserDto extends IdentifiableDto {
 
     private String email;
 

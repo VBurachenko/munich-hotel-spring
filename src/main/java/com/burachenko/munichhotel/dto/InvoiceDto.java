@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class InvoiceDto implements EntityDto{
-
-    private Long invoiceId;
+public class InvoiceDto extends IdentifiableDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate appointment = LocalDate.now();

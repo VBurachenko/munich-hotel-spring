@@ -1,8 +1,8 @@
 package com.burachenko.munichhotel.converter.impl;
 
 import com.burachenko.munichhotel.converter.DtoDboConverter;
-import com.burachenko.munichhotel.dbo.Invoice;
 import com.burachenko.munichhotel.dto.InvoiceDto;
+import com.burachenko.munichhotel.entity.Invoice;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 

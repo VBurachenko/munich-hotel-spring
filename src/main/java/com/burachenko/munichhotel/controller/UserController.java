@@ -2,7 +2,7 @@ package com.burachenko.munichhotel.controller;
 
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,14 +16,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@AllArgsConstructor
 public class UserController {
 
     private final UserService userService;
-
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/list")
     public List<UserDto> getAllUsers(){

@@ -1,16 +1,13 @@
-package com.burachenko.munichhotel.dbo;
+package com.burachenko.munichhotel.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -19,15 +16,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "room")
-public class Room implements EntityDbo {
-
-    @Id
-    @Column(name="room_id", nullable = false, unique = true, updatable = false)
-    private Integer roomId;
+public class Room extends IdentifiableEntity {
 
     @Column(name="berth_count", nullable = false, columnDefinition = "TINYINT")
     private Integer berthCount;
@@ -45,7 +37,7 @@ public class Room implements EntityDbo {
     @Type(type = "org.hibernate.type.NumericBooleanType")
     private Boolean isAvailable;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "booking_room",
             joinColumns = @JoinColumn(name="room_id"),
             inverseJoinColumns = @JoinColumn(name = "booking_id"))

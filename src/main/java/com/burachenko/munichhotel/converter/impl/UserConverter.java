@@ -1,10 +1,10 @@
 package com.burachenko.munichhotel.converter.impl;
 
 import com.burachenko.munichhotel.converter.DtoDboConverter;
-import com.burachenko.munichhotel.dbo.Booking;
-import com.burachenko.munichhotel.dbo.User;
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.dto.UserDto;
+import com.burachenko.munichhotel.entity.Booking;
+import com.burachenko.munichhotel.entity.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class UserConverter implements DtoDboConverter<User, UserDto> {
     @Override
     public UserDto convertToDto(final User user) {
         final UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(userDto, user, "bookingSet");
+        BeanUtils.copyProperties(user, userDto, "bookingSet");
         setBookingSetToDto(user, userDto);
         return userDto;
     }
