@@ -6,7 +6,7 @@
 
         <createTable tableName="user">
 
-            <column autoIncrement="true" name="user_id" type="BIGINT(19)" startWith="10">
+            <column autoIncrement="true" name="id" type="BIGINT(19)" startWith="10">
                 <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="PK_user_id"/>
             </column>
 

@@ -1,20 +1,20 @@
 package com.burachenko.munichhotel.converter.impl;
 
-import com.burachenko.munichhotel.converter.DtoDboConverter;
+import com.burachenko.munichhotel.converter.EntityDtoConverter;
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.dto.RoomDto;
-import com.burachenko.munichhotel.entity.Booking;
-import com.burachenko.munichhotel.entity.Room;
+import com.burachenko.munichhotel.entity.BookingEntity;
+import com.burachenko.munichhotel.entity.RoomEntity;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
 @Service
-public class RoomConverter implements DtoDboConverter<Room, RoomDto> {
+public class RoomConverter implements EntityDtoConverter<RoomEntity, RoomDto> {
 
     @Override
-    public RoomDto convertToDto(Room room) {
+    public RoomDto convertToDto(final RoomEntity room) {
         final RoomDto roomDto = new RoomDto();
         removeRoomSetFromBookingDto(roomDto);
         BeanUtils.copyProperties(room, roomDto, "bookingSet");
@@ -22,8 +22,8 @@ public class RoomConverter implements DtoDboConverter<Room, RoomDto> {
     }
 
     @Override
-    public Room convertToDbo(RoomDto roomDto) {
-        final Room room = new Room();
+    public RoomEntity convertToEntity(final RoomDto roomDto) {
+        final RoomEntity room = new RoomEntity();
         removeRoomSetFromBookingDbo(room);
         BeanUtils.copyProperties(roomDto, room, "bookingSet");
         return room;
@@ -32,16 +32,16 @@ public class RoomConverter implements DtoDboConverter<Room, RoomDto> {
     private void removeRoomSetFromBookingDto(final RoomDto dto){
         final Set<BookingDto> dtoBookingSet = dto.getBookingSet();
         if (dtoBookingSet != null){
-            for (BookingDto bookingDto : dtoBookingSet) {
+            for (final BookingDto bookingDto : dtoBookingSet) {
                 bookingDto.setRoomSet(null);
             }
         }
     }
 
-    private void removeRoomSetFromBookingDbo(final Room dbo){
-        final Set<Booking> dboBookingSet = dbo.getBookingSet();
+    private void removeRoomSetFromBookingDbo(final RoomEntity dbo){
+        final Set<BookingEntity> dboBookingSet = dbo.getBookingSet();
         if (dboBookingSet != null){
-            for (Booking booking : dboBookingSet) {
+            for (final BookingEntity booking : dboBookingSet) {
                 booking.setRoomSet(null);
             }
         }

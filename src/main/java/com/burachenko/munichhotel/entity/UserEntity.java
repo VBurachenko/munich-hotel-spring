@@ -20,7 +20,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "user")
-public class User extends IdentifiableEntity {
+public class UserEntity extends IdentifiableEntity {
 
     @Column(name="email", unique = true, nullable = false)
     private String email;
@@ -58,5 +58,5 @@ public class User extends IdentifiableEntity {
     @OneToMany(mappedBy = "user")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<Booking> bookingSet = new HashSet<>();
+    private Set<BookingEntity> bookingSet = new HashSet<>();
 }

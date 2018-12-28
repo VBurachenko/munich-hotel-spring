@@ -6,7 +6,7 @@
 
         <createTable tableName="booking">
 
-            <column name="booking_id" type="BIGINT(19)">
+            <column name="id" type="BIGINT(19)">
                 <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="PK_booking_id"/>
             </column>
 
@@ -27,11 +27,11 @@
             </column>
 
             <column name="user_id" type="BIGINT(19)">
-                <constraints nullable="false" foreignKeyName="fk_booking_user_id" references="user(user_id)"/>
+                <constraints nullable="false" foreignKeyName="fk_booking_user_id" references="user(id)"/>
             </column>
 
             <column name="invoice_id" type="BIGINT(19)">
-                <constraints foreignKeyName="fk_invoice_invoice_id" references="invoice(invoice_id)"/>
+                <constraints foreignKeyName="fk_invoice_invoice_id" references="invoice(id)"/>
             </column>
 
             <column name="status" type="VARCHAR(10)">

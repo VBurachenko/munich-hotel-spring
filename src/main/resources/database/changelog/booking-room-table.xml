@@ -8,12 +8,12 @@
 
             <column name="booking_id" type="BIGINT(19)">
                 <constraints primaryKeyName="PK_booking-room_booking_id" primaryKey="true"
-                             foreignKeyName="fK_booking-room_booking_id" references="booking(booking_id)"/>
+                             foreignKeyName="fK_booking-room_booking_id" references="booking(id)"/>
             </column>
 
-            <column name="room_id" type="INT">
+            <column name="room_id" type="BIGINT(19)">
                 <constraints primaryKeyName="PK_booking-room_room_id" primaryKey="true"
-                             foreignKeyName="fK_booking-room_room_id" references="room(room_id)"/>
+                             foreignKeyName="fK_booking-room_room_id" references="room(id)"/>
             </column>
         </createTable>
 

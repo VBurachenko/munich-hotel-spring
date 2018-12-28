@@ -1,28 +1,24 @@
 package com.burachenko.munichhotel.converter.impl;
 
-import com.burachenko.munichhotel.converter.DtoDboConverter;
+import com.burachenko.munichhotel.converter.EntityDtoConverter;
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.dto.UserDto;
-import com.burachenko.munichhotel.entity.Booking;
-import com.burachenko.munichhotel.entity.User;
+import com.burachenko.munichhotel.entity.BookingEntity;
+import com.burachenko.munichhotel.entity.UserEntity;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
 @Service
-public class UserConverter implements DtoDboConverter<User, UserDto> {
+@AllArgsConstructor
+public class UserConverter implements EntityDtoConverter<UserEntity, UserDto> {
 
     private final BookingConverter bookingConverter;
 
-    @Autowired
-    public UserConverter(BookingConverter bookingConverter) {
-        this.bookingConverter = bookingConverter;
-    }
-
     @Override
-    public UserDto convertToDto(final User user) {
+    public UserDto convertToDto(final UserEntity user) {
         final UserDto userDto = new UserDto();
         BeanUtils.copyProperties(user, userDto, "bookingSet");
         setBookingSetToDto(user, userDto);
@@ -30,28 +26,28 @@ public class UserConverter implements DtoDboConverter<User, UserDto> {
     }
 
     @Override
-    public User convertToDbo(UserDto userDto) {
-        final User user = new User();
+    public UserEntity convertToEntity(final UserDto userDto) {
+        final UserEntity user = new UserEntity();
         BeanUtils.copyProperties(userDto, user, "bookingSet");
         setBookingSetToDbo(userDto, user);
         return user;
     }
 
-    private void setBookingSetToDbo(final UserDto dto, final User dbo){
+    private void setBookingSetToDbo(final UserDto dto, final UserEntity dbo){
         final Set<BookingDto> dtoBookingSet = dto.getBookingSet();
         if (dtoBookingSet != null){
-            for (BookingDto bookingDto : dtoBookingSet) {
+            for (final BookingDto bookingDto : dtoBookingSet) {
                 bookingDto.setUser(null);
             }
         }
-        final Set<Booking> bookingSet = bookingConverter.convertToDbo(dtoBookingSet);
+        final Set<BookingEntity> bookingSet = bookingConverter.convertToEntity(dtoBookingSet);
         dbo.getBookingSet().addAll(bookingSet);
     }
 
-    private void setBookingSetToDto(final User dbo, final UserDto dto){
-        final Set<Booking> bookingSet = dbo.getBookingSet();
+    private void setBookingSetToDto(final UserEntity dbo, final UserDto dto){
+        final Set<BookingEntity> bookingSet = dbo.getBookingSet();
         if (bookingSet != null){
-            for (Booking booking : bookingSet) {
+            for (final BookingEntity booking : bookingSet) {
                 booking.setUser(null);
             }
         }

@@ -1,24 +1,24 @@
 package com.burachenko.munichhotel.converter.impl;
 
-import com.burachenko.munichhotel.converter.DtoDboConverter;
+import com.burachenko.munichhotel.converter.EntityDtoConverter;
 import com.burachenko.munichhotel.dto.InvoiceDto;
-import com.burachenko.munichhotel.entity.Invoice;
+import com.burachenko.munichhotel.entity.InvoiceEntity;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 @Service
-public class InvoiceConverter implements DtoDboConverter<Invoice, InvoiceDto> {
+public class InvoiceConverter implements EntityDtoConverter<InvoiceEntity, InvoiceDto> {
 
     @Override
-    public InvoiceDto convertToDto(Invoice invoice) {
+    public InvoiceDto convertToDto(final InvoiceEntity invoice) {
         final InvoiceDto invoiceDto = new InvoiceDto();
         BeanUtils.copyProperties(invoice, invoiceDto);
         return invoiceDto;
     }
 
     @Override
-    public Invoice convertToDbo(InvoiceDto invoiceDto) {
-        final Invoice invoice = new Invoice();
+    public InvoiceEntity convertToEntity(final InvoiceDto invoiceDto) {
+        final InvoiceEntity invoice = new InvoiceEntity();
         BeanUtils.copyProperties(invoiceDto, invoice);
         return invoice;
     }

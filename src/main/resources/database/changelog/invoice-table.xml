@@ -6,7 +6,7 @@
 
         <createTable tableName="invoice">
 
-            <column name="invoice_id" type="BIGINT(19)" autoIncrement="false">
+            <column name="id" type="BIGINT(19)" autoIncrement="false">
                 <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="PK_invoice_id"/>
             </column>
 

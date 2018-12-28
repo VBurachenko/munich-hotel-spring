@@ -25,7 +25,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "booking")
-public class Booking extends IdentifiableEntity {
+public class BookingEntity extends IdentifiableEntity {
 
     @Type(type = "org.hibernate.type.LocalDateType")
     @Column(name="check_in", nullable = false)
@@ -45,13 +45,13 @@ public class Booking extends IdentifiableEntity {
     @JoinColumn(name = "user_id", nullable = false)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private User user;
+    private UserEntity user;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "invoice_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Invoice invoice;
+    private InvoiceEntity invoice;
 
     @Column(name="status", nullable = false, length = 10)
     @Enumerated(value = EnumType.STRING)
@@ -62,5 +62,5 @@ public class Booking extends IdentifiableEntity {
                 mappedBy = "bookingSet")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<Room> roomSet = new HashSet<>();
+    private Set<RoomEntity> roomSet = new HashSet<>();
 }

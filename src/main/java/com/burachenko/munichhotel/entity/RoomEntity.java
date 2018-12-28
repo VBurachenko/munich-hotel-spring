@@ -19,7 +19,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "room")
-public class Room extends IdentifiableEntity {
+public class RoomEntity extends IdentifiableEntity {
 
     @Column(name="berth_count", nullable = false, columnDefinition = "TINYINT")
     private Integer berthCount;
@@ -43,5 +43,5 @@ public class Room extends IdentifiableEntity {
             inverseJoinColumns = @JoinColumn(name = "booking_id"))
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<Booking> bookingSet= new HashSet<>();
+    private Set<BookingEntity> bookingSet= new HashSet<>();
 }

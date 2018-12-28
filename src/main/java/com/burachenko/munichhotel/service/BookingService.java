@@ -1,27 +1,26 @@
 package com.burachenko.munichhotel.service;
 
-import com.burachenko.munichhotel.entity.Booking;
+import com.burachenko.munichhotel.converter.impl.BookingConverter;
+import com.burachenko.munichhotel.dto.BookingDto;
+import com.burachenko.munichhotel.entity.BookingEntity;
 import com.burachenko.munichhotel.repository.BookingRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class BookingService {
 
     private final BookingRepository bookingRepository;
+    private final BookingConverter bookingConverter;
 
-    @Autowired
-    public BookingService(final BookingRepository bookingRepository) {
-        this.bookingRepository = bookingRepository;
-    }
-
-    public List<Booking> getBookingsList(){
+    public List<BookingEntity> getBookingsList(){
         return bookingRepository.findAll();
     }
 
-    public void createBooking(final Booking booking){
-        bookingRepository.save(booking);
+    public BookingDto createBooking(final BookingEntity booking){
+        return bookingConverter.convertToDto(bookingRepository.save(booking));
     }
 }

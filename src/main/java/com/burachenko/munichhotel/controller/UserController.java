@@ -9,50 +9,47 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
 @AllArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/list")
+    @GetMapping("/user/list")
     public List<UserDto> getAllUsers(){
         return userService.getUsersList();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("user/{id}")
     public UserDto getUser(@PathVariable final long id){
         return userService.getUser(id);
     }
 
-    @PostMapping("/create")
-    public String createUser(@RequestBody final UserDto userDto){
-        if (userService.createUser(userDto)){
-            return "User was created.";
-        }
-        return "Fail of user creation.";
+    @PostMapping("user/create")
+    public UserDto createUser(@RequestBody final UserDto userDto){
+        return userService.createUser(userDto);
     }
 
-    @PutMapping("/update/{id}")
-    public String updateUser(@RequestBody final UserDto userDto, @PathVariable final long id){
-        if (userService.updateUser(userDto, id)){
-            return "User with id " + id + " was updated.";
-        }
-        return "Fail of user update.";
+    @PutMapping("/user/update/{id}")
+    public UserDto updateUser(@RequestBody final UserDto userDto, @PathVariable final long id){
+        return userService.updateUser(userDto, id);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable final long id){
-        String responsePart = "User with id " + id;
+        final String responsePart = "UserEntity with id " + id;
         if (userService.deleteUser(id)){
             return responsePart + " was deleted.";
         }
         return responsePart + " is absent.";
+    }
+
+    @GetMapping("/user/email/{email}")
+    public UserDto getUserByEmail(@PathVariable final String email){
+        return userService.findUserByEmail(email);
     }
 }
