@@ -3,7 +3,6 @@ package com.burachenko.munichhotel.entity;
 import com.burachenko.munichhotel.enumeration.UserRole;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
@@ -57,6 +56,5 @@ public class UserEntity extends IdentifiableEntity {
 
     @OneToMany(mappedBy = "user")
     @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     private Set<BookingEntity> bookingSet = new HashSet<>();
 }

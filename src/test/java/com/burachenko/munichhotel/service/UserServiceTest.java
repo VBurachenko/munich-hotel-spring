@@ -1,13 +1,9 @@
 package com.burachenko.munichhotel.service;
 
-import com.burachenko.munichhotel.converter.impl.BookingConverter;
-import com.burachenko.munichhotel.converter.impl.InvoiceConverter;
-import com.burachenko.munichhotel.converter.impl.RoomConverter;
 import com.burachenko.munichhotel.converter.impl.UserConverter;
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.entity.UserEntity;
 import com.burachenko.munichhotel.repository.UserRepository;
-import com.burachenko.munichhotel.tool.MockData;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +28,8 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     @Spy
-    private final UserConverter userConverter = new UserConverter(new BookingConverter(new InvoiceConverter(), new RoomConverter()));
+    @InjectMocks
+    private UserConverter userConverter;
 
     @Before
     public void init() {
@@ -50,9 +47,14 @@ public class UserServiceTest {
 
     @Test
     public void createUser() {
-        final UserEntity userEntity = MockData.userEntity();
-        doReturn(userEntity).when(userRepository).save(any(UserEntity.class));
+        final UserEntity personDbo = new UserEntity();
+        personDbo.setName("first");
+        personDbo.setSurname("last");
+
+        doReturn(personDbo).when(userRepository).save(any(UserEntity.class));
+
         userService.createUser(new UserDto());
+
         verify(userRepository, times(1)).save(any(UserEntity.class));
     }
 
