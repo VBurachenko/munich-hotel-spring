@@ -55,8 +55,9 @@ public class UserService {
     public boolean updateUser(final UserDto userDto, final long id){
         final Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()){
-            userDto.setUserId(id);
-            return userRepository.save(userConverter.convertToDbo(userDto)) != null;
+            User newUser = userConverter.convertToDbo(userDto);
+            newUser.setId(id);
+            return userRepository.save(newUser) != null;
         }
         return false;
     }
