@@ -1,5 +1,9 @@
 package com.burachenko.munichhotel.service;
 
+import com.burachenko.munichhotel.converter.impl.BookingConverter;
+import com.burachenko.munichhotel.converter.impl.InvoiceConverter;
+import com.burachenko.munichhotel.converter.impl.RoomConverter;
+import com.burachenko.munichhotel.converter.impl.UserConverter;
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.entity.UserEntity;
 import com.burachenko.munichhotel.repository.UserRepository;
@@ -11,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -28,9 +33,9 @@ public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
-//    @Spy
-//    @InjectMocks
-//    private UserConverter userConverter = new UserConverter(new BookingConverter(new InvoiceConverter(), new RoomConverter()));
+    @Spy
+    @InjectMocks
+    private final UserConverter userConverter = new UserConverter(new BookingConverter(new InvoiceConverter(), new RoomConverter()));
 
     @InjectMocks
     private UserService userService;
