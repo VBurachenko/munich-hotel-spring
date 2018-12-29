@@ -1,20 +1,15 @@
 package com.burachenko.munichhotel.service;
 
-import com.burachenko.munichhotel.converter.impl.BookingConverter;
-import com.burachenko.munichhotel.converter.impl.InvoiceConverter;
-import com.burachenko.munichhotel.converter.impl.RoomConverter;
 import com.burachenko.munichhotel.converter.impl.UserConverter;
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.entity.UserEntity;
 import com.burachenko.munichhotel.repository.UserRepository;
 import com.burachenko.munichhotel.tool.MockData;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -34,16 +29,10 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     @Spy
-    @InjectMocks
-    private final UserConverter userConverter = new UserConverter(new BookingConverter(new InvoiceConverter(), new RoomConverter()));
+    private UserConverter userConverter;
 
     @InjectMocks
     private UserService userService;
-
-    @Before
-    public void init() {
-        MockitoAnnotations.initMocks(this);
-    }
 
     @Test
     public void getUsersList() {

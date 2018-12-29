@@ -16,7 +16,6 @@ import java.util.Optional;
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 public class UserService {
 
-
     private final UserRepository userRepository;
     private final UserConverter userConverter;
 
