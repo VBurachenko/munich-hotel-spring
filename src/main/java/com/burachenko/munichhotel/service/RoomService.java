@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -20,7 +21,20 @@ public class RoomService {
         return roomRepository.findAll();
     }
 
-    public RoomDto createRoom(final RoomEntity room){
-        return roomConverter.convertToDto(roomRepository.save(room));
+    public RoomDto createRoom(final RoomDto roomDto){
+        final RoomEntity roomEntity = roomRepository.save(roomConverter.convertToEntity(roomDto));
+        if (roomEntity != null){
+            roomConverter.convertToDto(roomEntity);
+        }
+        return null;
     }
+
+    public RoomDto getRoom(final Long id){
+        final Optional<RoomEntity> roomEntity = roomRepository.findById(id);
+        if (roomEntity.isPresent()){
+            return roomConverter.convertToDto(roomEntity.get());
+        }
+        return null;
+    }
+
 }

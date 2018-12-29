@@ -58,6 +58,9 @@ public class UserService {
 
     public UserDto findUserByEmail(final String email){
         final Optional<UserEntity> userEntity = userRepository.findByEmail(email);
+        if (!userEntity.isPresent()){
+            return null;
+        }
         return userConverter.convertToDto(userEntity.get());
     }
 
@@ -67,6 +70,15 @@ public class UserService {
         if (userByEmail.isPresent() || userByTelNum.isPresent()){
             return null;
         }
-        return userConverter.convertToDto(userRepository.save(userConverter.convertToEntity(userDto)));
+        return createUser(userDto);
+    }
+
+    public UserDto changeBlockUser(final long userId, final int blockIndex){
+        final UserDto userDto = getUser(userId);
+        if (userDto != null){
+            userDto.setBlocking(blockIndex);
+            return updateUser(userDto, userId);
+        }
+        return null;
     }
 }

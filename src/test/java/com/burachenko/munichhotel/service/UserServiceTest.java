@@ -1,5 +1,8 @@
 package com.burachenko.munichhotel.service;
 
+import com.burachenko.munichhotel.converter.impl.BookingConverter;
+import com.burachenko.munichhotel.converter.impl.InvoiceConverter;
+import com.burachenko.munichhotel.converter.impl.RoomConverter;
 import com.burachenko.munichhotel.converter.impl.UserConverter;
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.entity.UserEntity;
@@ -18,6 +21,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -29,7 +34,7 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     @Spy
-    private UserConverter userConverter;
+    private final UserConverter userConverter = new UserConverter(new BookingConverter(new InvoiceConverter(), new RoomConverter()));
 
     @InjectMocks
     private UserService userService;
@@ -63,15 +68,43 @@ public class UserServiceTest {
 
     @Test
     public void createUser() {
+        final UserEntity userEntity = new UserEntity();
+        userEntity.setName("name");
+        userEntity.setSurname("surname");
+
+        doReturn(userEntity).when(userRepository).save(any(UserEntity.class));
+
         userService.createUser(new UserDto());
-        Mockito.verify(userRepository).save(Mockito.any());
+        verify(userRepository, times(1)).save(any(UserEntity.class));
     }
 
     @Test
     public void deleteUser() {
+        doNothing().when(userRepository).deleteById(any(Long.class));
+        userService.deleteUser(10L);
+        Mockito.verify(userRepository, times(1)).deleteById(any(Long.class));
     }
 
     @Test
     public void updateUser() {
+
+    }
+
+
+    @Test
+    public void findUserByEmail() {
+        final UserEntity userEntity = new UserEntity();
+        Mockito.when(userRepository.findByEmail("email")).thenReturn(Optional.of(userEntity));
+        final UserDto userDto = userService.findUserByEmail("email");
+        assertEquals(userDto.getEmail(), userEntity.getEmail());
+        assertEquals(userDto.getTelNum(), userEntity.getTelNum());
+    }
+
+    @Test
+    public void registerNewCustomer() {
+    }
+
+    @Test
+    public void changeBlockUser() {
     }
 }
