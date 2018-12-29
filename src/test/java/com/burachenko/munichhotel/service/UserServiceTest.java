@@ -1,19 +1,23 @@
 package com.burachenko.munichhotel.service;
 
-import com.burachenko.munichhotel.converter.impl.UserConverter;
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.entity.UserEntity;
 import com.burachenko.munichhotel.repository.UserRepository;
+import com.burachenko.munichhotel.tool.MockData;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.ArgumentMatchers.any;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -21,15 +25,15 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
 
-    @InjectMocks
-    private UserService userService;
-
     @Mock
     private UserRepository userRepository;
 
-    @Spy
+//    @Spy
+//    @InjectMocks
+//    private UserConverter userConverter = new UserConverter(new BookingConverter(new InvoiceConverter(), new RoomConverter()));
+
     @InjectMocks
-    private UserConverter userConverter;
+    private UserService userService;
 
     @Before
     public void init() {
@@ -38,24 +42,35 @@ public class UserServiceTest {
 
     @Test
     public void getUsersList() {
+        final List<UserEntity> findAllResult = new ArrayList<>();
+        final UserEntity userEntity = MockData.userEntity();
+        findAllResult.add(userEntity);
+        findAllResult.add(userEntity);
+        doReturn(findAllResult).when(userRepository).findAll();
+
+        final List<UserDto> userList = userService.getUsersList();
+
+        verify(userRepository, times(1)).findAll();
+        assertEquals(findAllResult.size(), userList.size());
+        for (final UserDto dto : userList) {
+            assertEquals(userEntity.getEmail(), dto.getEmail());
+            assertEquals(userEntity.getTelNum(), dto.getTelNum());
+        }
     }
 
     @Test
     public void getUser() {
-
+        final UserEntity userEntity = new UserEntity();
+        Mockito.when(userRepository.findById(10L)).thenReturn(Optional.of(userEntity));
+        final UserDto userDto = userService.getUser(10L);
+        assertEquals(userDto.getEmail(), userEntity.getEmail());
+        assertEquals(userDto.getTelNum(), userEntity.getTelNum());
     }
 
     @Test
     public void createUser() {
-        final UserEntity personDbo = new UserEntity();
-        personDbo.setName("first");
-        personDbo.setSurname("last");
-
-        doReturn(personDbo).when(userRepository).save(any(UserEntity.class));
-
         userService.createUser(new UserDto());
-
-        verify(userRepository, times(1)).save(any(UserEntity.class));
+        Mockito.verify(userRepository).save(Mockito.any());
     }
 
     @Test
