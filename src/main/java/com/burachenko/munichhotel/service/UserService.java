@@ -5,7 +5,6 @@ import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.entity.UserEntity;
 import com.burachenko.munichhotel.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor(onConstructor_ = {@Autowired})
+@AllArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
@@ -30,10 +29,7 @@ public class UserService {
 
     public UserDto getUser(final long id){
         final Optional<UserEntity> userEntity = userRepository.findById(id);
-        if (userEntity.isPresent()){
-            return userConverter.convertToDto(userEntity.get());
-        }
-        return null;
+        return userEntity.map(userConverter::convertToDto).orElse(null);
     }
 
     public UserDto createUser(final UserDto userDto){
@@ -57,15 +53,13 @@ public class UserService {
     }
 
     public UserDto findUserByEmail(final String email){
-        final Optional<UserEntity> userEntity = userRepository.findByEmail(email);
-        if (!userEntity.isPresent()){
-            return null;
-        }
-        return userConverter.convertToDto(userEntity.get());
+        final Optional<UserEntity> userEntity = userRepository.findUserByEmail(email);
+        return userEntity.map(userConverter::convertToDto).orElse(null);
+
     }
 
     public UserDto registerNewCustomer(final UserDto userDto){
-        final Optional <UserEntity> userByEmail = userRepository.findByEmail(userDto.getEmail());
+        final Optional <UserEntity> userByEmail = userRepository.findUserByEmail(userDto.getEmail());
         final Optional <UserEntity> userByTelNum = userRepository.findByTelNum(userDto.getTelNum());
         if (userByEmail.isPresent() || userByTelNum.isPresent()){
             return null;

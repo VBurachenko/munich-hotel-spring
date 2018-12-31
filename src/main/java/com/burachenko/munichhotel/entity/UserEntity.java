@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
@@ -56,7 +57,7 @@ public class UserEntity extends IdentifiableEntity {
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     @EqualsAndHashCode.Exclude
     private Set<BookingEntity> bookingSet = new HashSet<>();
 }

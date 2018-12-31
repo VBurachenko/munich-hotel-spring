@@ -94,7 +94,7 @@ public class UserServiceTest {
     @Test
     public void findUserByEmail() {
         final UserEntity userEntity = new UserEntity();
-        Mockito.when(userRepository.findByEmail("email")).thenReturn(Optional.of(userEntity));
+        Mockito.when(userRepository.findUserByEmail("email")).thenReturn(Optional.of(userEntity));
         final UserDto userDto = userService.findUserByEmail("email");
         assertEquals(userDto.getEmail(), userEntity.getEmail());
         assertEquals(userDto.getTelNum(), userEntity.getTelNum());

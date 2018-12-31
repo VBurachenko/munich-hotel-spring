@@ -2,6 +2,8 @@ package com.burachenko.munichhotel.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -13,7 +15,7 @@ import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
 @EnableSwagger2
-public class SwaggerConfiguration {
+public class SwaggerConfiguration extends WebMvcConfigurationSupport {
 
     @Bean
     public Docket productApi(){
@@ -32,5 +34,14 @@ public class SwaggerConfiguration {
                 new Contact("Vladimir Burachenko", "https://github.com/VBurachenko", "vladimir.burachenko@gmail.com"),
                 "Apache License Version 2.0",
                 "https://www.apache.org/licenses/LICENSE-2.0");
+    }
+
+    @Override
+    protected void addResourceHandlers(final ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 }
