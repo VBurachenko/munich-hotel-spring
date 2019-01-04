@@ -1,39 +1,56 @@
 package com.burachenko.munichhotel.ui;
 
-import com.burachenko.munichhotel.ui.view.AccessDeniedView;
-import com.burachenko.munichhotel.ui.view.ErrorView;
-import com.burachenko.munichhotel.ui.view.MainView;
+import com.burachenko.munichhotel.dto.UserDto;
+import com.burachenko.munichhotel.service.UserService;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
-import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.spring.access.ViewAccessControl;
 import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.spring.navigator.SpringViewProvider;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+
+import java.util.List;
 
 @Push
 @SpringUI(path = "munich-hotel")
 @Theme("mytheme")
-public class VaadinUI extends UI implements ViewAccessControl {
+public class VaadinUI extends UI{
 
-    private final SpringViewProvider viewProvider;
+    private final UserService userService;
 
-    public VaadinUI(final SpringViewProvider viewProvider) {
-        this.viewProvider = viewProvider;
-        viewProvider.setAccessDeniedViewClass(AccessDeniedView.class);
-    }
+    private final Grid<UserDto> userGrid = new Grid<>(UserDto.class);
 
-    @Override
-    public boolean isAccessGranted(final UI ui, final String beanName) {
-        return !"notAvailableView".equals(beanName);
+    public VaadinUI(final UserService userService) {
+        this.userService = userService;
     }
 
     @Override
     protected void init(final VaadinRequest request) {
-        final Navigator navigator = new Navigator(this, this);
-        navigator.addProvider(viewProvider);
-        navigator.setErrorView(new ErrorView());
-        navigator.navigateTo(MainView.NAME);
+
+        final VerticalLayout layout = new VerticalLayout();
+
+        layout.addComponents(userGrid);
+
+        updateList();
+
+        final TextField name = new TextField();
+        name.setCaption("Type your name here:");
+        final Button button = new Button("Click me");
+
+        button.addClickListener(e -> {
+            layout.addComponent(new Label("Thanks " + name.getValue() + ", it works!"));
+        });
+
+        layout.addComponents(name, button);
+        setContent(layout);
+    }
+
+    private void updateList() {
+        final List<UserDto> userList = userService.getUsersList();
+        userGrid.setItems(userList);
     }
 }

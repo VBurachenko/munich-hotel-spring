@@ -3,10 +3,6 @@ package com.burachenko.munichhotel.ui.editor;
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.service.UserService;
 import com.vaadin.data.Binder;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.KeyNotifier;
-import com.vaadin.flow.component.KeyPressEvent;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
@@ -18,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringComponent
 @UIScope
-public class UserEditor extends VerticalLayout implements KeyNotifier {
+public class UserEditor extends VerticalLayout{
 
     private final UserService userService;
 
@@ -47,12 +43,12 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
 
         setSpacing(true);
 
-        addKeyPressListener(Key.ENTER, new ComponentEventListener<KeyPressEvent>() {
-            @Override
-            public void onComponentEvent(final KeyPressEvent e) {
-                UserEditor.this.save();
-            }
-        });
+//        addKeyPressListener(Key.ENTER, new ComponentEventListener<KeyPressEvent>() {
+//            @Override
+//            public void onComponentEvent(final KeyPressEvent e) {
+//                UserEditor.this.save();
+//            }
+//        });
 
         save.addClickListener(e -> save());
         delete.addClickListener(e -> delete());

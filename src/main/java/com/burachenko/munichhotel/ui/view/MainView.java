@@ -20,10 +20,15 @@ import org.springframework.util.StringUtils;
 public class MainView extends VerticalLayout implements View {
 
     public static final String NAME = "main";
+
     private final UserService userService;
+
     private UserEditor userEditor;
+
     private final Grid<UserDto> grid;
+
     TextField filter;
+
     private Button addNewBtn;
 
     @Autowired
