@@ -57,7 +57,7 @@ public class BookingEntity extends IdentifiableEntity {
     @Enumerated(value = EnumType.STRING)
     private BookingStatus status;
 
-    @ManyToMany(fetch = FetchType.LAZY,
+    @ManyToMany(fetch = FetchType.EAGER,
                 cascade = {CascadeType.PERSIST, CascadeType.MERGE},
                 mappedBy = "bookingSet")
     @EqualsAndHashCode.Exclude

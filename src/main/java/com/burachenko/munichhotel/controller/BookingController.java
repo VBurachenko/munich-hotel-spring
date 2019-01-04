@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -19,7 +20,29 @@ public class BookingController {
 
     @GetMapping("/test")
     public String test(@RequestParam("before") String before, @RequestParam("after") String after) {
-        List<BookingEntity> current = bookingService.findAllByCheckInBeforeAndCheckOutAfter(LocalDate.parse(before), LocalDate.parse(after));
-        return "Size: " + current.size() + ", number: " + current.get(0).getCheckIn().toString() + ", " + (current.size() > 1 ? current.get(1).getCheckIn().toString() : " null");
+        //List<BookingEntity> current = bookingService.findAllByCheckInBeforeAndCheckOutAfter(LocalDate.parse(before), LocalDate.parse(after));
+        //return "Size: " + current.size() + ", number: " + current.get(0).getCheckIn().toString() + ", " + (current.size() > 1 ? current.get(1).getCheckIn().toString() : " null");
+        Map<Long, Double> currentPayments = bookingService.getPayDataForPeriodByRooms(LocalDate.parse(before), LocalDate.parse(after));
+        StringBuilder result=new StringBuilder();
+        result.append("Result: ");
+        for (Long id: currentPayments.keySet()){
+            result.append("id: " + id + ", summ: " + currentPayments.get(id) + ", ");
+        }
+        result.delete(result.length()-2, result.length()-1);
+        return result.toString();
+    }
+
+    @GetMapping("/testcomfort")
+    public String testByComfort(@RequestParam("before") String before, @RequestParam("after") String after) {
+        //List<BookingEntity> current = bookingService.findAllByCheckInBeforeAndCheckOutAfter(LocalDate.parse(before), LocalDate.parse(after));
+        //return "Size: " + current.size() + ", number: " + current.get(0).getCheckIn().toString() + ", " + (current.size() > 1 ? current.get(1).getCheckIn().toString() : " null");
+        Map<Integer, Double> currentPayments = bookingService.getPayDataForPeriodByComfort(LocalDate.parse(before), LocalDate.parse(after));
+        StringBuilder result=new StringBuilder();
+        result.append("Result: ");
+        for (Integer id: currentPayments.keySet()){
+            result.append("comfort level: " + id + ", summ: " + currentPayments.get(id) + ", ");
+        }
+        result.delete(result.length()-2, result.length()-1);
+        return result.toString();
     }
 }

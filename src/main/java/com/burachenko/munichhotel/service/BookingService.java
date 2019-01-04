@@ -4,6 +4,7 @@ import com.burachenko.munichhotel.converter.impl.BookingConverter;
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.dto.SearchUnitDto;
 import com.burachenko.munichhotel.entity.BookingEntity;
+import com.burachenko.munichhotel.entity.RoomEntity;
 import com.burachenko.munichhotel.enumeration.BookingStatus;
 import com.burachenko.munichhotel.repository.BookingRepository;
 import com.burachenko.munichhotel.service.util.IdCreator;
@@ -12,11 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -27,26 +24,26 @@ public class BookingService {
 
     private final UserService userService;
 
-    public List<BookingEntity> getBookingsList(){
+    public List<BookingEntity> getBookingsList() {
         return bookingRepository.findAll();
     }
 
-    public BookingDto createBooking(final BookingDto bookingDto){
+    public BookingDto createBooking(final BookingDto bookingDto) {
         int startIndex = 1;
         long bookingId = IdCreator.createLongIdByTodayDate(1);
-        while (getBooking(bookingId) != null){
+        while (getBooking(bookingId) != null) {
             bookingId = IdCreator.createLongIdByTodayDate(++startIndex);
         }
         bookingDto.setId(bookingId);
         final BookingEntity bookingEntity = bookingRepository.save(
-                                                    bookingConverter.convertToEntity(bookingDto));
-        if (bookingEntity != null){
+            bookingConverter.convertToEntity(bookingDto));
+        if (bookingEntity != null) {
             return bookingConverter.convertToDto(bookingEntity);
         }
         return null;
     }
 
-    public BookingDto prepareBookingToOrder(final SearchUnitDto searchUnit, final long userId){
+    public BookingDto prepareBookingToOrder(final SearchUnitDto searchUnit, final long userId) {
         final BookingDto preparedBooking = new BookingDto();
         preparedBooking.setCheckIn(searchUnit.getCheckIn());
         preparedBooking.setCheckOut(searchUnit.getCheckOut());
@@ -56,33 +53,33 @@ public class BookingService {
         return preparedBooking;
     }
 
-    public BookingDto getBooking(final long id){
+    public BookingDto getBooking(final long id) {
         final Optional<BookingEntity> bookingEntity = bookingRepository.findById(id);
-        if (bookingEntity.isPresent()){
+        if (bookingEntity.isPresent()) {
             return bookingConverter.convertToDto(bookingEntity.get());
         }
         return null;
     }
 
-    public BookingDto updateBooking(final BookingDto bookingDto, final long id){
+    public BookingDto updateBooking(final BookingDto bookingDto, final long id) {
         final Optional<BookingEntity> bookingEntity = bookingRepository.findById(id);
-        if (bookingEntity.isPresent()){
+        if (bookingEntity.isPresent()) {
             bookingDto.setId(id);
             return bookingConverter.convertToDto(bookingEntity.get());
         }
-         return null;
+        return null;
     }
 
-    public BookingDto changeBookingStatus(final long id, final BookingStatus status){
+    public BookingDto changeBookingStatus(final long id, final BookingStatus status) {
         final BookingDto bookingDto = getBooking(id);
-        if (bookingDto != null){
+        if (bookingDto != null) {
             bookingDto.setStatus(status);
             return updateBooking(bookingDto, id);
         }
         return null;
     }
 
-    BookingDto setInvoiceToBooking(final BookingDto bookingDto){
+    BookingDto setInvoiceToBooking(final BookingDto bookingDto) {
         return updateBooking(bookingDto, bookingDto.getId());
     }
 
@@ -94,37 +91,89 @@ public class BookingService {
         return !bookingRepository.findById(id).isPresent();
     }
 
-    public BookingDto getBookingByInvoiceId(final long invoiceId){
+    public BookingDto getBookingByInvoiceId(final long invoiceId) {
         final Optional<BookingEntity> bookingEntity = bookingRepository.getBookingByInvoiceId(invoiceId);
-        if (bookingEntity.isPresent()){
+        if (bookingEntity.isPresent()) {
             return bookingConverter.convertToDto(bookingEntity.get());
         }
         return null;
     }
 
-    public Set<BookingDto> getBookingListByUserId(final long userId){
+    public Set<BookingDto> getBookingListByUserId(final long userId) {
         return bookingConverter.convertToDto(bookingRepository.getBookingSetByUserId(userId));
     }
 
-    private long getDaysNumber(BookingEntity entity, LocalDate before, LocalDate after){
-        LocalDate startNumber=entity.getCheckIn().isBefore(before)?before:entity.getCheckIn();
-        LocalDate endNumber = entity.getCheckOut().isAfter(after)?after:entity.getCheckOut();
+    private long getDaysNumber(BookingEntity entity, LocalDate before, LocalDate after) {
+        LocalDate startNumber = entity.getCheckIn().isBefore(before) ? before : entity.getCheckIn();
+        LocalDate endNumber = entity.getCheckOut().isAfter(after) ? after : entity.getCheckOut();
         long days = startNumber.until(endNumber, ChronoUnit.DAYS);
         return days;
     }
 
-    private long getPeriodLength(BookingEntity entity){
+    private long getPeriodLength(BookingEntity entity) {
         long days = entity.getCheckIn().until(entity.getCheckOut(), ChronoUnit.DAYS);
         return days;
     }
-    public List<BookingEntity> findAllByCheckInBeforeAndCheckOutAfter(LocalDate before, LocalDate after){
+
+    public List<BookingEntity> findAllByCheckInBeforeAndCheckOutAfter(LocalDate before, LocalDate after) {
         System.out.println(before + " " + after);
-        List<BookingEntity> entities = bookingRepository.findAllByCheckInBeforeAndCheckOutAfter(after.plusDays(1L), before.minusDays(1L));
-        for (BookingEntity entity: entities){
-            System.out.println("Entity: " + getPeriodLength(entity));
-            long numberOfDays = getDaysNumber(entity, before, after);
-            System.out.println(numberOfDays);
-        }
         return bookingRepository.findAllByCheckInBeforeAndCheckOutAfter(after.plusDays(1L), before.minusDays(1L));
     }
+
+    public Map<Long, Double> getPayDataForPeriodByRooms(LocalDate before, LocalDate after) {
+        List<BookingEntity> entities = findAllByCheckInBeforeAndCheckOutAfter(before, after);
+        Map<Long, Double> roomsPays = new HashMap<>();
+        for (BookingEntity entity : entities) {
+            if (!entity.getRoomSet().isEmpty()) {
+                double coefficient = (double) getDaysNumber(entity, before, after) /
+                                     (getPeriodLength(entity) * entity.getRoomSet().size());
+                for (RoomEntity room : entity.getRoomSet()) {
+                    if (!roomsPays.containsKey(room.getId())) {
+                        roomsPays.put(room.getId(), 0.0);
+                    }
+                    double summ = roomsPays.get(room.getId());
+                    summ += entity.getInvoice().getTotalPayment() * coefficient;
+                    roomsPays.put(room.getId(), summ);
+
+                }
+            }
+        }
+        long days = before.until(after, ChronoUnit.DAYS);
+        if (days != 0) {
+            for (Long key : roomsPays.keySet()) {
+                double summ = roomsPays.get(key);
+                roomsPays.put(key, summ / days);
+            }
+        }
+        return roomsPays;
+    }
+
+    public Map<Integer, Double> getPayDataForPeriodByComfort(LocalDate before, LocalDate after) {
+        List<BookingEntity> entities = findAllByCheckInBeforeAndCheckOutAfter(before, after);
+        Map<Integer, Double> roomsPays = new HashMap<>();
+        for (BookingEntity entity : entities) {
+            if (!entity.getRoomSet().isEmpty()) {
+                double coefficient = (double) getDaysNumber(entity, before, after) /
+                                     (getPeriodLength(entity) * entity.getRoomSet().size());
+                for (RoomEntity room : entity.getRoomSet()) {
+                    if (!roomsPays.containsKey(room.getComfortLevel())) {
+                        roomsPays.put(room.getComfortLevel(), 0.0);
+                    }
+                    double summ = roomsPays.get(room.getComfortLevel());
+                    summ += entity.getInvoice().getTotalPayment() * coefficient;
+                    roomsPays.put(room.getComfortLevel(), summ);
+
+                }
+            }
+        }
+        long days = before.until(after, ChronoUnit.DAYS);
+        if (days != 0) {
+            for (Integer key : roomsPays.keySet()) {
+                double summ = roomsPays.get(key);
+                roomsPays.put(key, summ / days);
+            }
+        }
+        return roomsPays;
+    }
+
 }
