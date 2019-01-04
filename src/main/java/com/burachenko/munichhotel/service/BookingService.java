@@ -10,6 +10,10 @@ import com.burachenko.munichhotel.service.util.IdCreator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -100,5 +104,27 @@ public class BookingService {
 
     public Set<BookingDto> getBookingListByUserId(final long userId){
         return bookingConverter.convertToDto(bookingRepository.getBookingSetByUserId(userId));
+    }
+
+    private long getDaysNumber(BookingEntity entity, LocalDate before, LocalDate after){
+        LocalDate startNumber=entity.getCheckIn().isBefore(before)?before:entity.getCheckIn();
+        LocalDate endNumber = entity.getCheckOut().isAfter(after)?after:entity.getCheckOut();
+        long days = startNumber.until(endNumber, ChronoUnit.DAYS);
+        return days;
+    }
+
+    private long getPeriodLength(BookingEntity entity){
+        long days = entity.getCheckIn().until(entity.getCheckOut(), ChronoUnit.DAYS);
+        return days;
+    }
+    public List<BookingEntity> findAllByCheckInBeforeAndCheckOutAfter(LocalDate before, LocalDate after){
+        System.out.println(before + " " + after);
+        List<BookingEntity> entities = bookingRepository.findAllByCheckInBeforeAndCheckOutAfter(after.plusDays(1L), before.minusDays(1L));
+        for (BookingEntity entity: entities){
+            System.out.println("Entity: " + getPeriodLength(entity));
+            long numberOfDays = getDaysNumber(entity, before, after);
+            System.out.println(numberOfDays);
+        }
+        return bookingRepository.findAllByCheckInBeforeAndCheckOutAfter(after.plusDays(1L), before.minusDays(1L));
     }
 }
