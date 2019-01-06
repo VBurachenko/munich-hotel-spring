@@ -22,10 +22,10 @@ public class BookingController {
 
     @GetMapping("/orders")
     public List<OrderDto> findOrders(
-            @RequestParam(name = "fromDate") final String fromDate,
-            @RequestParam(name = "toDate") final String toDate,
-            @RequestParam(name = "bookingStatus") final String bookingStatus) {
-        return bookingService.findOrders(fromDate, toDate, bookingStatus);
+            @RequestParam(name = "type") final String type,
+            @RequestParam(name = "num") final int num,
+            @RequestParam(name = "status") final String status) {
+        return bookingService.findOrders(type, num, status);
     }
 
     @GetMapping("/moneyEarned")

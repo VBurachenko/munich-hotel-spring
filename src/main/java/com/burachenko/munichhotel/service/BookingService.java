@@ -9,6 +9,7 @@ import com.burachenko.munichhotel.entity.InvoiceEntity;
 import com.burachenko.munichhotel.enumeration.BookingStatus;
 import com.burachenko.munichhotel.repository.BookingRepository;
 import com.burachenko.munichhotel.repository.InvoiceRepository;
+import com.burachenko.munichhotel.service.util.DateRangeFinder;
 import com.burachenko.munichhotel.service.util.IdCreator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -109,9 +110,14 @@ public class BookingService {
         return bookingConverter.convertToDto(bookingRepository.getBookingSetByUserId(userId));
     }
 
-    public List<OrderDto> findOrders(final String fromDate, final String toDate, final String status) {
-        final LocalDate from = LocalDate.parse(fromDate).plusDays(1);
-        final LocalDate to = LocalDate.parse(toDate).plusDays(1);
+    public List<OrderDto> findOrders(final String type, final int num, final String status) {
+
+        LocalDate[] localDates = DateRangeFinder.getDateRange(type, num);
+
+        final LocalDate from = localDates[0];
+        final LocalDate to = localDates[1];
+        System.out.println(from);
+        System.out.println(to);
 
         BookingStatus bookingStatus;
         try {

@@ -34,7 +34,7 @@ public class BookingServiceTest {
         Mockito.when(bookingRepository.getByCheckInBetweenAndStatus(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(MockData.bookingEntities());
         Mockito.when(invoiceRepository.findByIdIn(Mockito.anyList())).thenReturn(MockData.invoiceEntities());
 
-        final List<OrderDto> orderDtos = bookingService.findOrders("0001-01-01", "0001-01-01", "REGISTERED");
+        final List<OrderDto> orderDtos = bookingService.findOrders("year", 2019, "REGISTERED");
 
         assertEquals(2, orderDtos.size());
 
