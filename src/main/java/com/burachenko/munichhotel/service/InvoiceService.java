@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -56,7 +55,7 @@ public class InvoiceService {
         final int nightsCount = DatesCalculator.nightsCountCalculate(bookingDto.getCheckIn(),
                                                                         bookingDto.getCheckOut());
 
-        final double totalPayment = calculateTotalPayment(nightsCount, bookingDto.getRoomSet());
+        final double totalPayment = calculateTotalPayment(nightsCount, bookingDto.getRoomList());
 
         invoiceDto.setNightsCount(nightsCount);
         invoiceDto.setTotalPayment(totalPayment);
@@ -64,7 +63,7 @@ public class InvoiceService {
         return invoiceDto;
     }
 
-    private double calculateTotalPayment(final int nightsCount, final Set<RoomDto> roomsInBooking){
+    private double calculateTotalPayment(final int nightsCount, final List<RoomDto> roomsInBooking){
 
         double commonDailyCost = 0.0;
 

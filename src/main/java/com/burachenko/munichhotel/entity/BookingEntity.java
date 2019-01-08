@@ -8,8 +8,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -25,17 +24,11 @@ public class BookingEntity extends IdentifiableEntity {
     @Column(name="check_out", nullable = false)
     private LocalDate checkOut;
 
-    @Column(name="adult_count", nullable = false)
-    private Integer adultCount;
-
-    @Column(name="child_count", nullable = false)
-    private Integer childCount;
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private UserEntity user;
+    private UserAccountEntity userAccount;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "invoice_id")
@@ -49,8 +42,8 @@ public class BookingEntity extends IdentifiableEntity {
 
     @ManyToMany(fetch = FetchType.EAGER,
                 cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-                mappedBy = "bookingSet")
+                mappedBy = "bookingList")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<RoomEntity> roomSet = new HashSet<>();
+    private List<RoomEntity> roomList;
 }

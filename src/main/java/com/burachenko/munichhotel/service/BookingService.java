@@ -13,7 +13,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -47,18 +50,13 @@ public class BookingService {
         final BookingDto preparedBooking = new BookingDto();
         preparedBooking.setCheckIn(searchUnit.getCheckIn());
         preparedBooking.setCheckOut(searchUnit.getCheckOut());
-        preparedBooking.setAdultCount(searchUnit.getAdultCount());
-        preparedBooking.setChildCount(searchUnit.getChildCount());
-        preparedBooking.setUser(userService.getUser(userId));
+        preparedBooking.setUserAccount(userService.getUserAccount(userId));
         return preparedBooking;
     }
 
     public BookingDto getBooking(final long id) {
         final Optional<BookingEntity> bookingEntity = bookingRepository.findById(id);
-        if (bookingEntity.isPresent()) {
-            return bookingConverter.convertToDto(bookingEntity.get());
-        }
-        return null;
+        return bookingEntity.map(bookingConverter::convertToDto).orElse(null);
     }
 
     public BookingDto updateBooking(final BookingDto bookingDto, final long id) {
@@ -93,14 +91,11 @@ public class BookingService {
 
     public BookingDto getBookingByInvoiceId(final long invoiceId) {
         final Optional<BookingEntity> bookingEntity = bookingRepository.getBookingByInvoiceId(invoiceId);
-        if (bookingEntity.isPresent()) {
-            return bookingConverter.convertToDto(bookingEntity.get());
-        }
-        return null;
+        return bookingEntity.map(bookingConverter::convertToDto).orElse(null);
     }
 
-    public Set<BookingDto> getBookingListByUserId(final long userId) {
-        return bookingConverter.convertToDto(bookingRepository.getBookingSetByUserId(userId));
+    public List<BookingDto> getBookingListByUserId(final long userId) {
+        return bookingConverter.convertToDto(bookingRepository.getBookingListByUserAccountId(userId));
     }
 
     private long getDaysNumber(BookingEntity entity, LocalDate before, LocalDate after) {
@@ -124,10 +119,10 @@ public class BookingService {
         List<BookingEntity> entities = findAllByCheckInBeforeAndCheckOutAfter(before, after);
         Map<Long, Double> roomsPays = new HashMap<>();
         for (BookingEntity entity : entities) {
-            if (!entity.getRoomSet().isEmpty()) {
+            if (!entity.getRoomList().isEmpty()) {
                 double coefficient = (double) getDaysNumber(entity, before, after) /
-                                     (getPeriodLength(entity) * entity.getRoomSet().size());
-                for (RoomEntity room : entity.getRoomSet()) {
+                                     (getPeriodLength(entity) * entity.getRoomList().size());
+                for (RoomEntity room : entity.getRoomList()) {
                     if (!roomsPays.containsKey(room.getId())) {
                         roomsPays.put(room.getId(), 0.0);
                     }
@@ -152,10 +147,10 @@ public class BookingService {
         List<BookingEntity> entities = findAllByCheckInBeforeAndCheckOutAfter(before, after);
         Map<Integer, Double> roomsPays = new HashMap<>();
         for (BookingEntity entity : entities) {
-            if (!entity.getRoomSet().isEmpty()) {
+            if (!entity.getRoomList().isEmpty()) {
                 double coefficient = (double) getDaysNumber(entity, before, after) /
-                                     (getPeriodLength(entity) * entity.getRoomSet().size());
-                for (RoomEntity room : entity.getRoomSet()) {
+                                     (getPeriodLength(entity) * entity.getRoomList().size());
+                for (RoomEntity room : entity.getRoomList()) {
                     if (!roomsPays.containsKey(room.getComfortLevel())) {
                         roomsPays.put(room.getComfortLevel(), 0.0);
                     }

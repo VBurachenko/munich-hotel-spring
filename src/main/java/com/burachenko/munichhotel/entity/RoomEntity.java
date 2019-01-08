@@ -5,15 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.*;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -43,5 +36,5 @@ public class RoomEntity extends IdentifiableEntity {
             inverseJoinColumns = @JoinColumn(name = "booking_id"))
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<BookingEntity> bookingSet= new HashSet<>();
+    private List<BookingEntity> bookingList;
 }

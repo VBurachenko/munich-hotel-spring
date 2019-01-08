@@ -6,12 +6,7 @@ import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 
 import java.util.List;
 
@@ -50,7 +45,7 @@ public class VaadinUI extends UI{
     }
 
     private void updateList() {
-        final List<UserDto> userList = userService.getUsersList();
+        final List<UserDto> userList = userService.getUserList();
         userGrid.setItems(userList);
     }
 }

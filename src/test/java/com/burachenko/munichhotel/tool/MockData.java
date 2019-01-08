@@ -1,54 +1,51 @@
 package com.burachenko.munichhotel.tool;
 
 import com.burachenko.munichhotel.dto.OrderDto;
-import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.entity.BookingEntity;
 import com.burachenko.munichhotel.entity.InvoiceEntity;
 import com.burachenko.munichhotel.entity.UserEntity;
 import com.burachenko.munichhotel.enumeration.BookingStatus;
 import com.burachenko.munichhotel.enumeration.InvoiceStatus;
-import com.burachenko.munichhotel.enumeration.UserRole;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class MockData {
 
-    public static UserEntity userEntity() {
-        final UserEntity userEntity = new UserEntity();
-        userEntity.setId(10L);
-        userEntity.setEmail("email");
-        userEntity.setPassword("11qq22ww33ee");
-        userEntity.setName("Name");
-        userEntity.setSurname("Surname");
-        userEntity.setTelNum("+1111");
-        userEntity.setBirthday(LocalDate.of(2000, 12, 12));
-        userEntity.setDiscount(0);
-        userEntity.setBlocking(0);
-        userEntity.setRole(UserRole.CUSTOMER);
-        userEntity.setGenderMale(true);
-        userEntity.setBookingSet(new HashSet<>());
-        return userEntity;
-    }
+//    public static UserEntity userEntity() {
+//        final UserEntity userEntity = new UserEntity();
+//        userEntity.setId(10L);
+//        userEntity.setEmail("email");
+//        userEntity.setPassword("11qq22ww33ee");
+//        userEntity.setName("Name");
+//        userEntity.setSurname("Surname");
+//        userEntity.setTelNum("+1111");
+//        userEntity.setBirthday(LocalDate.of(2000, 12, 12));
+//        userEntity.setDiscount(0);
+//        userEntity.setBlocking(0);
+//        userEntity.setRole(UserRole.CUSTOMER);
+//        userEntity.setGenderMale(true);
+//        userEntity.setBookingSet(new HashSet<>());
+//        return userEntity;
+//    }
 
-    public static UserDto userDto() {
-        final UserDto userDto = new UserDto();
-        userDto.setId(10L);
-        userDto.setEmail("email");
-        userDto.setPassword("11qq22ww33ee");
-        userDto.setName("Name");
-        userDto.setSurname("Surname");
-        userDto.setTelNum("+1111");
-        userDto.setBirthday(LocalDate.of(2000, 12, 12));
-        userDto.setDiscount(0);
-        userDto.setBlocking(0);
-        userDto.setRole(UserRole.CUSTOMER);
-        userDto.setGenderMale(true);
-        userDto.setBookingSet(new HashSet<>());
-        return userDto;
-    }
+//    public static UserDto userDto() {
+//        final UserDto userDto = new UserDto();
+//        userDto.setId(10L);
+//        userDto.setEmail("email");
+//        userDto.setPassword("11qq22ww33ee");
+//        userDto.setName("Name");
+//        userDto.setSurname("Surname");
+//        userDto.setTelNum("+1111");
+//        userDto.setBirthday(LocalDate.of(2000, 12, 12));
+//        userDto.setDiscount(0);
+//        userDto.setBlocking(0);
+//        userDto.setRole(UserRole.CUSTOMER);
+//        userDto.setGenderMale(true);
+//        userDto.setBookingSet(new HashSet<>());
+//        return userDto;
+//    }
 
     public static OrderDto orderDto() {
         OrderDto orderDto = new OrderDto();
@@ -78,7 +75,7 @@ public class MockData {
         bookingEntityOne.setCheckIn(LocalDate.parse("2019-01-01"));
         bookingEntityOne.setCheckOut(LocalDate.parse("2019-02-02"));
         bookingEntityOne.setStatus(BookingStatus.REGISTERED);
-        bookingEntityOne.setUser(userEntity);
+//        bookingEntityOne.setUser(userEntity);
         bookingEntityOne.setInvoice(invoiceEntityOne);
         bookingEntities.add(bookingEntityOne);
 
@@ -86,7 +83,7 @@ public class MockData {
         bookingEntityTwo.setCheckIn(LocalDate.parse("2019-02-02"));
         bookingEntityTwo.setCheckOut(LocalDate.parse("2019-03-03"));
         bookingEntityTwo.setStatus(BookingStatus.REGISTERED);
-        bookingEntityTwo.setUser(userEntity);
+//        bookingEntityTwo.setUser(userEntity);
         bookingEntityTwo.setInvoice(invoiceEntityTwo);
         bookingEntities.add(bookingEntityTwo);
 

@@ -5,8 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -25,5 +24,5 @@ public class RoomDto extends IdentifiableDto {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<BookingDto> bookingSet = new HashSet<>();
+    private List<BookingDto> bookingList;
 }

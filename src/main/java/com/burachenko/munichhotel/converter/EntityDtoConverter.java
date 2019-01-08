@@ -3,8 +3,8 @@ package com.burachenko.munichhotel.converter;
 import com.burachenko.munichhotel.dto.IdentifiableDto;
 import com.burachenko.munichhotel.entity.IdentifiableEntity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public interface EntityDtoConverter<E extends IdentifiableEntity, DTO extends IdentifiableDto>{
 
@@ -12,26 +12,26 @@ public interface EntityDtoConverter<E extends IdentifiableEntity, DTO extends Id
 
     E convertToEntity(final DTO dto);
 
-    default Set<DTO> convertToDto(final Set<E> entitySet){
-        if (entitySet != null){
-            final Set<DTO> dtoSet = new HashSet<>();
-            for (final E entity : entitySet){
+    default List<DTO> convertToDto(final List<E> entityList){
+        if (entityList != null){
+            final List<DTO> dtoList = new ArrayList<>();
+            for (final E entity : entityList){
                 final DTO dto = convertToDto(entity);
-                dtoSet.add(dto);
+                dtoList.add(dto);
             }
-            return dtoSet;
+            return dtoList;
         }
         return null;
     }
 
-    default Set<E> convertToEntity(final Set<DTO> dtoSet){
-        if (dtoSet != null){
-            final Set<E> entitySet = new HashSet<>();
-            for (final DTO dto : dtoSet){
+    default List<E> convertToEntity(final List<DTO> dtoList){
+        if (dtoList != null){
+            final List<E> entityList = new ArrayList<>();
+            for (final DTO dto : dtoList){
                 final E entity = convertToEntity(dto);
-                entitySet.add(entity);
+                entityList.add(entity);
             }
-            return entitySet;
+            return entityList;
         }
         return null;
     }

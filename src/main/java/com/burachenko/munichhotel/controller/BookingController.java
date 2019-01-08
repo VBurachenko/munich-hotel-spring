@@ -1,11 +1,9 @@
 package com.burachenko.munichhotel.controller;
 
+import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.service.BookingService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -42,5 +40,15 @@ public class BookingController {
         }
         result.delete(result.length()-2, result.length()-1);
         return result.toString();
+    }
+
+    @GetMapping("/history")
+    public void showHistory(){
+
+    }
+
+    @GetMapping("/get/{id}")
+    public BookingDto getBooking(@PathVariable final long id){
+        return bookingService.getBooking(id);
     }
 }

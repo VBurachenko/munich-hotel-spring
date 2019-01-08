@@ -4,94 +4,111 @@ import com.burachenko.munichhotel.converter.EntityDtoConverter;
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.dto.InvoiceDto;
 import com.burachenko.munichhotel.dto.RoomDto;
-import com.burachenko.munichhotel.dto.UserDto;
+import com.burachenko.munichhotel.dto.UserAccountDto;
 import com.burachenko.munichhotel.entity.BookingEntity;
 import com.burachenko.munichhotel.entity.InvoiceEntity;
 import com.burachenko.munichhotel.entity.RoomEntity;
-import com.burachenko.munichhotel.entity.UserEntity;
+import com.burachenko.munichhotel.entity.UserAccountEntity;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.List;
 
 @Service
 public class BookingConverter implements EntityDtoConverter<BookingEntity, BookingDto> {
 
     private final InvoiceConverter invoiceConverter;
     private final RoomConverter roomConverter;
+    private final UserAccountConverter userAccountConverter;
 
     @Autowired
-    public BookingConverter(final InvoiceConverter invoiceConverter,
-                            final RoomConverter roomConverter) {
+    public BookingConverter(final InvoiceConverter invoiceConverter, final RoomConverter roomConverter, final UserAccountConverter userAccountConverter) {
         this.invoiceConverter = invoiceConverter;
         this.roomConverter = roomConverter;
+        this.userAccountConverter = userAccountConverter;
     }
 
     @Override
     public BookingDto convertToDto(final BookingEntity booking) {
+
         final BookingDto bookingDto = new BookingDto();
-        removeBookingsFromUserDto(bookingDto);
-        BeanUtils.copyProperties(booking, bookingDto, "invoice", "user", "bookingSet");
+
+        BeanUtils.copyProperties(booking, bookingDto, "invoice", "userAccount", "roomList");
+
+        setUserAccountToDto(booking, bookingDto);
         setInvoiceToDto(booking, bookingDto);
-        setRoomSetToDto(booking, bookingDto);
+        setRoomListToDto(booking, bookingDto);
+
         return bookingDto;
     }
 
     @Override
     public BookingEntity convertToEntity(final BookingDto bookingDto) {
-        final BookingEntity booking = new BookingEntity();
-        removeBookingsFromUserDbo(booking);
-        BeanUtils.copyProperties(bookingDto, booking, "invoice", "user", "bookingSet");
-        setInvoiceToDbo(bookingDto, booking);
-        setRoomSetToDbo(bookingDto, booking);
-        return booking;
+
+        final BookingEntity bookingEntity = new BookingEntity();
+
+        BeanUtils.copyProperties(bookingDto, bookingEntity, "invoice", "userAccount", "roomList");
+
+        setUserAccountToEntity(bookingDto, bookingEntity);
+        setInvoiceToEntity(bookingDto, bookingEntity);
+        setRoomListToEntity(bookingDto, bookingEntity);
+
+        return bookingEntity;
     }
 
-    private void removeBookingsFromUserDto(final BookingDto dto){
-        final UserDto userDto = dto.getUser();
-        if (userDto != null){
-            userDto.setBookingSet(null);
-        }
+    /*
+    set invoice
+     */
+
+    private void setInvoiceToEntity(final BookingDto bookingDto, final BookingEntity bookingEntity){
+        final InvoiceEntity invoiceEntity = invoiceConverter.convertToEntity(bookingDto.getInvoice());
+        bookingEntity.setInvoice(invoiceEntity);
     }
 
-    private void removeBookingsFromUserDbo(final BookingEntity dbo){
-        final UserEntity user = dbo.getUser();
-        if (user != null){
-            user.setBookingSet(null);
-        }
+    private void setInvoiceToDto(final BookingEntity bookingEntity, final BookingDto bookingDto){
+        final InvoiceDto invoiceDto = invoiceConverter.convertToDto(bookingEntity.getInvoice());
+        bookingDto.setInvoice(invoiceDto);
     }
 
-    private void setInvoiceToDbo(final BookingDto dto, final BookingEntity dbo){
-        final InvoiceEntity invoice = invoiceConverter.convertToEntity(dto.getInvoice());
-        dbo.setInvoice(invoice);
-    }
+    /*
+    set rooms list
+     */
 
-    private void setInvoiceToDto(final BookingEntity dbo, final BookingDto dto){
-        final InvoiceDto invoiceDto = invoiceConverter.convertToDto(dbo.getInvoice());
-        dto.setInvoice(invoiceDto);
-    }
-
-    private void setRoomSetToDbo(final BookingDto dto, final BookingEntity dbo){
-        final Set<RoomDto> dtoRoomSet = dto.getRoomSet();
-        if (dtoRoomSet != null){
-            for (final RoomDto roomDto : dtoRoomSet){
-                roomDto.setBookingSet(null);
+    private void setRoomListToEntity(final BookingDto bookingDto, final BookingEntity bookingEntity){
+        final List<RoomDto> dtoRoomList = bookingDto.getRoomList();
+        if (dtoRoomList != null){
+            for (final RoomDto roomDto : dtoRoomList){
+                roomDto.setBookingList(null);
             }
         }
-        final Set<RoomEntity> roomSet = roomConverter.convertToEntity(dtoRoomSet);
-        dbo.setRoomSet(roomSet);
+        final List<RoomEntity> roomList = roomConverter.convertToEntity(dtoRoomList);
+        bookingEntity.setRoomList(roomList);
     }
 
-    private void setRoomSetToDto(final BookingEntity dbo, final BookingDto dto){
-        final Set<RoomEntity> roomSet = dbo.getRoomSet();
-        if (roomSet != null){
-            for (final RoomEntity room : roomSet){
-                room.setBookingSet(null);
+    private void setRoomListToDto(final BookingEntity bookingEntity, final BookingDto bookingDto){
+        final List<RoomEntity> roomList = bookingEntity.getRoomList();
+        if (roomList != null){
+            for (final RoomEntity room : roomList){
+                room.setBookingList(null);
             }
         }
-        final Set<RoomDto> dtoRoomSet = roomConverter.convertToDto(roomSet);
-        dto.setRoomSet(dtoRoomSet);
+        final List<RoomDto> dtoRoomList = roomConverter.convertToDto(roomList);
+        bookingDto.setRoomList(dtoRoomList);
+    }
+
+    /*
+    set user account
+     */
+
+    private void setUserAccountToDto(final BookingEntity bookingEntity, final BookingDto bookingDto){
+        final UserAccountDto userAccountDto = userAccountConverter.convertToDto(bookingEntity.getUserAccount());
+        bookingDto.setUserAccount(userAccountDto);
+    }
+
+    private void setUserAccountToEntity(final BookingDto bookingDto, final BookingEntity bookingEntity){
+        final UserAccountEntity userAccountEntity = userAccountConverter.convertToEntity(bookingDto.getUserAccount());
+        bookingEntity.setUserAccount(userAccountEntity);
     }
 
 }
