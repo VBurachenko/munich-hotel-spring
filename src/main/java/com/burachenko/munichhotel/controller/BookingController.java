@@ -1,37 +1,46 @@
 package com.burachenko.munichhotel.controller;
 
-import com.burachenko.munichhotel.dto.OrderDto;
 import com.burachenko.munichhotel.service.BookingService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Map;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/booking")
 public class BookingController {
-    @Autowired
     private final BookingService bookingService;
 
-    public BookingController(final BookingService bookingService) {
-        this.bookingService = bookingService;
+    @GetMapping("/test")
+    public String test(@RequestParam("before") String before, @RequestParam("after") String after) {
+        //List<BookingEntity> current = bookingService.findAllByCheckInBeforeAndCheckOutAfter(LocalDate.parse(before), LocalDate.parse(after));
+        //return "Size: " + current.size() + ", number: " + current.get(0).getCheckIn().toString() + ", " + (current.size() > 1 ? current.get(1).getCheckIn().toString() : " null");
+        Map<Long, Double> currentPayments = bookingService.getPayDataForPeriodByRooms(LocalDate.parse(before), LocalDate.parse(after));
+        StringBuilder result=new StringBuilder();
+        result.append("Result: ");
+        for (Long id: currentPayments.keySet()){
+            result.append("id: " + id + ", summ: " + currentPayments.get(id) + ", ");
+        }
+        result.delete(result.length()-2, result.length()-1);
+        return result.toString();
     }
 
-    @GetMapping("/orders")
-    public List<OrderDto> findOrders(
-            @RequestParam(name = "type") final String type,
-            @RequestParam(name = "num") final int num,
-            @RequestParam(name = "status") final String status) {
-        return bookingService.findOrders(type, num, status);
-    }
-
-    @GetMapping("/moneyEarned")
-    public Double moneyAmount(
-            @RequestParam(name = "fromDate") final String fromDate,
-            @RequestParam(name = "toDate") final String toDate) {
-        return bookingService.getMoneyAmount(fromDate, toDate);
+    @GetMapping("/testcomfort")
+    public String testByComfort(@RequestParam("before") String before, @RequestParam("after") String after) {
+        //List<BookingEntity> current = bookingService.findAllByCheckInBeforeAndCheckOutAfter(LocalDate.parse(before), LocalDate.parse(after));
+        //return "Size: " + current.size() + ", number: " + current.get(0).getCheckIn().toString() + ", " + (current.size() > 1 ? current.get(1).getCheckIn().toString() : " null");
+        Map<Integer, Double> currentPayments = bookingService.getPayDataForPeriodByComfort(LocalDate.parse(before), LocalDate.parse(after));
+        StringBuilder result=new StringBuilder();
+        result.append("Result: ");
+        for (Integer id: currentPayments.keySet()){
+            result.append("comfort level: " + id + ", summ: " + currentPayments.get(id) + ", ");
+        }
+        result.delete(result.length()-2, result.length()-1);
+        return result.toString();
     }
 }

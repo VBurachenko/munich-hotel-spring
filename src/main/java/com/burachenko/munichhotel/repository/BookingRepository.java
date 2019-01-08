@@ -16,6 +16,7 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
     Set<BookingEntity> getBookingSetByUserId(final long userId);
 
     Optional<BookingEntity> getBookingByInvoiceId(final long invoiceId);
+    List<BookingEntity> findAllByCheckInBeforeAndCheckOutAfter(LocalDate before, LocalDate after);
 
     List<BookingEntity> getByCheckInBetweenAndStatus(final LocalDate checkIn, final LocalDate checkIn2, final BookingStatus status);
 
