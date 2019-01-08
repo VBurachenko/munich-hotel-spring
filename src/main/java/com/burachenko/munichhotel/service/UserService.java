@@ -9,6 +9,7 @@ import com.burachenko.munichhotel.entity.UserEntity;
 import com.burachenko.munichhotel.repository.UserAccountRepository;
 import com.burachenko.munichhotel.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +25,27 @@ public class UserService {
 
     private final UserAccountRepository userAccountRepository;
     private final UserAccountConverter userAccountConverter;
+
+    public List<UserDto> fetchUsers(int offset, int limit){
+        return null;
+    }
+
+    public long getUsersCount(){
+        return userRepository.count();
+    }
+
+    public List<UserDto> getUserList(final String filterString){
+        if (!filterString.isEmpty()){
+            List<UserDto> dtoUserList = new ArrayList<>();
+            final UserEntity probe = new UserEntity();
+            probe.setEmail(filterString);
+            for (final UserEntity userEntity : userRepository.findAll(Example.of(probe))){
+                dtoUserList.add(userConverter.convertToDto(userEntity));
+            }
+            return dtoUserList;
+        }
+        return getUserList();
+    }
 
     public List<UserDto> getUserList(){
         final List<UserDto> dtoUserList = new ArrayList<>();

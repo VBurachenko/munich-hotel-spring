@@ -31,10 +31,7 @@ public class RoomService {
 
     public RoomDto getRoom(final Long id){
         final Optional<RoomEntity> roomEntity = roomRepository.findById(id);
-        if (roomEntity.isPresent()){
-            return roomConverter.convertToDto(roomEntity.get());
-        }
-        return null;
+        return roomEntity.map(roomConverter::convertToDto).orElse(null);
     }
 
 }

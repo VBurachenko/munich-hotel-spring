@@ -26,6 +26,7 @@ public class BookingService {
     private final BookingConverter bookingConverter;
 
     private final UserService userService;
+    private final RoomService roomService;
 
     public List<BookingEntity> getBookingsList() {
         return bookingRepository.findAll();
