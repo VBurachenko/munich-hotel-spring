@@ -69,20 +69,10 @@ public class UserService {
         return userRepository.exists(Example.of(userConverter.convertToEntity(userDto)));
     }
 
-    public UserDto updateUser(final UserDto userDto, final long id){
-        final Optional<UserEntity> userEntity = userRepository.findById(id);
+    public UserDto updateUser(final UserDto userDto){
+        final Optional<UserEntity> userEntity = userRepository.findById(userDto.getId());
         if (userEntity.isPresent()){
-            userDto.setId(id);
             return userConverter.convertToDto(userRepository.save(userConverter.convertToEntity(userDto)));
-        }
-        return null;
-    }
-
-    public UserAccountDto updateUserAccount(final UserAccountDto userAccountDto, final long id){
-        final Optional<UserAccountEntity> userAccountEntity = userAccountRepository.findById(id);
-        if (userAccountEntity.isPresent()){
-            userAccountDto.setId(id);
-            return userAccountConverter.convertToDto(userAccountRepository.save(userAccountConverter.convertToEntity(userAccountDto)));
         }
         return null;
     }
@@ -107,7 +97,7 @@ public class UserService {
         final UserDto userDto = getUser(userId);
         if (userDto != null){
             userDto.setBlocking(userBlocking.ordinal());
-            return updateUser(userDto, userId);
+            return updateUser(userDto);
         }
         return null;
     }
