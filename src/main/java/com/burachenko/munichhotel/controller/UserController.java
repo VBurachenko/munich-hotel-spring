@@ -26,7 +26,7 @@ public class UserController {
 
     @PostMapping("/create")
     public UserDto createUser(@RequestBody final UserDto userDto){
-        return userService.createUser(userDto);
+        return userService.registerNewUser(userDto);
     }
 
     @PutMapping("/update/{id}")

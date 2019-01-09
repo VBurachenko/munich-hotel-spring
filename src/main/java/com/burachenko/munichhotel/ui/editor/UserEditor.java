@@ -57,7 +57,7 @@ public class UserEditor extends VerticalLayout{
     }
 
     private void save() {
-        userService.createUser(userDto);
+        userService.registerNewUser(userDto);
         changeHandler.onChange();
     }
 

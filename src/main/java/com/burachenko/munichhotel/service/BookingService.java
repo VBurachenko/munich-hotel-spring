@@ -2,6 +2,7 @@ package com.burachenko.munichhotel.service;
 
 import com.burachenko.munichhotel.converter.impl.BookingConverter;
 import com.burachenko.munichhotel.dto.BookingDto;
+import com.burachenko.munichhotel.dto.RoomDto;
 import com.burachenko.munichhotel.dto.SearchUnitDto;
 import com.burachenko.munichhotel.entity.BookingEntity;
 import com.burachenko.munichhotel.entity.RoomEntity;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -28,13 +30,13 @@ public class BookingService {
     private final UserService userService;
     private final RoomService roomService;
 
-    public List<BookingEntity> getBookingsList() {
-        return bookingRepository.findAll();
+    public List<BookingDto> getBookingsList() {
+        return bookingRepository.findAll().stream().map(bookingConverter::convertToDto).collect(Collectors.toList());
     }
 
     public BookingDto createBooking(final BookingDto bookingDto) {
         int startIndex = 1;
-        long bookingId = IdCreator.createLongIdByTodayDate(1);
+        long bookingId = IdCreator.createLongIdByTodayDate(startIndex);
         while (getBooking(bookingId) != null) {
             bookingId = IdCreator.createLongIdByTodayDate(++startIndex);
         }
@@ -78,10 +80,6 @@ public class BookingService {
         return null;
     }
 
-    BookingDto setInvoiceToBooking(final BookingDto bookingDto) {
-        return updateBooking(bookingDto, bookingDto.getId());
-    }
-
     public boolean deleteBooking(final long id) {
         final Optional<BookingEntity> bookingEntity = bookingRepository.findById(id);
         if (bookingEntity.isPresent()) {
@@ -97,6 +95,29 @@ public class BookingService {
 
     public List<BookingDto> getBookingListByUserId(final long userId) {
         return bookingConverter.convertToDto(bookingRepository.getBookingListByUserAccountId(userId));
+    }
+
+    public BookingDto addRoomsToBooking(final BookingDto bookingDto, final long ... selectedRoomIds){
+        for (final long roomId : selectedRoomIds){
+           final RoomDto roomDto = roomService.getRoom(roomId);
+           if (roomDto == null){
+               return null;
+           }
+        }
+        return bookingDto;
+    }
+
+    public boolean removeRoomsFromBooking(final BookingDto bookingDto, final long ... selectedRoomIds){
+        final List<RoomDto> preSavedRooms = bookingDto.getRoomList();
+        for (final long roomId : selectedRoomIds){
+            final RoomDto roomDto = roomService.getRoom(roomId);
+            if (roomDto == null){
+                bookingDto.setRoomList(preSavedRooms);
+                return false;
+            }
+            bookingDto.getRoomList().remove(roomDto);
+        }
+        return true;
     }
 
     private long getDaysNumber(BookingEntity entity, LocalDate before, LocalDate after) {
