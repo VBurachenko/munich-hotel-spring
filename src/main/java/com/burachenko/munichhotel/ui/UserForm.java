@@ -58,7 +58,6 @@ public class UserForm extends FormLayout {
     }
 
     private void delete(){
-        System.out.println(userDto);
         userService.deleteUser(userDto);
         vaadinUI.updateList();
         setVisible(false);

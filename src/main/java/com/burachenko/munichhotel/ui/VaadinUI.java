@@ -2,7 +2,6 @@ package com.burachenko.munichhotel.ui;
 
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.service.UserService;
-import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.VaadinRequest;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-@Push
 @SpringUI(path = "/vaadin")
 @Theme("valo")
 public class VaadinUI extends UI{
@@ -26,10 +24,11 @@ public class VaadinUI extends UI{
 
     private TextField filterText = new TextField();
 
-    private UserForm userForm = new UserForm(this, userService);
+    private UserForm userForm;
 
     @Override
     protected void init(final VaadinRequest vaadinRequest) {
+        userForm = new UserForm(this, userService);
         final VerticalLayout layout = new VerticalLayout();
 
         filterText.setCaption("filter by email");
@@ -78,7 +77,7 @@ public class VaadinUI extends UI{
     }
 
     void updateList() {
-        List<UserDto> userList = userService.getUserList(filterText.getValue());
+        final List<UserDto> userList = userService.getUserList(filterText.getValue());
         grid.setItems(userList);
     }
 
