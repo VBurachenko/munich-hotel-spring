@@ -26,6 +26,8 @@ public class VaadinUI extends UI{
 
     private TextField filterText = new TextField();
 
+    private UserForm userForm = new UserForm(this, userService);
+
     @Override
     protected void init(final VaadinRequest vaadinRequest) {
         final VerticalLayout layout = new VerticalLayout();
@@ -42,15 +44,40 @@ public class VaadinUI extends UI{
         filtering.addComponents(filterText, clearFilterTextBtn);
         filtering.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
 
-        grid.setColumns("id", "email", "password", "telNum", "blocking", "role");
-        layout.addComponents(filtering, grid);
+        final Button addUserBtn = new Button("Add new user");
+
+        addUserBtn.addClickListener(e -> {
+            grid.asSingleSelect().clear();
+            userForm.setUserDto(new UserDto());
+        });
+
+        final HorizontalLayout toolbar = new HorizontalLayout(filtering, addUserBtn);
+
+        grid.setColumns("id", "email", "password", "name", "surname", "telNum", "birthday", "discount", "genderMale", "blocking", "role");
+
+        final HorizontalLayout main = new HorizontalLayout(grid, userForm);
+        main.setSizeFull();
+        grid.setSizeFull();
+        main.setExpandRatio(grid, 1);
+
+        layout.addComponents(toolbar, main);
 
         updateList();
 
         setContent(layout);
+
+        userForm.setVisible(false);
+
+        grid.asSingleSelect().addValueChangeListener(e -> {
+            if (e.getValue() == null){
+                userForm.setVisible(false);
+            } else {
+                userForm.setUserDto(e.getValue());
+            }
+        });
     }
 
-    private void updateList() {
+    void updateList() {
         List<UserDto> userList = userService.getUserList(filterText.getValue());
         grid.setItems(userList);
     }

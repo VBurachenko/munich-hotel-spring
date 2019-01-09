@@ -6,9 +6,11 @@ import com.burachenko.munichhotel.dto.UserAccountDto;
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.entity.UserAccountEntity;
 import com.burachenko.munichhotel.entity.UserEntity;
+import com.burachenko.munichhotel.enumeration.UserBlocking;
 import com.burachenko.munichhotel.repository.UserAccountRepository;
 import com.burachenko.munichhotel.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -62,6 +64,11 @@ public class UserService {
         return !user.isPresent();
     }
 
+    public boolean deleteUser(final UserDto userDto){
+        userRepository.delete(userConverter.convertToEntity(userDto));
+        return userRepository.exists(Example.of(userConverter.convertToEntity(userDto)));
+    }
+
     public UserDto updateUser(final UserDto userDto, final long id){
         final Optional<UserEntity> userEntity = userRepository.findById(id);
         if (userEntity.isPresent()){
@@ -81,13 +88,13 @@ public class UserService {
     }
 
     public UserDto findUserByEmail(final String email){
-        final Optional<UserEntity> userEntity = userRepository.findByEmail(email);
+        final Optional<UserEntity> userEntity = userRepository.findUserByEmail(email);
         return userEntity.map(userConverter::convertToDto).orElse(null);
 
     }
 
     public UserDto registerNewUser(final UserDto userDto){
-        final Optional <UserEntity> userByEmail = userRepository.findByEmail(userDto.getEmail());
+        final Optional <UserEntity> userByEmail = userRepository.findUserByEmail(userDto.getEmail());
         final Optional <UserEntity> userByTelNum = userRepository.findByTelNum(userDto.getTelNum());
         if (!userByEmail.isPresent() && !userByTelNum.isPresent()){
             final UserEntity justCreatedUser = userRepository.save(userConverter.convertToEntity(userDto));
@@ -96,12 +103,13 @@ public class UserService {
         return null;
     }
 
-    public UserDto changeBlockUser(final long userId, final int blockIndex){
+    public UserDto changeBlockUser(final long userId, final UserBlocking userBlocking){
         final UserDto userDto = getUser(userId);
         if (userDto != null){
-            userDto.setBlocking(blockIndex);
+            userDto.setBlocking(userBlocking.ordinal());
             return updateUser(userDto, userId);
         }
         return null;
     }
+
 }

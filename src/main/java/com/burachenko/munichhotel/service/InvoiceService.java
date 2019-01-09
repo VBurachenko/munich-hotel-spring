@@ -40,13 +40,13 @@ public class InvoiceService {
         return invoiceConverter.convertToDto(invoiceRepository.save(invoiceEntity));
     }
 
-    public BookingDto attachInvoiceToBooking(final BookingDto bookingDto){
-        final InvoiceDto invoiceDto = createInvoice(prepareInvoice(bookingDto));
-        if (invoiceDto != null){
-            bookingDto.setInvoice(invoiceDto);
-        }
-        return bookingService.setInvoiceToBooking(bookingDto);
-    }
+//    public BookingDto attachInvoiceToBooking(final BookingDto bookingDto){
+//        final InvoiceDto invoiceDto = createInvoice(prepareInvoice(bookingDto));
+//        if (invoiceDto != null){
+//            bookingDto.setInvoice(invoiceDto);
+//        }
+//        return bookingService.setInvoiceToBooking(bookingDto);
+//    }
 
     private InvoiceDto prepareInvoice(final BookingDto bookingDto){
 
