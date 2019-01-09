@@ -1,10 +1,18 @@
-package com.burachenko.munichhotel.ui;
+package com.burachenko.munichhotel.ui.form;
 
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.service.UserService;
+import com.burachenko.munichhotel.ui.VaadinUI;
 import com.vaadin.data.Binder;
 import com.vaadin.event.ShortcutAction;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class UserForm extends FormLayout {
@@ -17,8 +25,12 @@ public class UserForm extends FormLayout {
 
     private DateField birthday = new DateField("Birthday");
 
+    private Label optionsLabel = new Label("Options");
+
+    private Button hide = new Button("Hide");
     private Button save = new Button("Save");
     private Button delete = new Button("Delete");
+    private Button edit = new Button("Edit");
 
     private UserService userService;
     private UserDto userDto;
@@ -33,8 +45,10 @@ public class UserForm extends FormLayout {
 
         setSizeUndefined();
 
-        final HorizontalLayout buttons = new HorizontalLayout(save, delete);
-        addComponents(email, telNum, password, blocking, birthday, buttons);
+        final HorizontalLayout upperButtons = new HorizontalLayout(optionsLabel, hide);
+        final VerticalLayout fields = new VerticalLayout(email, telNum, password, blocking, birthday);
+        final HorizontalLayout buttons = new HorizontalLayout(save, delete, edit);
+        addComponents(upperButtons, fields,  buttons);
 
         blocking.setItems(new Integer[]{0, 1, 2});
 
@@ -43,8 +57,10 @@ public class UserForm extends FormLayout {
 
         userBinder.bindInstanceFields(this);
 
+        hide.addClickListener(e -> vaadinUI.expandGrid());
         save.addClickListener(e -> save());
         delete.addClickListener(e -> delete());
+        edit.addClickListener(e -> update());
 
     }
 
@@ -53,6 +69,7 @@ public class UserForm extends FormLayout {
         userBinder.setBean(userDto);
 
         delete.setVisible(userDto.isPersisted());
+        edit.setVisible(userDto.isPersisted() && !email.getValue().isEmpty() && !password.isEmpty() && !telNum.isEmpty());
         setVisible(true);
         email.selectAll();
     }
@@ -64,9 +81,15 @@ public class UserForm extends FormLayout {
     }
 
     private void save(){
-        System.out.println(userDto);
-        System.out.println(userService.registerNewUser(userDto));
+        userService.registerNewUser(userDto);
         vaadinUI.updateList();
         setVisible(false);
     }
+
+    private void update(){
+        userService.updateUser(userDto);
+        vaadinUI.updateList();
+        setVisible(false);
+    }
+
 }
