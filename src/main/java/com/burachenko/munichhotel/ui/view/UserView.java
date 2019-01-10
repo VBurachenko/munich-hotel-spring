@@ -2,20 +2,16 @@ package com.burachenko.munichhotel.ui.view;
 
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.service.UserService;
-import com.burachenko.munichhotel.ui.form.UserForm;
-import com.vaadin.event.ShortcutAction;
-import com.vaadin.icons.VaadinIcons;
+import com.burachenko.munichhotel.ui.form.UserEditForm;
+import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -32,68 +28,115 @@ public class UserView extends VerticalLayout implements View {
 
     private TextField filterText = new TextField();
 
+    private Button editButton = new Button("Edit");
+
+    private Button deleteButton = new Button("Delete");
+
     private Button userViewBtn = new Button("Next");
 
-    private UserForm userForm;
+    private UserEditForm userEditForm;
 
     public UserView() {
         setSizeFull();
+
     }
 
     @Override
     public void enter(final ViewChangeListener.ViewChangeEvent event) {
 
-        userForm = new UserForm(this, userService);
+        setSizeFull();
 
-        final VerticalLayout generalLayout = new VerticalLayout();
+        addControls();
 
-        this.addComponent(generalLayout);
+        setupGrid();
 
-        filterText.setPlaceholder("email or telephone");
-        filterText.setIcon(VaadinIcons.SEARCH);
-        filterText.addValueChangeListener(e -> updateList());
-        filterText.setValueChangeMode(ValueChangeMode.LAZY);
 
-        Button clearFilterTextBtn = new Button(VaadinIcons.CLOSE);
-        clearFilterTextBtn.setDescription("Clear the current filter");
-        clearFilterTextBtn.addClickListener(e -> filterText.clear());
-        clearFilterTextBtn.setClickShortcut(ShortcutAction.KeyCode.DELETE);
 
-        CssLayout filtering = new CssLayout();
-        filtering.setSizeFull();
-        filtering.addComponents(filterText, clearFilterTextBtn);
-        filtering.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+//        userEditForm = new UserEditForm(this, userService);
+//
+//        final VerticalLayout generalLayout = new VerticalLayout();
+//
+//        this.addComponent(generalLayout);
+//
+//        filterText.setPlaceholder("email or telephone");
+//        filterText.addValueChangeListener(e -> updateList());
+//        filterText.setValueChangeMode(ValueChangeMode.LAZY);
+//
+//        Button clearFilterTextBtn = new Button(VaadinIcons.CLOSE);
+//        clearFilterTextBtn.setDescription("Clear the current filter");
+//        clearFilterTextBtn.addClickListener(e -> filterText.clear());
+//        clearFilterTextBtn.setClickShortcut(ShortcutAction.KeyCode.DELETE);
+//
+//        CssLayout filtering = new CssLayout();
+//        filtering.setSizeFull();
+//        filtering.addComponents(filterText, clearFilterTextBtn);
+//        filtering.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+//
+//        final Button options = new Button("Add new user");
+//
+//        options.addClickListener(e -> {
+//            grid.asSingleSelect().clear();
+//            userEditForm.setUserDto(new UserDto());
+//            userEditForm.passwordFieldReadOnly(false);
+//        });
+//
+//        final HorizontalLayout toolbar = new HorizontalLayout(filtering, options);
+//
+//        grid.setColumns("id", "email", "password", "name", "surname", "telNum", "birthday", "discount", "genderMale", "blocking", "role");
+//
+//        final HorizontalLayout main = new HorizontalLayout(grid, userEditForm);
+//        main.setSizeFull();
+//        grid.setSizeFull();
+//        main.setExpandRatio(grid, 1);
+//
+//        generalLayout.addComponents(toolbar, main);
+//
+//        updateList();
+//
+//        userEditForm.setVisible(false);
+//
+//        grid.asSingleSelect().addValueChangeListener(e -> {
+//            if (e.getValue() == null){
+//                userEditForm.setVisible(false);
+//            } else {
+//                userEditForm.setUserDto(e.getValue());
+//            }
+//        });
+    }
 
-        final Button options = new Button("Add new user");
+    private void addControls() {
 
-        options.addClickListener(e -> {
-            grid.asSingleSelect().clear();
-            userForm.setUserDto(new UserDto());
-            userForm.passwordFieldReadOnly(false);
+        final HorizontalLayout outerLayout = new HorizontalLayout();
+        outerLayout.setWidth(100, Unit.PERCENTAGE);
+        outerLayout.setMargin(false);
+
+        final HorizontalLayout layout = new HorizontalLayout();
+        layout.setMargin(false);
+        outerLayout.addComponent(layout);
+
+        final Button addButton = new Button("Add");
+        addButton.addClickListener(click -> {
+            userEditForm.init(new UserDto());
         });
+    }
 
-        final HorizontalLayout toolbar = new HorizontalLayout(filtering, options);
-
-        grid.setColumns("id", "email", "password", "name", "surname", "telNum", "birthday", "discount", "genderMale", "blocking", "role");
-
-        final HorizontalLayout main = new HorizontalLayout(grid, userForm);
-        main.setSizeFull();
-        grid.setSizeFull();
-        main.setExpandRatio(grid, 1);
-
-        generalLayout.addComponents(toolbar, main);
-
-        updateList();
-
-        userForm.setVisible(false);
-
-        grid.asSingleSelect().addValueChangeListener(e -> {
-            if (e.getValue() == null){
-                userForm.setVisible(false);
-            } else {
-                userForm.setUserDto(e.getValue());
-            }
+    private void setupGrid(){
+        setupGridDataProvider();
+        grid.addSelectionListener(selection -> {
+            final int selectedUsersSize = selection.getAllSelectedItems().size();
+            editButton.setEnabled(selectedUsersSize == 1);
+            deleteButton.setEnabled(selectedUsersSize > 0);
         });
+        addComponent(grid);
+        setExpandRatio(grid, 30);
+    }
+
+    private void setupGridDataProvider(){
+        CallbackDataProvider<UserDto, String> dataProvider = new CallbackDataProvider<>(
+                q -> userService.getUserList(q),
+                q -> (int) userService.count());
+        grid.setDataProvider(dataProvider);
+        grid.getDataProvider().refreshAll();
     }
 
     public void updateList() {

@@ -9,13 +9,19 @@ import com.burachenko.munichhotel.entity.UserEntity;
 import com.burachenko.munichhotel.enumeration.UserBlocking;
 import com.burachenko.munichhotel.repository.UserAccountRepository;
 import com.burachenko.munichhotel.repository.UserRepository;
+import com.vaadin.data.provider.Query;
+import com.vaadin.shared.data.sort.SortDirection;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service(value = "userService")
 @AllArgsConstructor
@@ -27,6 +33,10 @@ public class UserService {
     private final UserAccountRepository userAccountRepository;
     private final UserAccountConverter userAccountConverter;
 
+    public long count(){
+        return userRepository.count();
+    }
+
     public List<UserDto> getUserList(final String filterString){
         if (!filterString.isEmpty()){
             List<UserDto> list = new ArrayList<>();
@@ -37,6 +47,20 @@ public class UserService {
             return list;
         }
         return getUserList();
+    }
+
+    public Stream<UserDto> getUserList(final Query<UserDto, String> query) {
+        final PageRequest pageRequest = preparePageRequest(query);
+        final List<UserDto> userDtoList = userRepository.findAll(pageRequest).getContent().stream().map(userConverter::convertToDto).collect(Collectors.toList());
+        return userDtoList.stream();
+    }
+
+    private PageRequest preparePageRequest(final Query<UserDto, String> query) {
+        final int page = query.getOffset() / query.getLimit();
+
+        final List<Sort.Order> sortOrders = query.getSortOrders().stream()
+                .map(sortOrder -> new Sort.Order(sortOrder.getDirection() == SortDirection.ASCENDING ? Sort.Direction.ASC : Sort.Direction.DESC, sortOrder.getSorted())).collect(Collectors.toList());
+        return PageRequest.of(page, query.getLimit(), sortOrders.isEmpty() ? Sort.unsorted() : Sort.by(sortOrders));
     }
 
     public List<UserDto> getUserList(){
