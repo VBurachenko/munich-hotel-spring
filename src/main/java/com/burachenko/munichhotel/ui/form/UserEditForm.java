@@ -14,7 +14,6 @@ public class UserEditForm extends FormLayout {
     private Button closeButton;
     private Runnable onSaveOnClose;
 
-
     @Autowired
     private UserService userService;
     private UserDto userDto;
@@ -33,5 +32,13 @@ public class UserEditForm extends FormLayout {
 
     private void initForm() {
 
+    }
+
+    public Runnable getOnSaveOnClose() {
+        return onSaveOnClose;
+    }
+
+    public void setOnSaveOnClose(final Runnable onSaveOnClose) {
+        this.onSaveOnClose = onSaveOnClose;
     }
 }
