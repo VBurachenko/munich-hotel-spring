@@ -1,6 +1,7 @@
 package com.burachenko.munichhotel.ui.form;
 
 import com.burachenko.munichhotel.dto.UserDto;
+import com.burachenko.munichhotel.enumeration.UserBlocking;
 import com.burachenko.munichhotel.service.UserService;
 import com.burachenko.munichhotel.ui.VaadinUI;
 import com.vaadin.data.Binder;
@@ -21,13 +22,14 @@ public class UserForm extends FormLayout {
     private TextField telNum = new TextField("Telephone");
     private TextField password = new TextField("Password");
 
-    private NativeSelect<Integer> blocking = new NativeSelect<>("Blocking");
+    private NativeSelect<UserBlocking> blocking = new NativeSelect<>("Blocking");
 
     private DateField birthday = new DateField("Birthday");
 
     private Label optionsLabel = new Label("Options");
 
     private Button hide = new Button("Hide");
+
     private Button save = new Button("Save");
     private Button delete = new Button("Delete");
     private Button edit = new Button("Edit");
@@ -50,18 +52,29 @@ public class UserForm extends FormLayout {
         final HorizontalLayout buttons = new HorizontalLayout(save, delete, edit);
         addComponents(upperButtons, fields,  buttons);
 
-        blocking.setItems(new Integer[]{0, 1, 2});
+        blocking.setItems(UserBlocking.values());
 
         save.setStyleName(ValoTheme.BUTTON_PRIMARY);
         save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
-        userBinder.bindInstanceFields(this);
+        userBinder.bind(email, UserDto::getEmail, UserDto::setEmail);
+        userBinder.bind(telNum, UserDto::getTelNum, UserDto::setTelNum);
+        userBinder.bind(password, UserDto::getPassword, UserDto::setPassword);
+        userBinder.bind(blocking, UserDto::getBlocking, UserDto::setBlocking);
+        userBinder.bind(birthday, UserDto::getBirthday, UserDto::setBirthday);
 
-        hide.addClickListener(e -> vaadinUI.expandGrid());
+        userBinder.readBean(userDto);
+
+        hide.addClickListener(e -> hideUserForm());
         save.addClickListener(e -> save());
         delete.addClickListener(e -> delete());
         edit.addClickListener(e -> update());
 
+    }
+
+    private void hideUserForm() {
+        userBinder.removeBean();
+        setVisible(false);
     }
 
     public void setUserDto(final UserDto userDto){
@@ -69,7 +82,7 @@ public class UserForm extends FormLayout {
         userBinder.setBean(userDto);
 
         delete.setVisible(userDto.isPersisted());
-        edit.setVisible(userDto.isPersisted() && !email.getValue().isEmpty() && !password.isEmpty() && !telNum.isEmpty());
+        edit.setVisible(userDto.isPersisted());
         setVisible(true);
         email.selectAll();
     }
@@ -81,6 +94,7 @@ public class UserForm extends FormLayout {
     }
 
     private void save(){
+        System.out.println(userDto);
         userService.registerNewUser(userDto);
         vaadinUI.updateList();
         setVisible(false);

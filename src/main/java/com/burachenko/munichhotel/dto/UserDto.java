@@ -31,11 +31,15 @@ public class UserDto extends IdentifiableDto {
 
     private Boolean genderMale = true;
 
-    private Integer blocking = UserBlocking.NONE.ordinal();
+    private UserBlocking blocking = UserBlocking.NONE;
 
     private UserRole role = UserRole.CUSTOMER;
 
     public boolean isPersisted(){
         return getId() != null;
+    }
+
+    {
+
     }
 }

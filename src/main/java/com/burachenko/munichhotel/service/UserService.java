@@ -96,7 +96,7 @@ public class UserService {
     public UserDto changeBlockUser(final long userId, final UserBlocking userBlocking){
         final UserDto userDto = getUser(userId);
         if (userDto != null){
-            userDto.setBlocking(userBlocking.ordinal());
+            userDto.setBlocking(userBlocking);
             return updateUser(userDto);
         }
         return null;

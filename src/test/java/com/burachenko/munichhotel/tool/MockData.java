@@ -7,6 +7,7 @@ import com.burachenko.munichhotel.entity.InvoiceEntity;
 import com.burachenko.munichhotel.entity.UserEntity;
 import com.burachenko.munichhotel.enumeration.BookingStatus;
 import com.burachenko.munichhotel.enumeration.InvoiceStatus;
+import com.burachenko.munichhotel.enumeration.UserBlocking;
 import com.burachenko.munichhotel.enumeration.UserRole;
 
 import java.time.LocalDate;
@@ -41,7 +42,7 @@ public class MockData {
         userDto.setTelNum("+1111");
         userDto.setBirthday(LocalDate.of(2000, 12, 12));
         userDto.setDiscount(0);
-        userDto.setBlocking(0);
+        userDto.setBlocking(UserBlocking.NONE);
         userDto.setRole(UserRole.CUSTOMER);
         userDto.setGenderMale(true);
         return userDto;
