@@ -3,7 +3,7 @@ package com.burachenko.munichhotel.ui.form;
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.enumeration.UserBlocking;
 import com.burachenko.munichhotel.service.UserService;
-import com.burachenko.munichhotel.ui.HotelUI;
+import com.burachenko.munichhotel.ui.view.UserView;
 import com.vaadin.data.Binder;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.Button;
@@ -34,12 +34,15 @@ public class UserForm extends FormLayout {
     private UserService userService;
     private UserDto userDto;
 
-    private HotelUI hotelUI;
+//    private HotelUI hotelUI;
+
+    private UserView userView;
 
     private Binder <UserDto> userBinder = new Binder<>(UserDto.class);
 
-    public UserForm(HotelUI hotelUI, UserService userService) {
-        this.hotelUI = hotelUI;
+    public UserForm(UserView userView, UserService userService) {
+//        this.hotelUI = hotelUI;
+        this.userView = userView;
         this.userService = userService;
 
         setSizeUndefined();
@@ -96,7 +99,7 @@ public class UserForm extends FormLayout {
 
     private void delete(){
         userService.deleteUser(userDto);
-        hotelUI.updateList();
+        userView.updateList();
         setVisible(false);
     }
 
@@ -104,7 +107,7 @@ public class UserForm extends FormLayout {
         if (userService.registerNewUser(userDto) == null){
             userService.updateUser(userDto);
         }
-        hotelUI.updateList();
+        userView.updateList();
         setVisible(false);
     }
 

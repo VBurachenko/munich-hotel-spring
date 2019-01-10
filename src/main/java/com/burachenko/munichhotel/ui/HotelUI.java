@@ -1,6 +1,8 @@
 package com.burachenko.munichhotel.ui;
 
+import com.burachenko.munichhotel.ui.view.MainView;
 import com.vaadin.annotations.Theme;
+import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
@@ -20,8 +22,9 @@ public class HotelUI extends UI{
 
     @Override
     protected void init(final VaadinRequest vaadinRequest) {
-
-
+        final Navigator navigator = new Navigator(this, this);
+        navigator.addProvider(viewProvider);
+        navigator.navigateTo(MainView.NAME);
     }
 
 

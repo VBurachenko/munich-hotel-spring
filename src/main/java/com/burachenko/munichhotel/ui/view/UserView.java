@@ -32,7 +32,7 @@ public class UserView extends VerticalLayout implements View {
 
     private TextField filterText = new TextField();
 
-    private Button userView = new Button("Next");
+    private Button userViewBtn = new Button("Next");
 
     private UserForm userForm;
 
@@ -43,8 +43,11 @@ public class UserView extends VerticalLayout implements View {
     @Override
     public void enter(final ViewChangeListener.ViewChangeEvent event) {
 
-        userForm = new UserForm(, userService);
+        userForm = new UserForm(this, userService);
+
         final VerticalLayout generalLayout = new VerticalLayout();
+
+        this.addComponent(generalLayout);
 
         filterText.setPlaceholder("email or telephone");
         filterText.setIcon(VaadinIcons.SEARCH);
@@ -81,8 +84,6 @@ public class UserView extends VerticalLayout implements View {
         generalLayout.addComponents(toolbar, main);
 
         updateList();
-
-        setContent(generalLayout);
 
         userForm.setVisible(false);
 

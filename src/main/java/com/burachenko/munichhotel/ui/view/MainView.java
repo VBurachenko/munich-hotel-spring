@@ -11,7 +11,7 @@ import static com.burachenko.munichhotel.ui.view.MainView.NAME;
 @SpringView(name = NAME)
 public class MainView extends VerticalLayout implements View {
 
-    static final String NAME = "main";
+    public static final String NAME = "main";
 
     private final MenuBar menuBar = new MenuBar();
 
@@ -19,5 +19,6 @@ public class MainView extends VerticalLayout implements View {
     public void enter(final ViewChangeListener.ViewChangeEvent event) {
         menuBar.addItem("Users",
                 (MenuBar.Command) selectedItem -> getUI().getNavigator().navigateTo(UserView.NAME));
+        addComponent(menuBar);
     }
 }
