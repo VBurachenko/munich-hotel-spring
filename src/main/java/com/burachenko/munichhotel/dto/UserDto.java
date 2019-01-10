@@ -1,6 +1,7 @@
 package com.burachenko.munichhotel.dto;
 
 import com.burachenko.munichhotel.enumeration.UserBlocking;
+import com.burachenko.munichhotel.enumeration.UserGender;
 import com.burachenko.munichhotel.enumeration.UserRole;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -29,7 +30,7 @@ public class UserDto extends IdentifiableDto {
 
     private Integer discount = 0;
 
-    private Boolean genderMale = true;
+    private UserGender genderMale = UserGender.M;
 
     private UserBlocking blocking = UserBlocking.NONE;
 

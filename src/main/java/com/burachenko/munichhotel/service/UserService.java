@@ -86,11 +86,11 @@ public class UserService {
     public UserDto registerNewUser(final UserDto userDto){
         final Optional <UserEntity> userByEmail = userRepository.findUserByEmail(userDto.getEmail());
         final Optional <UserEntity> userByTelNum = userRepository.findByTelNum(userDto.getTelNum());
-        if (!userByEmail.isPresent() && !userByTelNum.isPresent()){
-            final UserEntity justCreatedUser = userRepository.save(userConverter.convertToEntity(userDto));
-            return userConverter.convertToDto(justCreatedUser);
+        if (userByEmail.isPresent() || userByTelNum.isPresent()){
+            return null;
         }
-        return null;
+        final UserEntity justCreatedUser = userRepository.save(userConverter.convertToEntity(userDto));
+        return userConverter.convertToDto(justCreatedUser);
     }
 
     public UserDto changeBlockUser(final long userId, final UserBlocking userBlocking){

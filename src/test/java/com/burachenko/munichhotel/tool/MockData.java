@@ -8,6 +8,7 @@ import com.burachenko.munichhotel.entity.UserEntity;
 import com.burachenko.munichhotel.enumeration.BookingStatus;
 import com.burachenko.munichhotel.enumeration.InvoiceStatus;
 import com.burachenko.munichhotel.enumeration.UserBlocking;
+import com.burachenko.munichhotel.enumeration.UserGender;
 import com.burachenko.munichhotel.enumeration.UserRole;
 
 import java.time.LocalDate;
@@ -44,7 +45,7 @@ public class MockData {
         userDto.setDiscount(0);
         userDto.setBlocking(UserBlocking.NONE);
         userDto.setRole(UserRole.CUSTOMER);
-        userDto.setGenderMale(true);
+        userDto.setGenderMale(UserGender.M);
         return userDto;
     }
 
