@@ -1,5 +1,3 @@
-USE `munich_hotel`;
-
 INSERT INTO `user` (`email`, `password`, `name`, `surname`, `tel_num`, `birthday`, `discount`, `gender_male`, `blocking`, `role`)
 VALUES
 ('customer@mail.com', 'customer', 'Customer', 'Custom', '+375123456789', CURDATE(), 0, 1, 0, 'CUSTOMER'),
