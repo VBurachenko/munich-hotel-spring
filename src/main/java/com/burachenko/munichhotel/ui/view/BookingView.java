@@ -4,13 +4,14 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 
-@SpringView(name = UserView.NAME)
-public class UserView implements View {
+@SpringView(name = BookingView.NAME)
+public class BookingView implements View {
 
-    static final String NAME = "user";
+    static final String NAME = "booking";
 
     @Override
     public void enter(final ViewChangeListener.ViewChangeEvent event) {
+
 
     }
 }

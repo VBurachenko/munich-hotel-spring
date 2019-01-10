@@ -13,12 +13,16 @@ public class MainView extends VerticalLayout implements View {
 
     public static final String NAME = "main";
 
-    private final MenuBar menuBar = new MenuBar();
-
     @Override
     public void enter(final ViewChangeListener.ViewChangeEvent event) {
+        final MenuBar menuBar = new MenuBar();
         menuBar.addItem("Users",
                 (MenuBar.Command) selectedItem -> getUI().getNavigator().navigateTo(UserView.NAME));
+        menuBar.addItem("Rooms",
+                (MenuBar.Command) selectedItem -> getUI().getNavigator().navigateTo(RoomView.NAME));
+        menuBar.addItem("Bookings",
+                (MenuBar.Command) selectedItem -> getUI().getNavigator().navigateTo(BookingView.NAME));
+
         addComponent(menuBar);
     }
 }
