@@ -1,6 +1,5 @@
-package com.burachenko.munichhotel.converter.impl;
+package com.burachenko.munichhotel.converter;
 
-import com.burachenko.munichhotel.converter.EntityDtoConverter;
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.entity.UserEntity;
 import com.burachenko.munichhotel.enumeration.UserBlocking;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class UserConverter implements EntityDtoConverter<UserEntity, UserDto> {
+public class UserConverter extends AbstractConverter<UserEntity, UserDto> {
 
     @Override
     public UserDto convertToDto(final UserEntity userEntity) {

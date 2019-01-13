@@ -1,18 +1,11 @@
 package com.burachenko.munichhotel.service;
 
-import com.burachenko.munichhotel.converter.impl.UserAccountConverter;
-import com.burachenko.munichhotel.converter.impl.UserConverter;
-import com.burachenko.munichhotel.dto.UserAccountDto;
+import com.burachenko.munichhotel.converter.UserConverter;
 import com.burachenko.munichhotel.dto.UserDto;
-import com.burachenko.munichhotel.entity.UserAccountEntity;
 import com.burachenko.munichhotel.entity.UserEntity;
-import com.burachenko.munichhotel.enumeration.UserBlocking;
-import com.burachenko.munichhotel.repository.UserAccountRepository;
 import com.burachenko.munichhotel.repository.UserRepository;
 import com.vaadin.data.provider.Query;
 import com.vaadin.shared.data.sort.SortDirection;
-import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -23,35 +16,39 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Service(value = "userService")
-@AllArgsConstructor
-public class UserService {
+@Service
+public class UserService extends AbstractService<UserDto, UserEntity, UserRepository>{
 
-    private final UserRepository userRepository;
-    private final UserConverter userConverter;
+    public UserService(final UserRepository repository, final UserConverter userConverter) {
+        super(repository, userConverter);
+    }
 
-    private final UserAccountRepository userAccountRepository;
-    private final UserAccountConverter userAccountConverter;
+    @Override
+    protected boolean beforeSave(UserDto userDto) {
+        final Optional<UserEntity> userByEmail = getRepository().findUserByEmail(userDto.getEmail());
+        final Optional<UserEntity> userByTelNum = getRepository().findByTelNum(userDto.getTelNum());
+        return !userByEmail.isPresent() && !userByTelNum.isPresent();
+    }
 
-    public long count(){
-        return userRepository.count();
+    public List<UserDto> getUserList(){
+        final List<UserDto> dtoUserList = new ArrayList<>();
+        for (final UserEntity user : getRepository().findAll()) {
+            final UserDto userDto = getConverter().convertToDto(user);
+            dtoUserList.add(userDto);
+        }
+        return dtoUserList;
     }
 
     public List<UserDto> getUserList(final String filterString){
         if (!filterString.isEmpty()){
-            List<UserDto> list = new ArrayList<>();
-            for (UserEntity userEntity : userRepository.findUserByEmailOrTelNum(filterString)) {
-                UserDto convertToDto = userConverter.convertToDto(userEntity);
-                list.add(convertToDto);
-            }
-            return list;
+            return getConverter().convertToDto(getRepository().findUserByEmailOrTelNum(filterString));
         }
         return getUserList();
     }
 
     public Stream<UserDto> getUserList(final Query<UserDto, String> query) {
         final PageRequest pageRequest = preparePageRequest(query);
-        final List<UserDto> userDtoList = userRepository.findAll(pageRequest).getContent().stream().map(userConverter::convertToDto).collect(Collectors.toList());
+        final List<UserDto> userDtoList = getRepository().findAll(pageRequest).getContent().stream().map(getConverter()::convertToDto).collect(Collectors.toList());
         return userDtoList.stream();
     }
 
@@ -61,69 +58,6 @@ public class UserService {
         final List<Sort.Order> sortOrders = query.getSortOrders().stream()
                 .map(sortOrder -> new Sort.Order(sortOrder.getDirection() == SortDirection.ASCENDING ? Sort.Direction.ASC : Sort.Direction.DESC, sortOrder.getSorted())).collect(Collectors.toList());
         return PageRequest.of(page, query.getLimit(), sortOrders.isEmpty() ? Sort.unsorted() : Sort.by(sortOrders));
-    }
-
-    public List<UserDto> getUserList(){
-        final List<UserDto> dtoUserList = new ArrayList<>();
-        for (final UserEntity user : userRepository.findAll()) {
-            final UserDto userDto = userConverter.convertToDto(user);
-            dtoUserList.add(userDto);
-        }
-        return dtoUserList;
-    }
-
-    public UserAccountDto getUserAccount(final long id){
-        final Optional<UserAccountEntity> userAccount = userAccountRepository.findById(id);
-        return userAccount.map(userAccountConverter::convertToDto).orElse(null);
-    }
-
-    public UserDto getUser(final long id){
-        final Optional<UserEntity> userEntity = userRepository.findById(id);
-        return userEntity.map(userConverter::convertToDto).orElse(null);
-    }
-
-    public boolean deleteUser(final long id){
-        userRepository.deleteById(id);
-        final Optional <UserEntity> user = userRepository.findById(id);
-        return !user.isPresent();
-    }
-
-    public boolean deleteUser(final UserDto userDto){
-        userRepository.delete(userConverter.convertToEntity(userDto));
-        return userRepository.exists(Example.of(userConverter.convertToEntity(userDto)));
-    }
-
-    public UserDto updateUser(final UserDto userDto){
-        final Optional<UserEntity> userEntity = userRepository.findById(userDto.getId());
-        if (userEntity.isPresent()){
-            return userConverter.convertToDto(userRepository.save(userConverter.convertToEntity(userDto)));
-        }
-        return null;
-    }
-
-    public UserDto findUserByEmail(final String email){
-        final Optional<UserEntity> userEntity = userRepository.findUserByEmail(email);
-        return userEntity.map(userConverter::convertToDto).orElse(null);
-
-    }
-
-    public UserDto registerNewUser(final UserDto userDto){
-        final Optional <UserEntity> userByEmail = userRepository.findUserByEmail(userDto.getEmail());
-        final Optional <UserEntity> userByTelNum = userRepository.findByTelNum(userDto.getTelNum());
-        if (userByEmail.isPresent() || userByTelNum.isPresent()){
-            return null;
-        }
-        final UserEntity justCreatedUser = userRepository.save(userConverter.convertToEntity(userDto));
-        return userConverter.convertToDto(justCreatedUser);
-    }
-
-    public UserDto changeBlockUser(final long userId, final UserBlocking userBlocking){
-        final UserDto userDto = getUser(userId);
-        if (userDto != null){
-            userDto.setBlocking(userBlocking);
-            return updateUser(userDto);
-        }
-        return null;
     }
 
 }

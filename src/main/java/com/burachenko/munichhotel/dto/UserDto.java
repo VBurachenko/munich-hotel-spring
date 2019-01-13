@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class UserDto extends IdentifiableDto {
+public class UserDto extends AbstractDto {
 
     private String email;
 

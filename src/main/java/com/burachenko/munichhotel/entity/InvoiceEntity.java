@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "invoice")
-public class InvoiceEntity extends IdentifiableEntity {
+public class InvoiceEntity extends AbstractEntity {
 
     @Type(type = "org.hibernate.type.LocalDateType")
     @Column(name="appointment", nullable = false)

@@ -1,6 +1,6 @@
 package com.burachenko.munichhotel.service;
 
-import com.burachenko.munichhotel.converter.impl.BookingConverter;
+import com.burachenko.munichhotel.converter.BookingConverter;
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.dto.RoomDto;
 import com.burachenko.munichhotel.dto.SearchUnitDto;
@@ -53,7 +53,7 @@ public class BookingService {
         final BookingDto preparedBooking = new BookingDto();
         preparedBooking.setCheckIn(searchUnit.getCheckIn());
         preparedBooking.setCheckOut(searchUnit.getCheckOut());
-        preparedBooking.setUserAccount(userService.getUserAccount(userId));
+//        preparedBooking.setUserAccount(userService.getUserAccount(userId));
         return preparedBooking;
     }
 
@@ -99,7 +99,7 @@ public class BookingService {
 
     public BookingDto addRoomsToBooking(final BookingDto bookingDto, final long ... selectedRoomIds){
         for (final long roomId : selectedRoomIds){
-           final RoomDto roomDto = roomService.getRoom(roomId);
+           final RoomDto roomDto = roomService.findById(roomId);
            if (roomDto == null){
                return null;
            }
@@ -110,7 +110,7 @@ public class BookingService {
     public boolean removeRoomsFromBooking(final BookingDto bookingDto, final long ... selectedRoomIds){
         final List<RoomDto> preSavedRooms = bookingDto.getRoomList();
         for (final long roomId : selectedRoomIds){
-            final RoomDto roomDto = roomService.getRoom(roomId);
+            final RoomDto roomDto = roomService.findById(roomId);
             if (roomDto == null){
                 bookingDto.setRoomList(preSavedRooms);
                 return false;

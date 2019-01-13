@@ -1,5 +1,7 @@
 package com.burachenko.munichhotel.converter.impl;
 
+import com.burachenko.munichhotel.converter.UserConverter;
+
 public class UserConverterTest {
 
     private final UserConverter userConverter = new UserConverter();

@@ -5,12 +5,12 @@ import com.burachenko.munichhotel.ui.form.UserEditForm;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 
-public class UserEditContainer extends Window {
+public class UserEditWindow extends Window {
 
     private UserEditForm userEditForm;
     private Runnable onClose;
 
-    public UserEditContainer(final UserEditForm userEditForm) {
+    public UserEditWindow(final UserEditForm userEditForm) {
         this.userEditForm = userEditForm;
         setClosable(false);
         setModal(true);

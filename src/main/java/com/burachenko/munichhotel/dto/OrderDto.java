@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-public class OrderDto extends IdentifiableDto{
+public class OrderDto extends AbstractDto {
 
     private Long bookingId;
 

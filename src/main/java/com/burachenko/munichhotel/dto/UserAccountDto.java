@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class UserAccountDto extends IdentifiableDto{
+public class UserAccountDto extends AbstractDto {
 
     private String name;
 

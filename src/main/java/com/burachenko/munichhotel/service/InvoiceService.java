@@ -1,6 +1,6 @@
 package com.burachenko.munichhotel.service;
 
-import com.burachenko.munichhotel.converter.impl.InvoiceConverter;
+import com.burachenko.munichhotel.converter.InvoiceConverter;
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.dto.InvoiceDto;
 import com.burachenko.munichhotel.dto.RoomDto;

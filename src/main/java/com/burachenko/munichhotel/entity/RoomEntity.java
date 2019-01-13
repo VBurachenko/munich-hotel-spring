@@ -5,14 +5,20 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "room")
-public class RoomEntity extends IdentifiableEntity {
+public class RoomEntity extends AbstractEntity {
 
     @Column(name="berth_count", nullable = false, columnDefinition = "TINYINT")
     private Integer berthCount;

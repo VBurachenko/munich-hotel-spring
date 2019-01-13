@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class RoomDto extends IdentifiableDto {
+public class RoomDto extends AbstractDto {
 
     private Integer berthCount = 1;
 

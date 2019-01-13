@@ -1,13 +1,12 @@
-package com.burachenko.munichhotel.converter.impl;
+package com.burachenko.munichhotel.converter;
 
-import com.burachenko.munichhotel.converter.EntityDtoConverter;
 import com.burachenko.munichhotel.dto.UserAccountDto;
 import com.burachenko.munichhotel.entity.UserAccountEntity;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserAccountConverter implements EntityDtoConverter<UserAccountEntity, UserAccountDto> {
+public class UserAccountConverter extends AbstractConverter<UserAccountEntity, UserAccountDto> {
 
     @Override
     public UserAccountDto convertToDto(final UserAccountEntity entity) {

@@ -1,6 +1,5 @@
-package com.burachenko.munichhotel.converter.impl;
+package com.burachenko.munichhotel.converter;
 
-import com.burachenko.munichhotel.converter.EntityDtoConverter;
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.dto.InvoiceDto;
 import com.burachenko.munichhotel.dto.RoomDto;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class BookingConverter implements EntityDtoConverter<BookingEntity, BookingDto> {
+public class BookingConverter extends AbstractConverter<BookingEntity, BookingDto> {
 
     private final InvoiceConverter invoiceConverter;
     private final RoomConverter roomConverter;

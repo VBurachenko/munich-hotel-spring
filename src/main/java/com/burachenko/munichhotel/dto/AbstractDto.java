@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
-public abstract class IdentifiableDto implements Serializable {
+public abstract class AbstractDto implements Serializable {
 
     private Long id;
 }

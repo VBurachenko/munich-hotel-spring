@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "user")
-public class UserAccountEntity extends IdentifiableEntity{
+public class UserAccountEntity extends AbstractEntity {
 
     @Column(name = "name")
     private String name;

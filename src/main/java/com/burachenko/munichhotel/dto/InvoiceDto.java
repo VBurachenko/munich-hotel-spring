@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class InvoiceDto extends IdentifiableDto {
+public class InvoiceDto extends AbstractDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate appointment = LocalDate.now();
