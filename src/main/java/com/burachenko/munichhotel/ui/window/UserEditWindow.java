@@ -1,4 +1,4 @@
-package com.burachenko.munichhotel.ui.container;
+package com.burachenko.munichhotel.ui.window;
 
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.ui.form.UserEditForm;

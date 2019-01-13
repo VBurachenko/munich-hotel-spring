@@ -3,41 +3,42 @@ package com.burachenko.munichhotel.service;
 import com.burachenko.munichhotel.converter.InvoiceConverter;
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.dto.InvoiceDto;
-import com.burachenko.munichhotel.dto.RoomDto;
 import com.burachenko.munichhotel.entity.InvoiceEntity;
 import com.burachenko.munichhotel.repository.InvoiceRepository;
 import com.burachenko.munichhotel.service.util.DatesCalculator;
-import lombok.AllArgsConstructor;
+import com.burachenko.munichhotel.service.util.PaymentCalculator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
-public class InvoiceService {
+public class InvoiceService extends AbstractService<InvoiceDto, InvoiceEntity, InvoiceRepository>{
 
-    private final InvoiceRepository invoiceRepository;
-    private final InvoiceConverter invoiceConverter;
+    public InvoiceService(final InvoiceRepository invoiceRepository, final InvoiceConverter invoiceConverter) {
+        super(invoiceRepository, invoiceConverter);
+    }
 
-    private final BookingService bookingService;
-
+    @Override
+    protected boolean beforeSave(final InvoiceDto dto) {
+        return true;
+    }
 
     public List<InvoiceEntity> getInvoicesList(){
-        return invoiceRepository.findAll();
+        return getRepository().findAll();
     }
 
     public InvoiceDto getInvoice(final Long id){
-        final Optional<InvoiceEntity> invoiceEntity = invoiceRepository.findById(id);
+        final Optional<InvoiceEntity> invoiceEntity = getRepository().findById(id);
         if (invoiceEntity.isPresent()){
-            return invoiceConverter.convertToDto(invoiceEntity.get());
+            return getConverter().convertToDto(invoiceEntity.get());
         }
         return null;
     }
 
     public InvoiceDto createInvoice(final InvoiceDto invoiceDto){
-        final InvoiceEntity invoiceEntity = invoiceRepository.save(invoiceConverter.convertToEntity(invoiceDto));
-        return invoiceConverter.convertToDto(invoiceRepository.save(invoiceEntity));
+        final InvoiceEntity invoiceEntity = getRepository().save(getConverter().convertToEntity(invoiceDto));
+        return getConverter().convertToDto(getRepository().save(invoiceEntity));
     }
 
 //    public BookingDto attachInvoiceToBooking(final BookingDto bookingDto){
@@ -52,24 +53,16 @@ public class InvoiceService {
 
         final InvoiceDto invoiceDto = new InvoiceDto();
 
+        invoiceDto.setId(bookingDto.getId());
+
         final int nightsCount = DatesCalculator.nightsCountCalculate(bookingDto.getCheckIn(),
                                                                         bookingDto.getCheckOut());
 
-        final double totalPayment = calculateTotalPayment(nightsCount, bookingDto.getRoomList());
+        final double totalPayment = PaymentCalculator.calculateTotalPayment(nightsCount, bookingDto.getRoomList());
 
         invoiceDto.setNightsCount(nightsCount);
         invoiceDto.setTotalPayment(totalPayment);
 
         return invoiceDto;
-    }
-
-    private double calculateTotalPayment(final int nightsCount, final List<RoomDto> roomsInBooking){
-
-        double commonDailyCost = 0.0;
-
-        for (final RoomDto currentRoom : roomsInBooking){
-            commonDailyCost += currentRoom.getPricePerNight();
-        }
-        return commonDailyCost * nightsCount;
     }
 }
