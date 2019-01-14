@@ -6,7 +6,7 @@ import com.vaadin.spring.annotation.SpringView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringView(name = UserView.NAME)
-public class UserView extends AbstractEntityView<UserDto> {
+public class UserView extends AbstractEntityView<UserDto, UserService> {
 
     static final String NAME = "users";
 
@@ -14,6 +14,10 @@ public class UserView extends AbstractEntityView<UserDto> {
 
     @Autowired
     private UserService userService;
+
+    public UserView(final UserService userService) {
+        super(userService);
+    }
 
     @Override
     protected String getSearchFieldPlaceholder() {

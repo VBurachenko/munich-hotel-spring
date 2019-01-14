@@ -2,6 +2,7 @@ package com.burachenko.munichhotel.ui.window;
 
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.ui.form.UserEditForm;
+import com.google.common.util.concurrent.AbstractService;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 
@@ -9,6 +10,12 @@ public class UserEditWindow extends Window {
 
     private UserEditForm userEditForm;
     private Runnable onClose;
+
+    private AbstractService service;
+
+    public UserEditWindow(final AbstractService service) {
+        this.service = service;
+    }
 
     public UserEditWindow(final UserEditForm userEditForm) {
         this.userEditForm = userEditForm;

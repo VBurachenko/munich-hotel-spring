@@ -1,6 +1,9 @@
 package com.burachenko.munichhotel.ui.view;
 
 import com.burachenko.munichhotel.dto.AbstractDto;
+import com.burachenko.munichhotel.service.AbstractService;
+import com.burachenko.munichhotel.ui.window.UserAddWindow;
+import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
@@ -11,8 +14,12 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
+import org.springframework.beans.factory.annotation.Autowired;
 
-abstract class AbstractEntityView<T extends AbstractDto> extends VerticalLayout implements View {
+abstract class AbstractEntityView<DTO extends AbstractDto, Service extends AbstractService> extends VerticalLayout implements View {
+
+    private Service service;
 
     private HorizontalLayout mainInstrumentsLayout = new HorizontalLayout();
 
@@ -23,16 +30,22 @@ abstract class AbstractEntityView<T extends AbstractDto> extends VerticalLayout 
 
     TextField searchField = new TextField();
 
-    private DataProvider<T, String> dataProvider;
-    private Grid<T> grid;
+    private DataProvider<DTO, String> dataProvider;
+    private Grid<DTO> grid;
+
+    @Autowired
+    public AbstractEntityView(final Service service) {
+        this.service = service;
+    }
 
     @Override
     public void enter(final ViewChangeListener.ViewChangeEvent event) {
         setupInstrumentsLayout();
         setupGrid();
+        setupInstruments();
     }
 
-    protected abstract Class<T> getEntityClass();
+    protected abstract Class<DTO> getEntityClass();
 
     protected abstract String getSearchFieldPlaceholder();
 
@@ -48,10 +61,25 @@ abstract class AbstractEntityView<T extends AbstractDto> extends VerticalLayout 
         addComponent(mainInstrumentsLayout);
     }
 
+    private void setupInstruments() {
+        addButton.addClickListener(click -> {
+            final Window addWindow = new UserAddWindow(service);
+            addWindow.addCloseListener(close -> dataProvider.refreshAll());
+            getUI().addWindow(addWindow);
+        });
+        editButton.addClickListener(click -> {
+
+        });
+        clearSearchField.addClickListener(click -> {
+            searchField.clear();
+        });
+    }
+
     private void setupGrid(){
         grid = new Grid<>(getEntityClass());
+        setupGridDataProvider();
         grid.addSelectionListener(selection -> {
-            int selectedLinesCount = selection.getAllSelectedItems().size();
+            final int selectedLinesCount = selection.getAllSelectedItems().size();
             if (selectedLinesCount == 1){
                 setEditDeleteButtonsEnabled(true);
             } else if (selectedLinesCount > 1){
@@ -66,7 +94,11 @@ abstract class AbstractEntityView<T extends AbstractDto> extends VerticalLayout 
     }
 
     private void setupGridDataProvider(){
-
+        CallbackDataProvider<DTO, String> dataProvider = new CallbackDataProvider<>(
+                query -> service.findWithPagination(query),
+                query -> (int) service.count());
+        grid.setDataProvider(dataProvider);
+        grid.getDataProvider().refreshAll();
     }
 
     private void setEditDeleteButtonsEnabled(final boolean indicator) {
@@ -74,15 +106,19 @@ abstract class AbstractEntityView<T extends AbstractDto> extends VerticalLayout 
         deleteButton.setEnabled(indicator);
     }
 
-    public DataProvider<T, String> getDataProvider() {
+    public DataProvider<DTO, String> getDataProvider() {
         return dataProvider;
     }
 
-    public void setDataProvider(final DataProvider<T, String> dataProvider) {
+    public void setDataProvider(final DataProvider<DTO, String> dataProvider) {
         this.dataProvider = dataProvider;
     }
 
-    public Grid<T> getGrid() {
+    public Grid<DTO> getGrid() {
         return grid;
+    }
+
+    public Service getService() {
+        return service;
     }
 }
