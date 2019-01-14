@@ -13,8 +13,6 @@ public class UserView extends AbstractEntityView<UserDto, UserService> {
     private static final String SEARCH_PLACEHOLDER = "email or telephone";
 
     @Autowired
-    private UserService userService;
-
     public UserView(final UserService userService) {
         super(userService);
     }

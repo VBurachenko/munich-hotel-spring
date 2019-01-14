@@ -3,6 +3,7 @@ package com.burachenko.munichhotel.ui.view;
 import com.burachenko.munichhotel.dto.AbstractDto;
 import com.burachenko.munichhotel.service.AbstractService;
 import com.burachenko.munichhotel.ui.window.UserAddWindow;
+import com.burachenko.munichhotel.ui.window.UserEditWindow;
 import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.icons.VaadinIcons;
@@ -68,7 +69,13 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
             getUI().addWindow(addWindow);
         });
         editButton.addClickListener(click -> {
-
+            final Window editWindow = new UserEditWindow(service);
+            editWindow.addCloseListener(close -> dataProvider.refreshAll());
+            getUI().addWindow(editWindow);
+        });
+        deleteButton.addClickListener(click -> {
+            service.deleteAll(grid.getSelectedItems());
+            grid.getDataProvider().refreshAll();
         });
         clearSearchField.addClickListener(click -> {
             searchField.clear();
@@ -78,6 +85,7 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
     private void setupGrid(){
         grid = new Grid<>(getEntityClass());
         setupGridDataProvider();
+        grid.setSelectionMode(Grid.SelectionMode.MULTI);
         grid.addSelectionListener(selection -> {
             final int selectedLinesCount = selection.getAllSelectedItems().size();
             if (selectedLinesCount == 1){
