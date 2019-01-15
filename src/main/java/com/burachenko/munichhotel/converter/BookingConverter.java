@@ -3,11 +3,11 @@ package com.burachenko.munichhotel.converter;
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.dto.InvoiceDto;
 import com.burachenko.munichhotel.dto.RoomDto;
-import com.burachenko.munichhotel.dto.UserAccountDto;
+import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.entity.BookingEntity;
 import com.burachenko.munichhotel.entity.InvoiceEntity;
 import com.burachenko.munichhotel.entity.RoomEntity;
-import com.burachenko.munichhotel.entity.UserAccountEntity;
+import com.burachenko.munichhotel.entity.UserEntity;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,13 +19,13 @@ public class BookingConverter extends AbstractConverter<BookingEntity, BookingDt
 
     private final InvoiceConverter invoiceConverter;
     private final RoomConverter roomConverter;
-    private final UserAccountConverter userAccountConverter;
+    private final UserConverter userConverter;
 
     @Autowired
-    public BookingConverter(final InvoiceConverter invoiceConverter, final RoomConverter roomConverter, final UserAccountConverter userAccountConverter) {
+    public BookingConverter(final InvoiceConverter invoiceConverter, final RoomConverter roomConverter, final UserConverter userConverter) {
         this.invoiceConverter = invoiceConverter;
         this.roomConverter = roomConverter;
-        this.userAccountConverter = userAccountConverter;
+        this.userConverter = userConverter;
     }
 
     @Override
@@ -101,13 +101,13 @@ public class BookingConverter extends AbstractConverter<BookingEntity, BookingDt
      */
 
     private void setUserAccountToDto(final BookingEntity bookingEntity, final BookingDto bookingDto){
-        final UserAccountDto userAccountDto = userAccountConverter.convertToDto(bookingEntity.getUserAccount());
-        bookingDto.setUserAccount(userAccountDto);
+        final UserDto userDto = userConverter.convertToDto(bookingEntity.getUser());
+        bookingDto.setUser(userDto);
     }
 
     private void setUserAccountToEntity(final BookingDto bookingDto, final BookingEntity bookingEntity){
-        final UserAccountEntity userAccountEntity = userAccountConverter.convertToEntity(bookingDto.getUserAccount());
-        bookingEntity.setUserAccount(userAccountEntity);
+        final UserEntity userEntity = userConverter.convertToEntity(bookingDto.getUser());
+        bookingEntity.setUser(userEntity);
     }
 
 }

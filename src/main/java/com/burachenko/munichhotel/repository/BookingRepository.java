@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
 
-    List<BookingEntity> getBookingListByUserAccountId(final long userId);
+    List<BookingEntity> getBookingListByUserId(final long userId);
 
     Optional<BookingEntity> getBookingByInvoiceId(final long invoiceId);
 

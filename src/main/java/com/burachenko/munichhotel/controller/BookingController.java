@@ -3,7 +3,11 @@ package com.burachenko.munichhotel.controller;
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.service.BookingService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -49,6 +53,6 @@ public class BookingController {
 
     @GetMapping("/get/{id}")
     public BookingDto getBooking(@PathVariable final long id){
-        return bookingService.getBooking(id);
+        return bookingService.findById(id);
     }
 }

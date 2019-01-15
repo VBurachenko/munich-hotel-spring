@@ -23,7 +23,7 @@ public class BookingDto extends AbstractDto {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private UserAccountDto userAccount;
+    private UserDto user;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BookingHistoryDto implements Serializable {
 
-    private UserAccountDto userAccount;
+    private UserDto user;
 
     private List<BookingDto> bookingList;
 }

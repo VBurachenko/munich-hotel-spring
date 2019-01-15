@@ -2,8 +2,6 @@ package com.burachenko.munichhotel.ui.view;
 
 import com.burachenko.munichhotel.dto.AbstractDto;
 import com.burachenko.munichhotel.service.AbstractService;
-import com.burachenko.munichhotel.ui.window.UserAddWindow;
-import com.burachenko.munichhotel.ui.window.UserEditWindow;
 import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.icons.VaadinIcons;
@@ -21,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 abstract class AbstractEntityView<DTO extends AbstractDto, Service extends AbstractService> extends VerticalLayout implements View {
 
     private Service service;
+    private DTO abstractDto;
 
     private HorizontalLayout mainInstrumentsLayout = new HorizontalLayout();
 
@@ -64,12 +63,12 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
 
     private void setupInstruments() {
         addButton.addClickListener(click -> {
-            final Window addWindow = new UserAddWindow(service);
+            final Window addWindow = new Window();
             addWindow.addCloseListener(close -> dataProvider.refreshAll());
             getUI().addWindow(addWindow);
         });
         editButton.addClickListener(click -> {
-            final Window editWindow = new UserEditWindow(service);
+            final Window editWindow = new Window();
             editWindow.addCloseListener(close -> dataProvider.refreshAll());
             getUI().addWindow(editWindow);
         });

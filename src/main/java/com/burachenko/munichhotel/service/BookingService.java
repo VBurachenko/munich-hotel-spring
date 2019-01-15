@@ -1,6 +1,6 @@
 package com.burachenko.munichhotel.service;
 
-import com.burachenko.munichhotel.converter.BookingConverter;
+import com.burachenko.munichhotel.converter.AbstractConverter;
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.dto.RoomDto;
 import com.burachenko.munichhotel.dto.SearchUnitDto;
@@ -9,7 +9,7 @@ import com.burachenko.munichhotel.entity.RoomEntity;
 import com.burachenko.munichhotel.enumeration.BookingStatus;
 import com.burachenko.munichhotel.repository.BookingRepository;
 import com.burachenko.munichhotel.service.util.IdCreator;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,33 +18,40 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
-public class BookingService {
+public class BookingService extends AbstractService<BookingDto, BookingEntity, BookingRepository>{
 
-    private final BookingRepository bookingRepository;
-    private final BookingConverter bookingConverter;
+    @Autowired
+    private UserService userService;
 
-    private final UserService userService;
-    private final RoomService roomService;
+    @Autowired
+    private RoomService roomService;
 
-    public List<BookingDto> getBookingsList() {
-        return bookingRepository.findAll().stream().map(bookingConverter::convertToDto).collect(Collectors.toList());
+    @Autowired
+    private InvoiceService invoiceService;
+
+    public BookingService(final BookingRepository repository, final AbstractConverter<BookingEntity, BookingDto> converter) {
+        super(repository, converter);
     }
 
-    public BookingDto createBooking(final BookingDto bookingDto) {
+    @Override
+    protected boolean beforeSave(final BookingDto dto) {
+        return false;
+    }
+
+    @Override
+    public BookingDto save(final BookingDto bookingDto) {
         int startIndex = 1;
         long bookingId = IdCreator.createLongIdByTodayDate(startIndex);
-        while (getBooking(bookingId) != null) {
+        while (findById(bookingId) != null) {
             bookingId = IdCreator.createLongIdByTodayDate(++startIndex);
         }
         bookingDto.setId(bookingId);
-        final BookingEntity bookingEntity = bookingRepository.save(
-            bookingConverter.convertToEntity(bookingDto));
+        final BookingEntity bookingEntity = getRepository().save(
+            getConverter().convertToEntity(bookingDto));
         if (bookingEntity != null) {
-            return bookingConverter.convertToDto(bookingEntity);
+            return getConverter().convertToDto(bookingEntity);
         }
         return null;
     }
@@ -53,48 +60,26 @@ public class BookingService {
         final BookingDto preparedBooking = new BookingDto();
         preparedBooking.setCheckIn(searchUnit.getCheckIn());
         preparedBooking.setCheckOut(searchUnit.getCheckOut());
-//        preparedBooking.setUserAccount(userService.getUserAccount(userId));
+        preparedBooking.setUser(userService.findById(userId));
         return preparedBooking;
     }
 
-    public BookingDto getBooking(final long id) {
-        final Optional<BookingEntity> bookingEntity = bookingRepository.findById(id);
-        return bookingEntity.map(bookingConverter::convertToDto).orElse(null);
-    }
-
-    public BookingDto updateBooking(final BookingDto bookingDto, final long id) {
-        final Optional<BookingEntity> bookingEntity = bookingRepository.findById(id);
-        if (bookingEntity.isPresent()) {
-            bookingDto.setId(id);
-            return bookingConverter.convertToDto(bookingEntity.get());
-        }
-        return null;
-    }
-
     public BookingDto changeBookingStatus(final long id, final BookingStatus status) {
-        final BookingDto bookingDto = getBooking(id);
+        final BookingDto bookingDto = findById(id);
         if (bookingDto != null) {
             bookingDto.setStatus(status);
-            return updateBooking(bookingDto, id);
+            return save(bookingDto);
         }
         return null;
-    }
-
-    public boolean deleteBooking(final long id) {
-        final Optional<BookingEntity> bookingEntity = bookingRepository.findById(id);
-        if (bookingEntity.isPresent()) {
-            bookingRepository.deleteById(id);
-        }
-        return !bookingRepository.findById(id).isPresent();
     }
 
     public BookingDto getBookingByInvoiceId(final long invoiceId) {
-        final Optional<BookingEntity> bookingEntity = bookingRepository.getBookingByInvoiceId(invoiceId);
-        return bookingEntity.map(bookingConverter::convertToDto).orElse(null);
+        final Optional<BookingEntity> bookingEntity = getRepository().getBookingByInvoiceId(invoiceId);
+        return bookingEntity.map(getConverter()::convertToDto).orElse(null);
     }
 
     public List<BookingDto> getBookingListByUserId(final long userId) {
-        return bookingConverter.convertToDto(bookingRepository.getBookingListByUserAccountId(userId));
+        return getConverter().convertToDto(getRepository().getBookingListByUserId(userId));
     }
 
     public BookingDto addRoomsToBooking(final BookingDto bookingDto, final long ... selectedRoomIds){
@@ -134,7 +119,7 @@ public class BookingService {
 
     public List<BookingEntity> findAllByCheckInBeforeAndCheckOutAfter(LocalDate before, LocalDate after) {
         System.out.println(before + " " + after);
-        return bookingRepository.findAllByCheckInBeforeAndCheckOutAfter(after.plusDays(1L), before.minusDays(1L));
+        return getRepository().findAllByCheckInBeforeAndCheckOutAfter(after.plusDays(1L), before.minusDays(1L));
     }
 
     public Map<Long, Double> getPayDataForPeriodByRooms(LocalDate before, LocalDate after) {

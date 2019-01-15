@@ -4,13 +4,11 @@ import com.burachenko.munichhotel.converter.InvoiceConverter;
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.dto.InvoiceDto;
 import com.burachenko.munichhotel.entity.InvoiceEntity;
+import com.burachenko.munichhotel.enumeration.InvoiceStatus;
 import com.burachenko.munichhotel.repository.InvoiceRepository;
 import com.burachenko.munichhotel.service.util.DatesCalculator;
 import com.burachenko.munichhotel.service.util.PaymentCalculator;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class InvoiceService extends AbstractService<InvoiceDto, InvoiceEntity, InvoiceRepository>{
@@ -24,30 +22,22 @@ public class InvoiceService extends AbstractService<InvoiceDto, InvoiceEntity, I
         return true;
     }
 
-    public List<InvoiceEntity> getInvoicesList(){
-        return getRepository().findAll();
-    }
-
-    public InvoiceDto getInvoice(final Long id){
-        final Optional<InvoiceEntity> invoiceEntity = getRepository().findById(id);
-        if (invoiceEntity.isPresent()){
-            return getConverter().convertToDto(invoiceEntity.get());
+    public InvoiceDto changeInvoiceStatus(final long invoiceId, final InvoiceStatus status){
+        final InvoiceDto invoiceDto = findById(invoiceId);
+        if (invoiceDto != null){
+            invoiceDto.setStatus(status);
+            return save(invoiceDto);
         }
         return null;
     }
 
-    public InvoiceDto createInvoice(final InvoiceDto invoiceDto){
-        final InvoiceEntity invoiceEntity = getRepository().save(getConverter().convertToEntity(invoiceDto));
-        return getConverter().convertToDto(getRepository().save(invoiceEntity));
+    public InvoiceDto performInvoicePayment(final long invoiceId){
+        final InvoiceDto invoiceDto = findById(invoiceId);
+        if (invoiceDto != null){
+            invoiceDto.setIsPayed(true);
+        }
+        return null;
     }
-
-//    public BookingDto attachInvoiceToBooking(final BookingDto bookingDto){
-//        final InvoiceDto invoiceDto = createInvoice(prepareInvoice(bookingDto));
-//        if (invoiceDto != null){
-//            bookingDto.setInvoice(invoiceDto);
-//        }
-//        return bookingService.setInvoiceToBooking(bookingDto);
-//    }
 
     private InvoiceDto prepareInvoice(final BookingDto bookingDto){
 
@@ -63,6 +53,6 @@ public class InvoiceService extends AbstractService<InvoiceDto, InvoiceEntity, I
         invoiceDto.setNightsCount(nightsCount);
         invoiceDto.setTotalPayment(totalPayment);
 
-        return invoiceDto;
+        return save(invoiceDto);
     }
 }

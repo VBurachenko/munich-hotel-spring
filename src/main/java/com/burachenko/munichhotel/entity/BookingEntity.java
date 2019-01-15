@@ -38,7 +38,7 @@ public class BookingEntity extends AbstractEntity {
     @JoinColumn(name = "user_id", nullable = false)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private UserAccountEntity userAccount;
+    private UserEntity user;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "invoice_id")
