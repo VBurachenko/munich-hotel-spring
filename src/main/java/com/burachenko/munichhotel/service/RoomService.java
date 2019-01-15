@@ -3,6 +3,7 @@ package com.burachenko.munichhotel.service;
 import com.burachenko.munichhotel.converter.RoomConverter;
 import com.burachenko.munichhotel.dto.RoomDto;
 import com.burachenko.munichhotel.entity.RoomEntity;
+import com.burachenko.munichhotel.enumeration.RoomAvailabilityStatus;
 import com.burachenko.munichhotel.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 
@@ -33,10 +34,10 @@ public class RoomService extends AbstractService<RoomDto, RoomEntity, RoomReposi
 
 
 
-    public RoomDto changeRoomAvailability(final long id, final boolean availabilityValue){
+    public RoomDto changeRoomAvailability(final long id, final RoomAvailabilityStatus isAvailable){
         final RoomDto roomDto = findById(id);
         if (roomDto != null){
-            roomDto.setIsAvailable(availabilityValue);
+            roomDto.setIsAvailable(isAvailable);
         }
         return save(roomDto);
     }

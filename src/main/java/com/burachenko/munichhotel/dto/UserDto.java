@@ -35,12 +35,4 @@ public class UserDto extends AbstractDto {
     private UserBlocking blocking = UserBlocking.NONE;
 
     private UserRole role = UserRole.CUSTOMER;
-
-    public boolean isPersisted(){
-        return getId() != null;
-    }
-
-    {
-
-    }
 }

@@ -7,6 +7,7 @@ import com.vaadin.data.provider.DataProvider;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Grid;
@@ -14,7 +15,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import org.springframework.beans.factory.annotation.Autowired;
 
 abstract class AbstractEntityView<DTO extends AbstractDto, Service extends AbstractService> extends VerticalLayout implements View {
 
@@ -31,9 +31,8 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
 
     private DataProvider<DTO, String> dataProvider;
     private ConfigurableFilterDataProvider<DTO, Void, String> filteredDataProvider;
-    private Grid<DTO> grid;
+    private Grid<DTO> grid = new Grid<>(getEntityClass());
 
-    @Autowired
     public AbstractEntityView(final Service service) {
         this.service = service;
     }
@@ -51,13 +50,15 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
 
     private void setupInstrumentsLayout() {
         searchField.setPlaceholder(getSearchFieldPlaceholder());
+        searchField.setValueChangeMode(ValueChangeMode.LAZY);
+
         final CssLayout searchInstrumentsLayout = new CssLayout();
         searchInstrumentsLayout.addComponents(searchField, clearSearchField);
-        mainInstrumentsLayout.addComponent(searchInstrumentsLayout);
-        mainInstrumentsLayout.addComponent(addButton);
-        mainInstrumentsLayout.addComponent(editButton);
-        mainInstrumentsLayout.addComponent(deleteButton);
+
+        mainInstrumentsLayout.addComponents(searchInstrumentsLayout, addButton, editButton, deleteButton);
+
         setEditDeleteButtonsEnabled(false);
+
         addComponent(mainInstrumentsLayout);
     }
 
@@ -78,15 +79,15 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
         });
         clearSearchField.addClickListener(click -> {
             searchField.clear();
-            filteredDataProvider.setFilter(null);
+            grid.getDataProvider().refreshAll();
         });
         setupSearchField();
     }
 
     private void setupGrid(){
-        grid = new Grid<>(getEntityClass());
         setupGridDataProvider();
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
+        grid.setSizeFull();
         grid.addSelectionListener(selection -> {
             final int selectedLinesCount = selection.getAllSelectedItems().size();
             if (selectedLinesCount == 1){
@@ -99,23 +100,23 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
             }
         });
         addComponent(grid);
-        setExpandRatio(grid, 30);
+        setExpandRatio(grid, 20);
     }
 
     private void setupGridDataProvider(){
         dataProvider = DataProvider.fromFilteringCallbacks(
                 query -> service.findByFilterQueryWithPagination(query),
-                query -> Math.toIntExact(service.findByFilterQueryWithPagination(query).count())
+                query -> (int) service.findByFilterQueryWithPagination(query).count()
         );
-//        filteredDataProvider = dataProvider.withConfigurableFilter();
-        grid.setDataProvider(dataProvider);
+        filteredDataProvider = dataProvider.withConfigurableFilter();
+        grid.setDataProvider(filteredDataProvider);
         grid.getDataProvider().refreshAll();
     }
 
     private void setupSearchField(){
         searchField.addValueChangeListener(e -> {
             filteredDataProvider.setFilter(e.getValue());
-            setupGridDataProvider();
+            grid.getDataProvider().refreshAll();
         });
     }
 

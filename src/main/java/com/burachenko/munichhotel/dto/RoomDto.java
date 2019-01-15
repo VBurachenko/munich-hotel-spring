@@ -1,5 +1,6 @@
 package com.burachenko.munichhotel.dto;
 
+import com.burachenko.munichhotel.enumeration.RoomAvailabilityStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ public class RoomDto extends AbstractDto {
 
     private String pictureLink;
 
-    private Boolean isAvailable = false;
+    private RoomAvailabilityStatus isAvailable = RoomAvailabilityStatus.DISABLED;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

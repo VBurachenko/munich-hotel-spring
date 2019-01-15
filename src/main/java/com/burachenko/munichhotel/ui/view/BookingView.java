@@ -1,21 +1,27 @@
 package com.burachenko.munichhotel.ui.view;
 
-import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener;
+import com.burachenko.munichhotel.dto.BookingDto;
+import com.burachenko.munichhotel.service.BookingService;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.VerticalLayout;
 
 @SpringView(name = BookingView.NAME)
-public class BookingView extends VerticalLayout implements View {
+public class BookingView extends AbstractEntityView<BookingDto, BookingService> {
 
     static final String NAME = "booking";
 
-    public BookingView() {
+    private static final String SEARCH_PLACEHOLDER = "booking id";
+
+    public BookingView(final BookingService bookingService) {
+        super(bookingService);
     }
 
     @Override
-    public void enter(final ViewChangeListener.ViewChangeEvent event) {
-        Notification.show("Booking view", Notification.Type.HUMANIZED_MESSAGE);
+    protected Class<BookingDto> getEntityClass() {
+        return BookingDto.class;
+    }
+
+    @Override
+    protected String getSearchFieldPlaceholder() {
+        return SEARCH_PLACEHOLDER;
     }
 }

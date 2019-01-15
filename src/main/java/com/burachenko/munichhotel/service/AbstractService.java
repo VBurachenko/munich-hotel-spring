@@ -50,10 +50,10 @@ public abstract class AbstractService<DTO extends AbstractDto, Entity extends Ab
         final PageRequest pageRequest = preparePageRequest(query);
         final Optional <String> filterParameter = query.getFilter();
         List<DTO> dtoList = null;
-        if (query.getFilter().isPresent()){
+        if (query.getFilter().isPresent() && !query.getFilter().get().isEmpty()){
             dtoList = findByFilterParameter(filterParameter.get());
         } else {
-            dtoList = repository.findAll(pageRequest).getContent();
+            dtoList = converter.convertToDto(repository.findAll(pageRequest).getContent());
         }
         return dtoList.stream();
     }

@@ -31,6 +31,8 @@ public class MainView extends VerticalLayout implements View {
                 (MenuBar.Command) selectedItem -> getUI().getNavigator().navigateTo(RoomView.NAME));
         menuBar.addItem("Bookings",
                 (MenuBar.Command) selectedItem -> getUI().getNavigator().navigateTo(BookingView.NAME));
+        menuBar.addItem("Invoices",
+                (MenuBar.Command) selectedItem -> getUI().getNavigator().navigateTo(InvoiceView.NAME));
         Notification.show("Main view", Notification.Type.HUMANIZED_MESSAGE);
     }
 }
