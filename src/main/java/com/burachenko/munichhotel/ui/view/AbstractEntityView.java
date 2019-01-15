@@ -4,6 +4,7 @@ import com.burachenko.munichhotel.dto.AbstractDto;
 import com.burachenko.munichhotel.service.AbstractService;
 import com.vaadin.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -51,6 +52,7 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
     private void setupInstrumentsLayout() {
         searchField.setPlaceholder(getSearchFieldPlaceholder());
         searchField.setValueChangeMode(ValueChangeMode.LAZY);
+        clearSearchField.setClickShortcut(ShortcutAction.KeyCode.DELETE);
 
         final CssLayout searchInstrumentsLayout = new CssLayout();
         searchInstrumentsLayout.addComponents(searchField, clearSearchField);
