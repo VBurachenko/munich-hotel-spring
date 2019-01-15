@@ -41,6 +41,11 @@ public class BookingService extends AbstractService<BookingDto, BookingEntity, B
     }
 
     @Override
+    public List<BookingDto> findByFilterParameter(final String filterParameter) {
+        return null;
+    }
+
+    @Override
     public BookingDto save(final BookingDto bookingDto) {
         int startIndex = 1;
         long bookingId = IdCreator.createLongIdByTodayDate(startIndex);

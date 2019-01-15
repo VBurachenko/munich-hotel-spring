@@ -30,6 +30,11 @@ public class UserService extends AbstractService<UserDto, UserEntity, UserReposi
         return !userByEmail.isPresent() && !userByTelNum.isPresent();
     }
 
+    @Override
+    public List<UserDto> findByFilterParameter(final String filterParameter) {
+        return getConverter().convertToDto(getRepository().findUserByEmailOrTelNum(filterParameter));
+    }
+
     public List<UserDto> getUserList(){
         final List<UserDto> dtoUserList = new ArrayList<>();
         for (final UserEntity user : getRepository().findAll()) {
@@ -39,11 +44,11 @@ public class UserService extends AbstractService<UserDto, UserEntity, UserReposi
         return dtoUserList;
     }
 
-    public List<UserDto> getUserList(final String filterString){
+    public Stream<UserDto> getUserList(final String filterString){
         if (!filterString.isEmpty()){
-            return getConverter().convertToDto(getRepository().findUserByEmailOrTelNum(filterString));
+            return getConverter().convertToDto(getRepository().findUserByEmailOrTelNum(filterString)).stream();
         }
-        return getUserList();
+        return getUserList().stream();
     }
 
     public Stream<UserDto> getUserList(final Query<UserDto, String> query) {

@@ -26,4 +26,5 @@ public class UserView extends AbstractEntityView<UserDto, UserService> {
     protected Class<UserDto> getEntityClass() {
         return UserDto.class;
     }
+
 }

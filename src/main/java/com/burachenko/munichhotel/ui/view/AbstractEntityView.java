@@ -2,7 +2,7 @@ package com.burachenko.munichhotel.ui.view;
 
 import com.burachenko.munichhotel.dto.AbstractDto;
 import com.burachenko.munichhotel.service.AbstractService;
-import com.vaadin.data.provider.CallbackDataProvider;
+import com.vaadin.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 abstract class AbstractEntityView<DTO extends AbstractDto, Service extends AbstractService> extends VerticalLayout implements View {
 
     private Service service;
-    private DTO abstractDto;
 
     private HorizontalLayout mainInstrumentsLayout = new HorizontalLayout();
 
@@ -31,6 +30,7 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
     TextField searchField = new TextField();
 
     private DataProvider<DTO, String> dataProvider;
+    private ConfigurableFilterDataProvider<DTO, Void, String> filteredDataProvider;
     private Grid<DTO> grid;
 
     @Autowired
@@ -78,7 +78,9 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
         });
         clearSearchField.addClickListener(click -> {
             searchField.clear();
+            filteredDataProvider.setFilter(null);
         });
+        setupSearchField();
     }
 
     private void setupGrid(){
@@ -101,12 +103,22 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
     }
 
     private void setupGridDataProvider(){
-        CallbackDataProvider<DTO, String> dataProvider = new CallbackDataProvider<>(
-                query -> service.findWithPagination(query),
-                query -> (int) service.count());
+        dataProvider = DataProvider.fromFilteringCallbacks(
+                query -> service.findByFilterQueryWithPagination(query),
+                query -> Math.toIntExact(service.findByFilterQueryWithPagination(query).count())
+        );
+//        filteredDataProvider = dataProvider.withConfigurableFilter();
         grid.setDataProvider(dataProvider);
         grid.getDataProvider().refreshAll();
     }
+
+    private void setupSearchField(){
+        searchField.addValueChangeListener(e -> {
+            filteredDataProvider.setFilter(e.getValue());
+            setupGridDataProvider();
+        });
+    }
+
 
     private void setEditDeleteButtonsEnabled(final boolean indicator) {
         editButton.setEnabled(indicator);
@@ -115,10 +127,6 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
 
     public DataProvider<DTO, String> getDataProvider() {
         return dataProvider;
-    }
-
-    public void setDataProvider(final DataProvider<DTO, String> dataProvider) {
-        this.dataProvider = dataProvider;
     }
 
     public Grid<DTO> getGrid() {

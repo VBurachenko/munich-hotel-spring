@@ -6,6 +6,7 @@ import com.burachenko.munichhotel.entity.RoomEntity;
 import com.burachenko.munichhotel.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +21,16 @@ public class RoomService extends AbstractService<RoomDto, RoomEntity, RoomReposi
     protected boolean beforeSave(final RoomDto roomDto) {
         return true;
     }
-    public List<RoomDto> getFreeRoomsList(){
+
+    @Override
+    public List<RoomDto> findByFilterParameter(final String filterParameter) {
+        return null;
+    }
+
+    public List<RoomDto> getFreeRoomsList(final LocalDate checkIn, final LocalDate checkOut){
         return new ArrayList<>();
     }
+
 
 
     public RoomDto changeRoomAvailability(final long id, final boolean availabilityValue){

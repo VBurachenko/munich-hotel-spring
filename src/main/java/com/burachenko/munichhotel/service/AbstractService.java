@@ -36,12 +36,6 @@ public abstract class AbstractService<DTO extends AbstractDto, Entity extends Ab
         return converter.convertToDto(repository.findAll());
     }
 
-    public Stream<DTO> findWithPagination(final Query<DTO, String> query){
-        final PageRequest pageRequest = preparePageRequest(query);
-        final List<Entity> items = repository.findAll(pageRequest).getContent();
-        return converter.convertToDto(items).stream();
-    }
-
     private PageRequest preparePageRequest(final Query<DTO, String> query){
         final int pageNumber = query.getOffset() / query.getLimit();
         final List<Sort.Order> sortOrders = new ArrayList<>();
@@ -51,6 +45,20 @@ public abstract class AbstractService<DTO extends AbstractDto, Entity extends Ab
         }
         return PageRequest.of(pageNumber, query.getLimit(), sortOrders.isEmpty() ? Sort.unsorted() : Sort.by(sortOrders));
     }
+
+    public Stream<DTO> findByFilterQueryWithPagination(final Query<DTO, String> query){
+        final PageRequest pageRequest = preparePageRequest(query);
+        final Optional <String> filterParameter = query.getFilter();
+        List<DTO> dtoList = null;
+        if (query.getFilter().isPresent()){
+            dtoList = findByFilterParameter(filterParameter.get());
+        } else {
+            dtoList = repository.findAll(pageRequest).getContent();
+        }
+        return dtoList.stream();
+    }
+
+    public abstract List<DTO> findByFilterParameter(final String filterParameter);
 
     public boolean deleteAll(final Collection<DTO> toDelete){
         repository.deleteAll(converter.convertToEntity(toDelete));

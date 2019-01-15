@@ -10,6 +10,8 @@ import com.burachenko.munichhotel.service.util.DatesCalculator;
 import com.burachenko.munichhotel.service.util.PaymentCalculator;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class InvoiceService extends AbstractService<InvoiceDto, InvoiceEntity, InvoiceRepository>{
 
@@ -20,6 +22,11 @@ public class InvoiceService extends AbstractService<InvoiceDto, InvoiceEntity, I
     @Override
     protected boolean beforeSave(final InvoiceDto dto) {
         return true;
+    }
+
+    @Override
+    public List<InvoiceDto> findByFilterParameter(final String filterParameter) {
+        return null;
     }
 
     public InvoiceDto changeInvoiceStatus(final long invoiceId, final InvoiceStatus status){
