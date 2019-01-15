@@ -4,6 +4,7 @@ import com.burachenko.munichhotel.converter.InvoiceConverter;
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.dto.InvoiceDto;
 import com.burachenko.munichhotel.entity.InvoiceEntity;
+import com.burachenko.munichhotel.enumeration.InvoicePaymentStatus;
 import com.burachenko.munichhotel.enumeration.InvoiceStatus;
 import com.burachenko.munichhotel.repository.InvoiceRepository;
 import com.burachenko.munichhotel.service.util.DatesCalculator;
@@ -41,7 +42,7 @@ public class InvoiceService extends AbstractService<InvoiceDto, InvoiceEntity, I
     public InvoiceDto performInvoicePayment(final long invoiceId){
         final InvoiceDto invoiceDto = findById(invoiceId);
         if (invoiceDto != null){
-            invoiceDto.setIsPayed(true);
+            invoiceDto.setIsPayed(InvoicePaymentStatus.PAYED);
         }
         return null;
     }

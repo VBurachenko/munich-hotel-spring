@@ -1,5 +1,6 @@
 package com.burachenko.munichhotel.dto;
 
+import com.burachenko.munichhotel.enumeration.InvoicePaymentStatus;
 import com.burachenko.munichhotel.enumeration.InvoiceStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -22,5 +23,5 @@ public class InvoiceDto extends AbstractDto {
 
     private InvoiceStatus status = InvoiceStatus.INVOICED;
 
-    private Boolean isPayed = false;
+    private InvoicePaymentStatus isPayed = InvoicePaymentStatus.NOT_PAYED;
 }
