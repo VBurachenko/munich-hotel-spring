@@ -20,7 +20,7 @@ public class RoomView extends AbstractEntityView<RoomDto, RoomService> {
     }
 
     @Override
-    protected Class<RoomDto> getEntityClass() {
+    protected Class<RoomDto> getDtoClass() {
         return RoomDto.class;
     }
 

@@ -3,10 +3,12 @@ package com.burachenko.munichhotel.ui.form;
 import com.burachenko.munichhotel.dto.AbstractDto;
 import com.burachenko.munichhotel.service.AbstractService;
 import com.vaadin.data.Binder;
+import com.vaadin.data.ReadOnlyHasValue;
 import com.vaadin.data.ValidationException;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,29 +16,39 @@ public abstract class AbstractEditForm<DTO extends AbstractDto> extends FormLayo
 
     @Autowired
     private AbstractService service;
-    private DTO abstractDto;
+    private DTO dto;
 
     private Binder<DTO> binder;
     private HorizontalLayout controlsLayout = new HorizontalLayout();
     private Button saveButton;
 
-    public AbstractEditForm(final DTO abstractDto) {
+    public AbstractEditForm(final DTO dto) {
         setMargin(true);
-        this.abstractDto = abstractDto;
+        this.dto = dto;
         binder = new Binder<>();
-        binder.setBean(abstractDto);
+        binder.setBean(dto);
         removeAllComponents();
+        bindID();
         bindEntityFields();
         setupControls();
     }
 
     protected abstract void bindEntityFields();
 
+    private void bindID(){
+        final Label label = new Label();
+        label.setCaption("Id");
+        ReadOnlyHasValue<DTO> hasValue = new ReadOnlyHasValue<>(
+                dto -> label.setValue(String.valueOf(dto.getId())));
+        binder.forField(hasValue).bind(dto -> dto, null);
+        addComponent(label);
+    }
+
     private void setupControls() {
         saveButton = new Button("Save");
         saveButton.addClickListener(click -> {
             try {
-                final DTO abstractDto = getAbstractDto();
+                final DTO abstractDto = getDto();
                 getBinder().writeBean(abstractDto);
                 final DTO savedDto = (DTO) getService().save(abstractDto);
                 if (savedDto != null){
@@ -53,8 +65,9 @@ public abstract class AbstractEditForm<DTO extends AbstractDto> extends FormLayo
         addComponent(controlsLayout);
     }
 
-    public DTO getAbstractDto() {
-        return abstractDto;
+
+    public DTO getDto() {
+        return dto;
     }
 
     public Binder<DTO> getBinder() {

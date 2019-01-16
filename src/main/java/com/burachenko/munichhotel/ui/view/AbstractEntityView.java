@@ -33,7 +33,7 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
 
     private DataProvider<DTO, String> dataProvider;
     private ConfigurableFilterDataProvider<DTO, Void, String> filteredDataProvider;
-    private Grid<DTO> grid = new Grid<>(getEntityClass());
+    private Grid<DTO> grid = new Grid<>(getDtoClass());
 
     public AbstractEntityView(final Service service) {
         this.service = service;
@@ -46,7 +46,7 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
         setupInstruments();
     }
 
-    protected abstract Class<DTO> getEntityClass();
+    protected abstract Class<DTO> getDtoClass();
 
     protected abstract String getSearchFieldPlaceholder();
 
@@ -72,7 +72,7 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
     private void setupInstruments() {
         addButton.addClickListener(click -> {
             try {
-                final Window addingWindow = getEditWindow(getEntityClass().newInstance());
+                final Window addingWindow = getEditWindow(getDtoClass().newInstance());
                 addingWindow.addCloseListener(close -> dataProvider.refreshAll());
                 getUI().addWindow(addingWindow);
             } catch (InstantiationException | IllegalAccessException e) {

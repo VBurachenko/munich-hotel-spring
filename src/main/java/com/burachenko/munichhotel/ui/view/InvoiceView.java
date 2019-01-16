@@ -21,7 +21,7 @@ public class InvoiceView extends AbstractEntityView<InvoiceDto, InvoiceService> 
     }
 
     @Override
-    protected Class<InvoiceDto> getEntityClass() {
+    protected Class<InvoiceDto> getDtoClass() {
         return InvoiceDto.class;
     }
 

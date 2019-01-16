@@ -27,7 +27,7 @@ public class UserView extends AbstractEntityView<UserDto, UserService> {
     }
 
     @Override
-    protected Class<UserDto> getEntityClass() {
+    protected Class<UserDto> getDtoClass() {
         return UserDto.class;
     }
 

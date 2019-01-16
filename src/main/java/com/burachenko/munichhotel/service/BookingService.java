@@ -1,6 +1,6 @@
 package com.burachenko.munichhotel.service;
 
-import com.burachenko.munichhotel.converter.AbstractConverter;
+import com.burachenko.munichhotel.converter.BookingConverter;
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.dto.RoomDto;
 import com.burachenko.munichhotel.dto.SearchUnitDto;
@@ -32,7 +32,7 @@ public class BookingService extends AbstractService<BookingDto, BookingEntity, B
     @Autowired
     private InvoiceService invoiceService;
 
-    public BookingService(final BookingRepository repository, final AbstractConverter<BookingEntity, BookingDto> converter) {
+    public BookingService(final BookingRepository repository, final BookingConverter converter) {
         super(repository, converter);
     }
 

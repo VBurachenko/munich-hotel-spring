@@ -20,7 +20,7 @@ public class BookingView extends AbstractEntityView<BookingDto, BookingService> 
     }
 
     @Override
-    protected Class<BookingDto> getEntityClass() {
+    protected Class<BookingDto> getDtoClass() {
         return BookingDto.class;
     }
 
