@@ -5,8 +5,8 @@ import com.burachenko.munichhotel.dto.InvoiceDto;
 public class InvoiceEditFrom extends AbstractEditForm<InvoiceDto> {
 
 
-    public InvoiceEditFrom(final InvoiceDto abstractDto) {
-        super(abstractDto);
+    public InvoiceEditFrom(final InvoiceDto invoiceDto) {
+        super(invoiceDto);
     }
 
     @Override

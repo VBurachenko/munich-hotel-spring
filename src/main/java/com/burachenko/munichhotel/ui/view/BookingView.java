@@ -2,7 +2,9 @@ package com.burachenko.munichhotel.ui.view;
 
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.service.BookingService;
+import com.burachenko.munichhotel.ui.form.BookingEditForm;
 import com.burachenko.munichhotel.ui.window.AbstractEditWindow;
+import com.burachenko.munichhotel.ui.window.BookingEditWindow;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.HorizontalLayout;
 
@@ -33,7 +35,7 @@ public class BookingView extends AbstractEntityView<BookingDto, BookingService> 
     }
 
     @Override
-    protected AbstractEditWindow<BookingDto> getEditWindow(final BookingDto dto) {
-        return null;
+    protected AbstractEditWindow<BookingDto> getEditWindow(final BookingDto bookingDto) {
+        return new BookingEditWindow(new BookingEditForm(bookingDto));
     }
 }
