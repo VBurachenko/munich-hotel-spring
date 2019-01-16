@@ -3,13 +3,13 @@ package com.burachenko.munichhotel.service;
 import com.burachenko.munichhotel.converter.AbstractConverter;
 import com.burachenko.munichhotel.dto.AbstractDto;
 import com.burachenko.munichhotel.entity.AbstractEntity;
+import com.burachenko.munichhotel.repository.BasicRepository;
 import com.vaadin.data.provider.Query;
 import com.vaadin.data.provider.QuerySortOrder;
 import com.vaadin.shared.data.sort.SortDirection;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @AllArgsConstructor
-public abstract class AbstractService<DTO extends AbstractDto, Entity extends AbstractEntity, Repository extends JpaRepository> {
+public abstract class AbstractService<DTO extends AbstractDto, Entity extends AbstractEntity, Repository extends BasicRepository> {
 
     private Repository repository;
 

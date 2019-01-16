@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,12 @@ public class BookingService extends AbstractService<BookingDto, BookingEntity, B
 
     @Override
     public List<BookingDto> findByFilterParameter(final String filterParameter) {
-        return null;
+        try {
+            final long id = Long.valueOf(filterParameter);
+            return getConverter().convertToDto(getRepository().findAllByBookingIdOrUserIdOrInvoiceId(id));
+        } catch (NumberFormatException e){
+            return Collections.emptyList();
+        }
     }
 
     @Override

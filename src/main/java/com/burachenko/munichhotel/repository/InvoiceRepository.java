@@ -1,13 +1,12 @@
 package com.burachenko.munichhotel.repository;
 
 import com.burachenko.munichhotel.entity.InvoiceEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface InvoiceRepository extends JpaRepository<InvoiceEntity, Long> {
+public interface InvoiceRepository extends BasicRepository<InvoiceEntity> {
 
     List<InvoiceEntity> findByIdAndIsPayed(final Long id, final Boolean isPayed);
 

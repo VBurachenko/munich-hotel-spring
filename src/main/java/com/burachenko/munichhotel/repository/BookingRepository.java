@@ -2,7 +2,7 @@ package com.burachenko.munichhotel.repository;
 
 import com.burachenko.munichhotel.entity.BookingEntity;
 import com.burachenko.munichhotel.enumeration.BookingStatus;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -10,7 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
+public interface BookingRepository extends BasicRepository<BookingEntity> {
+
+    @Query(value = "SELECT * FROM `booking` WHERE `id`=:id OR `user_id`=:id OR `invoice_id`=:id", nativeQuery = true)
+    List<BookingEntity> findAllByBookingIdOrUserIdOrInvoiceId(final long id);
 
     List<BookingEntity> getBookingListByUserId(final long userId);
 

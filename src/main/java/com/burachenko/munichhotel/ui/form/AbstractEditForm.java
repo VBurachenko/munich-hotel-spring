@@ -19,7 +19,6 @@ public abstract class AbstractEditForm<DTO extends AbstractDto> extends FormLayo
     private Binder<DTO> binder;
     private HorizontalLayout controlsLayout = new HorizontalLayout();
     private Button saveButton;
-    private Button closeButton;
 
     public AbstractEditForm(final DTO abstractDto) {
         setMargin(true);
@@ -50,12 +49,7 @@ public abstract class AbstractEditForm<DTO extends AbstractDto> extends FormLayo
             }
 
         });
-        closeButton = new Button("Close");
-        closeButton.addClickListener(click -> {
-            getBinder().removeBean();
-
-        });
-        controlsLayout.addComponents(saveButton, closeButton);
+        controlsLayout.addComponents(saveButton);
         addComponent(controlsLayout);
     }
 
