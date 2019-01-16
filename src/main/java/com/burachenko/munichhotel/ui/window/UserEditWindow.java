@@ -1,15 +1,16 @@
 package com.burachenko.munichhotel.ui.window;
 
 import com.burachenko.munichhotel.dto.UserDto;
-import com.burachenko.munichhotel.service.AbstractService;
-import com.burachenko.munichhotel.ui.form.AbstractEditForm;
+import com.burachenko.munichhotel.ui.form.UserEditForm;
+import org.springframework.beans.factory.annotation.Autowired;
 
-public class UserEditWindow extends AbstractEditWindow<UserDto>{
+public class UserEditWindow extends AbstractEditWindow<UserDto> {
 
-    private AbstractService service;
+    private UserEditForm userEditForm;
 
-    public UserEditWindow(final AbstractEditForm<UserDto> editForm, final AbstractService service) {
-        super(editForm);
-        this.service = service;
+    @Autowired
+    public UserEditWindow(final UserEditForm userEditForm) {
+        super(userEditForm);
+        this.userEditForm = userEditForm;
     }
 }

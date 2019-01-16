@@ -12,13 +12,13 @@ public abstract class AbstractEditWindow<DTO extends AbstractDto> extends Window
 
     public AbstractEditWindow(final AbstractEditForm<DTO> editForm) {
         this.editForm = editForm;
-        setClosable(false);
         setModal(true);
         setDraggable(false);
         setResizable(false);
         setWidth(70, Unit.PERCENTAGE);
         setHeight(70, Unit.PERCENTAGE);
         setContent(this.editForm);
+        setScrollLeft(0);
     }
 
     public AbstractEditForm<DTO> getEditForm() {

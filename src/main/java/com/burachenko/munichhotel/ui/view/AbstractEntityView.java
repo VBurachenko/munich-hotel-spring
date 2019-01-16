@@ -2,6 +2,7 @@ package com.burachenko.munichhotel.ui.view;
 
 import com.burachenko.munichhotel.dto.AbstractDto;
 import com.burachenko.munichhotel.service.AbstractService;
+import com.burachenko.munichhotel.ui.window.AbstractEditWindow;
 import com.vaadin.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.event.ShortcutAction;
@@ -49,6 +50,10 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
 
     protected abstract String getSearchFieldPlaceholder();
 
+    protected abstract void addMoreInstruments(final HorizontalLayout layout);
+
+    protected abstract AbstractEditWindow<DTO> getEditWindow(final DTO dto);
+
     private void setupInstrumentsLayout() {
         searchField.setPlaceholder(getSearchFieldPlaceholder());
         searchField.setValueChangeMode(ValueChangeMode.LAZY);
@@ -58,7 +63,7 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
         searchInstrumentsLayout.addComponents(searchField, clearSearchField);
 
         mainInstrumentsLayout.addComponents(searchInstrumentsLayout, addButton, editButton, deleteButton);
-
+        addMoreInstruments(mainInstrumentsLayout);
         setEditDeleteButtonsEnabled(false);
 
         addComponent(mainInstrumentsLayout);
@@ -66,14 +71,19 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
 
     private void setupInstruments() {
         addButton.addClickListener(click -> {
-            final Window addWindow = new Window();
-            addWindow.addCloseListener(close -> dataProvider.refreshAll());
-            getUI().addWindow(addWindow);
+            try {
+                final Window addingWindow = getEditWindow(getEntityClass().newInstance());
+                addingWindow.addCloseListener(close -> dataProvider.refreshAll());
+                getUI().addWindow(addingWindow);
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException("Impossible to create instance of entity");
+            }
         });
         editButton.addClickListener(click -> {
-            final Window editWindow = new Window();
-            editWindow.addCloseListener(close -> dataProvider.refreshAll());
-            getUI().addWindow(editWindow);
+            final DTO dto = grid.getSelectedItems().iterator().next();
+            final Window editingWindow = getEditWindow(dto);
+            editingWindow.addCloseListener(close -> dataProvider.refreshAll());
+            getUI().addWindow(editingWindow);
         });
         deleteButton.addClickListener(click -> {
             service.deleteAll(grid.getSelectedItems());

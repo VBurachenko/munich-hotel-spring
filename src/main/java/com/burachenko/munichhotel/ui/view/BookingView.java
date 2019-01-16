@@ -2,7 +2,9 @@ package com.burachenko.munichhotel.ui.view;
 
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.service.BookingService;
+import com.burachenko.munichhotel.ui.window.AbstractEditWindow;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.ui.HorizontalLayout;
 
 @SpringView(name = BookingView.NAME)
 public class BookingView extends AbstractEntityView<BookingDto, BookingService> {
@@ -23,5 +25,15 @@ public class BookingView extends AbstractEntityView<BookingDto, BookingService> 
     @Override
     protected String getSearchFieldPlaceholder() {
         return SEARCH_PLACEHOLDER;
+    }
+
+    @Override
+    protected void addMoreInstruments(final HorizontalLayout layout) {
+
+    }
+
+    @Override
+    protected AbstractEditWindow<BookingDto> getEditWindow(final BookingDto dto) {
+        return null;
     }
 }

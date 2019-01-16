@@ -2,7 +2,11 @@ package com.burachenko.munichhotel.ui.view;
 
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.service.UserService;
+import com.burachenko.munichhotel.ui.form.UserEditForm;
+import com.burachenko.munichhotel.ui.window.AbstractEditWindow;
+import com.burachenko.munichhotel.ui.window.UserEditWindow;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.ui.HorizontalLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringView(name = UserView.NAME)
@@ -27,4 +31,13 @@ public class UserView extends AbstractEntityView<UserDto, UserService> {
         return UserDto.class;
     }
 
+    @Override
+    protected void addMoreInstruments(final HorizontalLayout layout) {
+
+    }
+
+    @Override
+    protected AbstractEditWindow<UserDto> getEditWindow(final UserDto userDto) {
+        return new UserEditWindow(new UserEditForm(userDto));
+    }
 }

@@ -2,7 +2,9 @@ package com.burachenko.munichhotel.ui.view;
 
 import com.burachenko.munichhotel.dto.InvoiceDto;
 import com.burachenko.munichhotel.service.InvoiceService;
+import com.burachenko.munichhotel.ui.window.AbstractEditWindow;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.ui.HorizontalLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -24,5 +26,15 @@ public class InvoiceView extends AbstractEntityView<InvoiceDto, InvoiceService> 
     @Override
     protected String getSearchFieldPlaceholder() {
         return "invoice id";
+    }
+
+    @Override
+    protected void addMoreInstruments(final HorizontalLayout layout) {
+
+    }
+
+    @Override
+    protected AbstractEditWindow<InvoiceDto> getEditWindow(final InvoiceDto dto) {
+        return null;
     }
 }
