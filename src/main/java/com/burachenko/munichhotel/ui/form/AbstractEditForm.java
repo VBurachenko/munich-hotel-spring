@@ -16,6 +16,7 @@ public abstract class AbstractEditForm<DTO extends AbstractDto> extends FormLayo
 
     @Autowired
     private AbstractService service;
+
     private DTO dto;
 
     private Binder<DTO> binder;

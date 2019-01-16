@@ -120,6 +120,11 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
                 query -> service.findByFilterQueryWithPagination(query),
                 query -> (int) service.findByFilterQueryWithPagination(query).count()
         );
+
+//        filteredDataProvider = DataProvider.fromFilteringCallbacks(
+//                query -> service.findByFilterQueryWithPagination(query),
+//                query -> (int) service.findByFilterQueryWithPagination(query).count()
+//        ).withConfigurableFilter();
         filteredDataProvider = dataProvider.withConfigurableFilter();
         grid.setDataProvider(filteredDataProvider);
         grid.getDataProvider().refreshAll();
