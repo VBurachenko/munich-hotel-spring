@@ -40,7 +40,13 @@ public abstract class AbstractEditForm<DTO extends AbstractDto> extends FormLayo
         final Label label = new Label();
         label.setCaption("Id");
         ReadOnlyHasValue<DTO> hasValue = new ReadOnlyHasValue<>(
-                dto -> label.setValue(String.valueOf(dto.getId())));
+                dto -> {
+                    String labelContent = "-";
+                    if (getDto() != null && getDto().getId() != null){
+                        labelContent = String.valueOf(getDto().getId());
+                    }
+                    label.setValue(labelContent);
+                });
         binder.forField(hasValue).bind(dto -> dto, null);
         addComponent(label);
     }

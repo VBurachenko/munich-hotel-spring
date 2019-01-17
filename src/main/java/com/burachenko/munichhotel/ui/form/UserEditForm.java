@@ -11,33 +11,106 @@ import com.vaadin.ui.TextField;
 
 public class UserEditForm extends AbstractEditForm<UserDto>{
 
-    private TextField emailField = new TextField("Email");
-    private PasswordField passwordField = new PasswordField("Password");
-    private TextField nameField = new TextField("Name");
-    private TextField surnameField = new TextField("Surname");
-    private TextField telNumField = new TextField("Tel. number");
-    private DateField birthdayField = new DateField("Birthday");
-
-    private RadioButtonGroup<UserGender> checkGender = new RadioButtonGroup<>("Gender");
-    private NativeSelect<UserBlocking> selectBlocking = new NativeSelect<>("Blocking");
-
-    private TextField discountValueField = new TextField("Discount");
-
     public UserEditForm(final UserDto userDto) {
         super(userDto);
-        checkGender.setItems(UserGender.values());
-        checkGender.setSelectedItem(UserGender.M);
+    }
 
+    @Override
+    protected void bindEntityFields() {
+        bindEmailField();
+        bindPasswordField();
+        getBindNameField();
+        getBindSurnameField();
+        getBindTelNumField();
+        getBindBirthdayField();
+        getBindDiscountField();
+        getBindGenderSelector();
+        getBindBlockingSelector();
+        getBindRoleSelector();
+    }
+
+    private void bindEmailField(){
+        final TextField emailField = new TextField("Email");
+        emailField.setPlaceholder("email");
+        getBinder()
+                .forField(emailField)
+                .bind(UserDto::getEmail, UserDto::setEmail);
+        addComponent(emailField);
+    }
+
+    private void bindPasswordField(){
+        final PasswordField passwordField = new PasswordField("Password");
+        getBinder()
+                .forField(passwordField)
+                .bind(UserDto::getPassword, UserDto::setPassword);
+        addComponent(passwordField);
+    }
+
+    private void getBindNameField() {
+        final TextField nameField = new TextField("Name");
+        getBinder()
+                .forField(nameField)
+                .bind(UserDto::getName, UserDto::setName);
+        addComponent(nameField);
+    }
+
+    private void getBindSurnameField() {
+        final TextField surnameField = new TextField("Surname");
+        getBinder()
+                .forField(surnameField)
+                .bind(UserDto::getSurname, UserDto::setSurname);
+        addComponent(surnameField);
+    }
+
+    private void getBindTelNumField() {
+        final TextField telNumField = new TextField("Tel. number");
+        getBinder()
+                .forField(telNumField)
+                .bind(UserDto::getTelNum, UserDto::setTelNum);
+        addComponent(telNumField);
+    }
+
+    private void getBindBirthdayField() {
+        final DateField birthdayField = new DateField("Birthday");
+        getBinder()
+                .forField(birthdayField)
+                .bind(UserDto::getBirthday, UserDto::setBirthday);
+        addComponent(birthdayField);
+    }
+
+    private void getBindDiscountField() {
+        final TextField discountField = new TextField("Discount");
+        getBinder()
+                .forField(discountField)
+                .withConverter(Integer::valueOf, String::valueOf)
+                .bind(UserDto::getDiscount, UserDto::setDiscount);
+        addComponent(discountField);
+    }
+
+    private void getBindGenderSelector() {
+        final RadioButtonGroup<UserGender> selectGender = new RadioButtonGroup<>("Gender");
+        selectGender.setItems(UserGender.values());
+        selectGender.setSelectedItem(UserGender.M);
+        getBinder()
+                .forField(selectGender)
+                .bind(UserDto::getGenderMale, UserDto::setGenderMale);
+        addComponent(selectGender);
+    }
+
+    private void getBindBlockingSelector() {
+        final NativeSelect<UserBlocking> selectBlocking = new NativeSelect<>();
 
         selectBlocking.setItems(UserBlocking.values());
         selectBlocking.setEmptySelectionAllowed(false);
         selectBlocking.setSelectedItem(UserBlocking.NONE);
 
-        addComponents(emailField, passwordField, nameField, surnameField, telNumField, birthdayField, checkGender, selectBlocking, discountValueField);
+        getBinder().forField(selectBlocking).bind(UserDto::getBlocking, UserDto::setBlocking);
+
+        addComponent(selectBlocking);
     }
 
-    @Override
-    protected void bindEntityFields() {
-
+    private void getBindRoleSelector() {
     }
+
+
 }

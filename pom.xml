@@ -16,8 +16,11 @@
 	<description>Hotel's rooms booking system</description>
 
 	<properties>
+
 		<java.version>1.8</java.version>
         <vaadin.version>8.6.3</vaadin.version>
+        <vaadin-spring.version>3.0.0</vaadin-spring.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
@@ -54,15 +57,26 @@
             <scope>test</scope>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-security</artifactId>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring-boot-starter</artifactId>
+            <version>${vaadin-spring.version}</version><!--$NO-MVN-MAN-VER$ -->
         </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-spring-boot</artifactId>
+            <version>${vaadin-spring.version}</version><!--$NO-MVN-MAN-VER$ -->
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-spring</artifactId>
+            <version>${vaadin-spring.version}</version><!--$NO-MVN-MAN-VER$ -->
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.vaadin</groupId>-->
+            <!--<artifactId>vaadin-spring-security</artifactId>-->
+            <!--<version>${vaadin-spring.version}</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
