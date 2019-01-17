@@ -1,5 +1,7 @@
 package com.burachenko.munichhotel.ui.view;
 
+import com.burachenko.munichhotel.enumeration.UserRole;
+import com.burachenko.munichhotel.ui.annotation.AllowedTo;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
@@ -11,6 +13,7 @@ import com.vaadin.ui.VerticalLayout;
 import static com.burachenko.munichhotel.ui.view.MainView.NAME;
 
 @SpringView(name = NAME)
+@AllowedTo(value = UserRole.MODER)
 public class MainView extends VerticalLayout implements View {
 
     public static final String NAME = "main";

@@ -112,7 +112,7 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
             }
         });
         addComponent(grid);
-        setExpandRatio(grid, 20);
+        setExpandRatio(grid, 1);
     }
 
     private void setupGridDataProvider(){

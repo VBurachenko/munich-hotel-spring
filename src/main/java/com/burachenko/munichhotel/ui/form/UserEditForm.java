@@ -3,6 +3,7 @@ package com.burachenko.munichhotel.ui.form;
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.enumeration.UserBlocking;
 import com.burachenko.munichhotel.enumeration.UserGender;
+import com.burachenko.munichhotel.enumeration.UserRole;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.PasswordField;
@@ -31,7 +32,6 @@ public class UserEditForm extends AbstractEditForm<UserDto>{
 
     private void bindEmailField(){
         final TextField emailField = new TextField("Email");
-        emailField.setPlaceholder("email");
         getBinder()
                 .forField(emailField)
                 .bind(UserDto::getEmail, UserDto::setEmail);
@@ -98,7 +98,7 @@ public class UserEditForm extends AbstractEditForm<UserDto>{
     }
 
     private void getBindBlockingSelector() {
-        final NativeSelect<UserBlocking> selectBlocking = new NativeSelect<>();
+        final NativeSelect<UserBlocking> selectBlocking = new NativeSelect<>("Blocking");
 
         selectBlocking.setItems(UserBlocking.values());
         selectBlocking.setEmptySelectionAllowed(false);
@@ -110,6 +110,15 @@ public class UserEditForm extends AbstractEditForm<UserDto>{
     }
 
     private void getBindRoleSelector() {
+        final NativeSelect<UserRole> selectRole = new NativeSelect<>("Role");
+
+        selectRole.setItems(UserRole.values());
+        selectRole.setEmptySelectionAllowed(false);
+        selectRole.setSelectedItem(UserRole.GUEST);
+
+        getBinder().forField(selectRole).bind(UserDto::getRole, UserDto::setRole);
+
+        addComponent(selectRole);
     }
 
 

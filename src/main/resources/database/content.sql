@@ -1,6 +1,6 @@
 INSERT INTO `user` (`email`, `password`, `name`, `surname`, `tel_num`, `birthday`, `discount`, `gender_male`, `blocking`, `role`)
 VALUES
-('customer@mail.com', 'customer', 'Customer', 'Custom', '+375123456789', CURDATE(), 0, 1, 0, 'CUSTOMER'),
+('customer@mail.com', '$2a$10$k8DQUGjY7/p.no9xPwjUkexEC2F.6Xf9l1OS49mmXB6R9zd3Tlf3G', 'Customer', 'Custom', '+375123456789', CURDATE(), 0, 1, 0, 'CUSTOMER'),
 ('admin@mail.com', 'admin', 'Admin', 'Adam', '+375987654321', CURDATE(), 0, 1, 0, 'ADMIN'),
 ('moder@mail.com', 'moder', 'Moder', 'Moderator', '+375333333333', CURDATE(), 0, 1, 0, 'MODER');
 
