@@ -17,6 +17,8 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.components.grid.MultiSelectionModel;
+import com.vaadin.ui.components.grid.MultiSelectionModel.SelectAllCheckBoxVisibility;
 
 abstract class AbstractEntityView<DTO extends AbstractDto, Service extends AbstractService> extends VerticalLayout implements View {
 
@@ -99,6 +101,8 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
     private void setupGrid(){
         setupGridDataProvider();
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
+        ((MultiSelectionModel) grid.getSelectionModel())
+                .setSelectAllCheckBoxVisibility(SelectAllCheckBoxVisibility.VISIBLE);
         grid.setSizeFull();
         grid.addSelectionListener(selection -> {
             final int selectedLinesCount = selection.getAllSelectedItems().size();
