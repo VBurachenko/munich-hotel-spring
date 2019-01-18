@@ -9,7 +9,7 @@ import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.ui.UI;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@SpringUI(path = "/vaadin")
+@SpringUI
 @Theme("valo")
 public class HotelUI extends UI{
 

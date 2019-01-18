@@ -8,11 +8,10 @@ import com.burachenko.munichhotel.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Service
+@Service("roomService")
 public class RoomService extends AbstractService<RoomDto, RoomEntity, RoomRepository>{
 
     public RoomService(final RoomRepository roomRepository, final RoomConverter roomConverter){
@@ -35,10 +34,8 @@ public class RoomService extends AbstractService<RoomDto, RoomEntity, RoomReposi
     }
 
     public List<RoomDto> getFreeRoomsList(final LocalDate checkIn, final LocalDate checkOut){
-        return new ArrayList<>();
+        return Collections.emptyList();
     }
-
-
 
     public RoomDto changeRoomAvailability(final long id, final RoomAvailabilityStatus isAvailable){
         final RoomDto roomDto = findById(id);
