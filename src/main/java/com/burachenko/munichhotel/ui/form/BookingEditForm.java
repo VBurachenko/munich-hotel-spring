@@ -75,6 +75,9 @@ public class BookingEditForm extends AbstractEditForm<BookingDto> {
             if (change.getValue().isAfter(checkOutField.getValue())){
                 checkOutField.setValue(change.getValue().plusDays(minimalAllowedDifference));
             }
+            if (change.getValue().isEqual(checkOutField.getValue())){
+                checkOutField.setValue(change.getValue().plusDays(minimalAllowedDifference));
+            }
         });
         checkOutField.setValue(LocalDate.now().plusDays(minimalAllowedDifference));
         checkOutField.addValueChangeListener(change -> {

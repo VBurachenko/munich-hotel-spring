@@ -5,6 +5,7 @@ import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.components.grid.MultiSelectionModel;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,8 +46,15 @@ public class VaadinConfiguration {
                     throw new RuntimeException("Error to retrive prioperty value", e);
                 }
             });
+            setColumnCaption(column, field.getName());
         }
         return grid;
+    }
+
+    private <DTO> void setColumnCaption(final Column<DTO, ?> column, final String fieldName) {
+        final String columnCaption = StringUtils.capitalize(StringUtils
+                .join(StringUtils.splitByCharacterTypeCamelCase(fieldName), StringUtils.SPACE));
+        column.setCaption(columnCaption);
     }
 
 }
