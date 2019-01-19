@@ -70,7 +70,12 @@ public class BookingEditForm extends AbstractEditForm<BookingDto> {
 
     private void setupDateFields() {
         final long minimalAllowedDifference = 1L;
-        checkInField.setValue(LocalDate.now());
+        if (checkInField.isEmpty()){
+            checkInField.setValue(LocalDate.now());
+        }
+        if (checkOutField.isEmpty()){
+            checkOutField.setValue(LocalDate.now().plusDays(minimalAllowedDifference));
+        }
         checkInField.addValueChangeListener(change -> {
             if (change.getValue().isAfter(checkOutField.getValue())){
                 checkOutField.setValue(change.getValue().plusDays(minimalAllowedDifference));
@@ -79,9 +84,7 @@ public class BookingEditForm extends AbstractEditForm<BookingDto> {
                 checkOutField.setValue(change.getValue().plusDays(minimalAllowedDifference));
             }
         });
-        checkOutField.setValue(LocalDate.now().plusDays(minimalAllowedDifference));
         checkOutField.addValueChangeListener(change -> {
-
             if (change.getValue().isBefore(checkInField.getValue())){
                 checkInField.setValue(change.getValue().minusDays(minimalAllowedDifference));
             }

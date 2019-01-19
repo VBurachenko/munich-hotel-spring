@@ -10,6 +10,8 @@ import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.TextField;
 
+import java.time.LocalDate;
+
 public class UserEditForm extends AbstractEditForm<UserDto>{
 
     public UserEditForm(final UserDto userDto) {
@@ -71,10 +73,12 @@ public class UserEditForm extends AbstractEditForm<UserDto>{
     }
 
     private void getBindBirthdayField() {
+        final long minimalAllowedAge = 18L;
         final DateField birthdayField = new DateField("Birthday");
         getBinder()
                 .forField(birthdayField)
                 .bind(UserDto::getBirthday, UserDto::setBirthday);
+        birthdayField.setRangeStart(LocalDate.now().minusYears(minimalAllowedAge));
         addComponent(birthdayField);
     }
 
