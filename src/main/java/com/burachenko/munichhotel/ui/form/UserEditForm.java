@@ -4,18 +4,25 @@ import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.enumeration.UserBlocking;
 import com.burachenko.munichhotel.enumeration.UserGender;
 import com.burachenko.munichhotel.enumeration.UserRole;
+import com.burachenko.munichhotel.service.UserService;
+import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.TextField;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 
-public class UserEditForm extends AbstractEditForm<UserDto>{
+@SpringComponent
+@ViewScope
+public class UserEditForm extends AbstractEditForm<UserDto, UserService>{
 
-    public UserEditForm(final UserDto userDto) {
-        super(userDto);
+    @Autowired
+    public UserEditForm(final UserDto userDto, final UserService userService) {
+        super(userDto, userService);
     }
 
     @Override

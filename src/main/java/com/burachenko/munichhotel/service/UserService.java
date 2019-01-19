@@ -24,10 +24,13 @@ public class UserService extends AbstractService<UserDto, UserEntity, UserReposi
     }
 
     @Override
-    protected boolean beforeSave(UserDto userDto) {
-        final Optional<UserEntity> userByEmail = getRepository().findUserByEmail(userDto.getEmail());
-        final Optional<UserEntity> userByTelNum = getRepository().findByTelNum(userDto.getTelNum());
-        return !userByEmail.isPresent() && !userByTelNum.isPresent();
+    protected boolean beforeSave(final UserDto userDto) {
+        if (userDto.getId() == null){
+            final Optional<UserEntity> userByEmail = getRepository().findUserByEmail(userDto.getEmail());
+            final Optional<UserEntity> userByTelNum = getRepository().findByTelNum(userDto.getTelNum());
+            return !userByEmail.isPresent() && !userByTelNum.isPresent();
+        }
+        return true;
     }
 
     @Override

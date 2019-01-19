@@ -35,7 +35,7 @@ public class RoomView extends AbstractEntityView<RoomDto, RoomService> {
     }
 
     @Override
-    protected AbstractEditWindow<RoomDto> getEditWindow(final RoomDto roomDto) {
-        return new RoomEditWindow(new RoomEditForm(roomDto));
+    protected AbstractEditWindow<RoomDto, RoomService> getEditWindow(final RoomDto roomDto, final RoomService roomService) {
+        return new RoomEditWindow(new RoomEditForm(roomDto, roomService));
     }
 }

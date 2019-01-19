@@ -37,7 +37,7 @@ public class UserView extends AbstractEntityView<UserDto, UserService> {
     }
 
     @Override
-    protected AbstractEditWindow<UserDto> getEditWindow(final UserDto userDto) {
-        return new UserEditWindow(new UserEditForm(userDto));
+    protected AbstractEditWindow<UserDto, UserService> getEditWindow(final UserDto userDto, final UserService userService) {
+        return new UserEditWindow(new UserEditForm(userDto, userService));
     }
 }

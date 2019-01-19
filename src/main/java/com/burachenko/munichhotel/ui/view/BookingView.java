@@ -35,7 +35,7 @@ public class BookingView extends AbstractEntityView<BookingDto, BookingService> 
     }
 
     @Override
-    protected AbstractEditWindow<BookingDto> getEditWindow(final BookingDto bookingDto) {
-        return new BookingEditWindow(new BookingEditForm(bookingDto));
+    protected AbstractEditWindow<BookingDto, BookingService> getEditWindow(final BookingDto bookingDto, final BookingService bookingService) {
+        return new BookingEditWindow(new BookingEditForm(bookingDto, bookingService));
     }
 }

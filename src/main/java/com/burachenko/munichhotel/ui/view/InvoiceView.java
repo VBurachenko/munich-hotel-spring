@@ -36,7 +36,7 @@ public class InvoiceView extends AbstractEntityView<InvoiceDto, InvoiceService> 
     }
 
     @Override
-    protected AbstractEditWindow<InvoiceDto> getEditWindow(final InvoiceDto invoiceDto) {
-        return new InvoiceEditWindow(new InvoiceEditFrom(invoiceDto));
+    protected AbstractEditWindow<InvoiceDto, InvoiceService> getEditWindow(final InvoiceDto invoiceDto, final InvoiceService invoiceService) {
+        return new InvoiceEditWindow(new InvoiceEditFrom(invoiceDto, invoiceService));
     }
 }

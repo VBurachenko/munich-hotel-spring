@@ -8,7 +8,7 @@ import com.vaadin.data.provider.DataProvider;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
@@ -19,20 +19,21 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 
-abstract class AbstractEntityView<DTO extends AbstractDto, Service extends AbstractService> extends VerticalLayout implements View {
+abstract class AbstractEntityView<DTO extends AbstractDto, Service extends AbstractService>
+        extends VerticalLayout
+        implements View {
 
     private Service service;
 
-    private HorizontalLayout mainInstrumentsLayout = new HorizontalLayout();
+    private final HorizontalLayout mainInstrumentsLayout = new HorizontalLayout();
 
-    Button addButton = new Button("Add");
-    Button editButton = new Button("Edit");
-    Button deleteButton = new Button("Delete");
-    Button clearSearchField = new Button(VaadinIcons.CLOSE_CIRCLE);
+    private final Button addButton = new Button("Add");
+    private final Button editButton = new Button("Edit");
+    private final Button deleteButton = new Button("Delete");
+    private final Button clearSearchField = new Button(VaadinIcons.CLOSE_CIRCLE);
 
-    TextField searchField = new TextField();
+    private final TextField searchField = new TextField();
 
-    private DataProvider<DTO, String> dataProvider;
     private ConfigurableFilterDataProvider<DTO, Void, String> filteredDataProvider;
 
     @Autowired
@@ -43,7 +44,7 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
     }
 
     @Override
-    public void enter(final ViewChangeListener.ViewChangeEvent event) {
+    public void enter(final ViewChangeEvent event) {
         setupInstrumentsLayout();
         setupGrid();
         setupInstruments();
@@ -55,7 +56,7 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
 
     protected abstract void addMoreInstruments(final HorizontalLayout layout);
 
-    protected abstract AbstractEditWindow<DTO> getEditWindow(final DTO dto);
+    protected abstract AbstractEditWindow<DTO, Service> getEditWindow(final DTO dto, final Service service);
 
     private void setupInstrumentsLayout() {
         searchField.setPlaceholder(getSearchFieldPlaceholder());
@@ -75,8 +76,8 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
     private void setupInstruments() {
         addButton.addClickListener(click -> {
             try {
-                final Window addingWindow = getEditWindow(getDtoClass().newInstance());
-                addingWindow.addCloseListener(close -> dataProvider.refreshAll());
+                final Window addingWindow = getEditWindow(getDtoClass().newInstance(), getService());
+                addingWindow.addCloseListener(close -> filteredDataProvider.refreshAll());
                 getUI().addWindow(addingWindow);
             } catch (InstantiationException | IllegalAccessException e) {
                 throw new RuntimeException("Impossible to create instance of entity");
@@ -84,8 +85,8 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
         });
         editButton.addClickListener(click -> {
             final DTO dto = grid.getSelectedItems().iterator().next();
-            final Window editingWindow = getEditWindow(dto);
-            editingWindow.addCloseListener(close -> dataProvider.refreshAll());
+            final Window editingWindow = getEditWindow(dto, getService());
+            editingWindow.addCloseListener(close -> filteredDataProvider.refreshAll());
             getUI().addWindow(editingWindow);
         });
         deleteButton.addClickListener(click -> {
@@ -117,7 +118,7 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
     }
 
     private void setupGridDataProvider(){
-        dataProvider = DataProvider.fromFilteringCallbacks(
+        final DataProvider<DTO, String> dataProvider = DataProvider.fromFilteringCallbacks(
                 query -> service.findByFilterQueryWithPagination(query),
                 query -> (int) service.findByFilterQueryWithPagination(query).count()
         );
@@ -139,8 +140,8 @@ abstract class AbstractEntityView<DTO extends AbstractDto, Service extends Abstr
         deleteButton.setEnabled(indicator);
     }
 
-    public DataProvider<DTO, String> getDataProvider() {
-        return dataProvider;
+    public ConfigurableFilterDataProvider<DTO, Void, String> getFilteredDataProvider() {
+        return filteredDataProvider;
     }
 
     public Grid<DTO> getGrid() {

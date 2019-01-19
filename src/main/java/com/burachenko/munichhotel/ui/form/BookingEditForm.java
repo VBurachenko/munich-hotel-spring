@@ -5,6 +5,7 @@ import com.burachenko.munichhotel.dto.RoomDto;
 import com.burachenko.munichhotel.entity.RoomEntity;
 import com.burachenko.munichhotel.repository.RoomRepository;
 import com.burachenko.munichhotel.service.AbstractService;
+import com.burachenko.munichhotel.service.BookingService;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.DateField;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 
 @SpringComponent
 @ViewScope
-public class BookingEditForm extends AbstractEditForm<BookingDto> {
+public class BookingEditForm extends AbstractEditForm<BookingDto, BookingService> {
 
     private DateField checkInField;
     private DateField checkOutField;
@@ -22,8 +23,8 @@ public class BookingEditForm extends AbstractEditForm<BookingDto> {
     @Autowired
     private AbstractService<RoomDto, RoomEntity, RoomRepository> roomService;
 
-    public BookingEditForm(final BookingDto bookingDto){
-        super(bookingDto);
+    public BookingEditForm(final BookingDto bookingDto, final BookingService bookingService){
+        super(bookingDto, bookingService);
     }
 
     @Override

@@ -1,16 +1,17 @@
 package com.burachenko.munichhotel.ui.window;
 
 import com.burachenko.munichhotel.dto.AbstractDto;
+import com.burachenko.munichhotel.service.AbstractService;
 import com.burachenko.munichhotel.ui.form.AbstractEditForm;
 import com.vaadin.ui.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractEditWindow<DTO extends AbstractDto> extends Window {
+public abstract class AbstractEditWindow<DTO extends AbstractDto, Service extends AbstractService> extends Window {
 
     @Autowired
-    private AbstractEditForm<DTO> editForm;
+    private AbstractEditForm<DTO, Service> editForm;
 
-    public AbstractEditWindow(final AbstractEditForm<DTO> editForm) {
+    public AbstractEditWindow(final AbstractEditForm<DTO, Service> editForm) {
         this.editForm = editForm;
         setModal(true);
         setDraggable(false);
@@ -21,7 +22,7 @@ public abstract class AbstractEditWindow<DTO extends AbstractDto> extends Window
         setScrollLeft(0);
     }
 
-    public AbstractEditForm<DTO> getEditForm() {
+    public AbstractEditForm<DTO, Service> getEditForm() {
         return editForm;
     }
 }

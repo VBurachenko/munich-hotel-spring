@@ -10,22 +10,22 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractEditForm<DTO extends AbstractDto> extends FormLayout {
+public abstract class AbstractEditForm<DTO extends AbstractDto, Service extends AbstractService>
+        extends FormLayout {
 
-    @Autowired
-    private AbstractService service;
+    private final Service service;
 
-    private DTO dto;
+    private final DTO dto;
 
     private Binder<DTO> binder;
     private HorizontalLayout controlsLayout = new HorizontalLayout();
     private Button saveButton;
 
-    public AbstractEditForm(final DTO dto) {
+    public AbstractEditForm(final DTO dto, final Service service) {
         setMargin(true);
         this.dto = dto;
+        this.service = service;
         binder = new Binder<>();
         binder.setBean(dto);
         removeAllComponents();
@@ -60,6 +60,7 @@ public abstract class AbstractEditForm<DTO extends AbstractDto> extends FormLayo
                 final DTO savedDto = (DTO) getService().save(abstractDto);
                 if (savedDto != null){
                     getBinder().setBean(savedDto);
+
                 } else {
                     Notification.show("Saving error", Notification.Type.ERROR_MESSAGE);
                 }
@@ -81,7 +82,7 @@ public abstract class AbstractEditForm<DTO extends AbstractDto> extends FormLayo
         return binder;
     }
 
-    public AbstractService getService() {
+    public Service getService() {
         return service;
     }
 }
