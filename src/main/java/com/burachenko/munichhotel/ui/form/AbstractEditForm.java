@@ -20,6 +20,7 @@ public abstract class AbstractEditForm<DTO extends AbstractDto, Service extends 
 
     private Binder<DTO> binder;
     private HorizontalLayout controlsLayout = new HorizontalLayout();
+
     private Button saveButton;
 
     public AbstractEditForm(final DTO dto, final Service service) {
