@@ -1,40 +1,48 @@
 package com.burachenko.munichhotel.service;
 
-import com.burachenko.munichhotel.converter.impl.RoomConverter;
+import com.burachenko.munichhotel.converter.RoomConverter;
 import com.burachenko.munichhotel.dto.RoomDto;
 import com.burachenko.munichhotel.entity.RoomEntity;
+import com.burachenko.munichhotel.enumeration.RoomAvailabilityStatus;
 import com.burachenko.munichhotel.repository.RoomRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
-@Service
-@AllArgsConstructor
-public class RoomService {
+@Service("roomService")
+public class RoomService extends AbstractService<RoomDto, RoomEntity, RoomRepository>{
 
-    private final RoomRepository roomRepository;
-    private final RoomConverter roomConverter;
-
-    public List<RoomEntity> getRoomsList(){
-        return roomRepository.findAll();
+    public RoomService(final RoomRepository roomRepository, final RoomConverter roomConverter){
+        super(roomRepository, roomConverter);
     }
 
-    public RoomDto createRoom(final RoomDto roomDto){
-        final RoomEntity roomEntity = roomRepository.save(roomConverter.convertToEntity(roomDto));
-        if (roomEntity != null){
-            roomConverter.convertToDto(roomEntity);
-        }
-        return null;
+    @Override
+    protected boolean beforeSave(final RoomDto roomDto) {
+        return true;
     }
 
-    public RoomDto getRoom(final Long id){
-        final Optional<RoomEntity> roomEntity = roomRepository.findById(id);
-        if (roomEntity.isPresent()){
-            return roomConverter.convertToDto(roomEntity.get());
+    @Override
+    public List<RoomDto> findByFilterParameter(final String filterParameter) {
+        try {
+            final long id = Long.valueOf(filterParameter);
+            return getConverter().convertToDto(getRepository().findAllById(id));
+        } catch (NumberFormatException e){
+            return Collections.emptyList();
         }
-        return null;
+    }
+
+    public List<RoomDto> getFreeRoomsList(final LocalDate checkIn, final LocalDate checkOut){
+        return Collections.emptyList();
+    }
+
+    public RoomDto changeRoomAvailability(final long id, final RoomAvailabilityStatus isAvailable){
+        final RoomDto roomDto = findById(id);
+        if (roomDto != null){
+            roomDto.setIsAvailable(isAvailable);
+        }
+        return save(roomDto);
     }
 
 }

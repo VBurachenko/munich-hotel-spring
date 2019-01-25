@@ -12,14 +12,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "room")
-public class RoomEntity extends IdentifiableEntity {
+public class RoomEntity extends AbstractEntity {
 
     @Column(name="berth_count", nullable = false, columnDefinition = "TINYINT")
     private Integer berthCount;
@@ -43,5 +42,5 @@ public class RoomEntity extends IdentifiableEntity {
             inverseJoinColumns = @JoinColumn(name = "booking_id"))
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<BookingEntity> bookingSet= new HashSet<>();
+    private List<BookingEntity> bookingList;
 }

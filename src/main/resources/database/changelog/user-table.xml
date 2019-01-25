@@ -14,16 +14,14 @@
                 <constraints nullable="false" unique="true"/>
             </column>
 
-            <column name="password" type="VARCHAR(32)">
+            <column name="password" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
 
             <column name="name" type="VARCHAR(100)">
-                <constraints nullable="false"/>
             </column>
 
             <column name="surname" type="VARCHAR(100)">
-                <constraints nullable="false"/>
             </column>
 
             <column name="tel_num" type="VARCHAR(20)">
@@ -31,7 +29,6 @@
             </column>
 
             <column name="birthday" type="DATE">
-                <constraints nullable="false"/>
             </column>
 
             <column name="discount" type="TINYINT(2)" defaultValue="0">
@@ -46,7 +43,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="role" type="VARCHAR(10)" defaultValue="customer">
+            <column name="role" type="VARCHAR(10)" defaultValue="CUSTOMER">
                 <constraints nullable="false"/>
             </column>
 

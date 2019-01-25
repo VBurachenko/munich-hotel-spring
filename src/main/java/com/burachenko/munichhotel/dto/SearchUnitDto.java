@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class SearchUnitDto extends IdentifiableDto{
+public class SearchUnitDto extends AbstractDto {
 
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

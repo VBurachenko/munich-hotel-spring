@@ -1,20 +1,19 @@
 package com.burachenko.munichhotel.dto;
 
+import com.burachenko.munichhotel.enumeration.UserBlocking;
+import com.burachenko.munichhotel.enumeration.UserGender;
 import com.burachenko.munichhotel.enumeration.UserRole;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class UserDto extends IdentifiableDto {
+public class UserDto extends AbstractDto {
 
     private String email;
 
@@ -31,13 +30,9 @@ public class UserDto extends IdentifiableDto {
 
     private Integer discount = 0;
 
-    private Boolean genderMale = true;
+    private UserGender genderMale = UserGender.M;
 
-    private Integer blocking = 0;
+    private UserBlocking blocking = UserBlocking.NONE;
 
     private UserRole role = UserRole.CUSTOMER;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Set<BookingDto> bookingSet = new HashSet<>();
 }

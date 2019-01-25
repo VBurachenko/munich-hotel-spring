@@ -1,76 +1,72 @@
 package com.burachenko.munichhotel.service;
 
-import com.burachenko.munichhotel.converter.impl.InvoiceConverter;
+import com.burachenko.munichhotel.converter.InvoiceConverter;
 import com.burachenko.munichhotel.dto.BookingDto;
 import com.burachenko.munichhotel.dto.InvoiceDto;
-import com.burachenko.munichhotel.dto.RoomDto;
 import com.burachenko.munichhotel.entity.InvoiceEntity;
+import com.burachenko.munichhotel.enumeration.InvoicePaymentStatus;
+import com.burachenko.munichhotel.enumeration.InvoiceStatus;
 import com.burachenko.munichhotel.repository.InvoiceRepository;
 import com.burachenko.munichhotel.service.util.DatesCalculator;
-import lombok.AllArgsConstructor;
+import com.burachenko.munichhotel.service.util.PaymentCalculator;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Service
-@AllArgsConstructor
-public class InvoiceService {
+public class InvoiceService extends AbstractService<InvoiceDto, InvoiceEntity, InvoiceRepository>{
 
-    private final InvoiceRepository invoiceRepository;
-    private final InvoiceConverter invoiceConverter;
-
-    private final BookingService bookingService;
-
-
-    public List<InvoiceEntity> getInvoicesList(){
-        return invoiceRepository.findAll();
+    public InvoiceService(final InvoiceRepository invoiceRepository, final InvoiceConverter invoiceConverter) {
+        super(invoiceRepository, invoiceConverter);
     }
 
-    public InvoiceDto getInvoice(final Long id){
-        final Optional<InvoiceEntity> invoiceEntity = invoiceRepository.findById(id);
-        if (invoiceEntity.isPresent()){
-            return invoiceConverter.convertToDto(invoiceEntity.get());
+    @Override
+    protected boolean beforeSave(final InvoiceDto dto) {
+        return true;
+    }
+
+    @Override
+    public List<InvoiceDto> findByFilterParameter(final String filterParameter) {
+        try {
+            final long id = Long.valueOf(filterParameter);
+            return getConverter().convertToDto(getRepository().findAllById(id));
+        } catch (NumberFormatException e){
+            return Collections.emptyList();
+        }
+    }
+
+    public InvoiceDto changeInvoiceStatus(final long invoiceId, final InvoiceStatus status){
+        final InvoiceDto invoiceDto = findById(invoiceId);
+        if (invoiceDto != null){
+            invoiceDto.setStatus(status);
+            return save(invoiceDto);
         }
         return null;
     }
 
-    public InvoiceDto createInvoice(final InvoiceDto invoiceDto){
-        final InvoiceEntity invoiceEntity = invoiceRepository.save(invoiceConverter.convertToEntity(invoiceDto));
-        return invoiceConverter.convertToDto(invoiceRepository.save(invoiceEntity));
-    }
-
-    public BookingDto attachInvoiceToBooking(final BookingDto bookingDto){
-        final InvoiceDto invoiceDto = createInvoice(prepareInvoice(bookingDto));
+    public InvoiceDto performInvoicePayment(final long invoiceId){
+        final InvoiceDto invoiceDto = findById(invoiceId);
         if (invoiceDto != null){
-            bookingDto.setInvoice(invoiceDto);
+            invoiceDto.setIsPayed(InvoicePaymentStatus.PAYED);
         }
-        return bookingService.setInvoiceToBooking(bookingDto);
+        return null;
     }
 
     private InvoiceDto prepareInvoice(final BookingDto bookingDto){
 
         final InvoiceDto invoiceDto = new InvoiceDto();
 
+        invoiceDto.setId(bookingDto.getId());
+
         final int nightsCount = DatesCalculator.nightsCountCalculate(bookingDto.getCheckIn(),
                                                                         bookingDto.getCheckOut());
 
-        final double totalPayment = calculateTotalPayment(nightsCount, bookingDto.getRoomSet());
+        final double totalPayment = PaymentCalculator.calculateTotalPayment(nightsCount, bookingDto.getRoomList());
 
         invoiceDto.setNightsCount(nightsCount);
         invoiceDto.setTotalPayment(totalPayment);
 
-        return invoiceDto;
-    }
-
-    private double calculateTotalPayment(final int nightsCount, final Set<RoomDto> roomsInBooking){
-
-        double commonDailyCost = 0.0;
-
-        for (final RoomDto currentRoom : roomsInBooking){
-            commonDailyCost += currentRoom.getPricePerNight();
-        }
-        return commonDailyCost * nightsCount;
+        return save(invoiceDto);
     }
 }

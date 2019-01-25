@@ -18,14 +18,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "booking")
-public class BookingEntity extends IdentifiableEntity {
+public class BookingEntity extends AbstractEntity {
 
     @Type(type = "org.hibernate.type.LocalDateType")
     @Column(name="check_in", nullable = false)
@@ -34,12 +33,6 @@ public class BookingEntity extends IdentifiableEntity {
     @Type(type = "org.hibernate.type.LocalDateType")
     @Column(name="check_out", nullable = false)
     private LocalDate checkOut;
-
-    @Column(name="adult_count", nullable = false)
-    private Integer adultCount;
-
-    @Column(name="child_count", nullable = false)
-    private Integer childCount;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -57,10 +50,10 @@ public class BookingEntity extends IdentifiableEntity {
     @Enumerated(value = EnumType.STRING)
     private BookingStatus status;
 
-    @ManyToMany(fetch = FetchType.LAZY,
+    @ManyToMany(fetch = FetchType.EAGER,
                 cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-                mappedBy = "bookingSet")
+                mappedBy = "bookingList")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<RoomEntity> roomSet = new HashSet<>();
+    private List<RoomEntity> roomList;
 }

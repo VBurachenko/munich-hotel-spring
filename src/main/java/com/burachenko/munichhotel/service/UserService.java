@@ -1,78 +1,71 @@
 package com.burachenko.munichhotel.service;
 
-import com.burachenko.munichhotel.converter.impl.UserConverter;
+import com.burachenko.munichhotel.converter.UserConverter;
 import com.burachenko.munichhotel.dto.UserDto;
 import com.burachenko.munichhotel.entity.UserEntity;
 import com.burachenko.munichhotel.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import com.vaadin.data.provider.Query;
+import com.vaadin.shared.data.sort.SortDirection;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
-@AllArgsConstructor
-public class UserService {
+public class UserService extends AbstractService<UserDto, UserEntity, UserRepository>{
 
-    private final UserRepository userRepository;
-    private final UserConverter userConverter;
+    public UserService(final UserRepository repository, final UserConverter userConverter) {
+        super(repository, userConverter);
+    }
 
-    public List<UserDto> getUsersList(){
-        final List<UserDto> list = new ArrayList<>();
-        for (final UserEntity user : userRepository.findAll()) {
-            final UserDto userDto = userConverter.convertToDto(user);
-            list.add(userDto);
+    @Override
+    protected boolean beforeSave(final UserDto userDto) {
+        if (userDto.getId() == null){
+            final Optional<UserEntity> userByEmail = getRepository().findUserByEmail(userDto.getEmail());
+            final Optional<UserEntity> userByTelNum = getRepository().findByTelNum(userDto.getTelNum());
+            return !userByEmail.isPresent() && !userByTelNum.isPresent();
         }
-        return list;
+        return true;
     }
 
-    public UserDto getUser(final long id){
-        final Optional<UserEntity> userEntity = userRepository.findById(id);
-        return userEntity.map(userConverter::convertToDto).orElse(null);
+    @Override
+    public List<UserDto> findByFilterParameter(final String filterParameter) {
+        return getConverter().convertToDto(getRepository().findUserByEmailOrTelNum(filterParameter));
     }
 
-    public UserDto createUser(final UserDto userDto){
-        final UserEntity justCreatedUser = userRepository.save(userConverter.convertToEntity(userDto));
-        return userConverter.convertToDto(justCreatedUser);
-    }
-
-    public boolean deleteUser(final long id){
-        userRepository.deleteById(id);
-        final Optional <UserEntity> user = userRepository.findById(id);
-        return !user.isPresent();
-    }
-
-    public UserDto updateUser(final UserDto userDto, final long id){
-        final Optional<UserEntity> optionalUser = userRepository.findById(id);
-        if (optionalUser.isPresent()){
-            userDto.setId(id);
-            return userConverter.convertToDto(userRepository.save(userConverter.convertToEntity(userDto)));
+    public List<UserDto> getUserList(){
+        final List<UserDto> dtoUserList = new ArrayList<>();
+        for (final UserEntity user : getRepository().findAll()) {
+            final UserDto userDto = getConverter().convertToDto(user);
+            dtoUserList.add(userDto);
         }
-        return null;
+        return dtoUserList;
     }
 
-    public UserDto findUserByEmail(final String email){
-        final Optional<UserEntity> userEntity = userRepository.findUserByEmail(email);
-        return userEntity.map(userConverter::convertToDto).orElse(null);
-
-    }
-
-    public UserDto registerNewCustomer(final UserDto userDto){
-        final Optional <UserEntity> userByEmail = userRepository.findUserByEmail(userDto.getEmail());
-        final Optional <UserEntity> userByTelNum = userRepository.findByTelNum(userDto.getTelNum());
-        if (userByEmail.isPresent() || userByTelNum.isPresent()){
-            return null;
+    public Stream<UserDto> getUserList(final String filterString){
+        if (!filterString.isEmpty()){
+            return getConverter().convertToDto(getRepository().findUserByEmailOrTelNum(filterString)).stream();
         }
-        return createUser(userDto);
+        return getUserList().stream();
     }
 
-    public UserDto changeBlockUser(final long userId, final int blockIndex){
-        final UserDto userDto = getUser(userId);
-        if (userDto != null){
-            userDto.setBlocking(blockIndex);
-            return updateUser(userDto, userId);
-        }
-        return null;
+    public Stream<UserDto> getUserList(final Query<UserDto, String> query) {
+        final PageRequest pageRequest = preparePageRequest(query);
+        final List<UserDto> userDtoList = getRepository().findAll(pageRequest).getContent().stream().map(getConverter()::convertToDto).collect(Collectors.toList());
+        return userDtoList.stream();
     }
+
+    private PageRequest preparePageRequest(final Query<UserDto, String> query) {
+        final int page = query.getOffset() / query.getLimit();
+
+        final List<Sort.Order> sortOrders = query.getSortOrders().stream()
+                .map(sortOrder -> new Sort.Order(sortOrder.getDirection() == SortDirection.ASCENDING ? Sort.Direction.ASC : Sort.Direction.DESC, sortOrder.getSorted())).collect(Collectors.toList());
+        return PageRequest.of(page, query.getLimit(), sortOrders.isEmpty() ? Sort.unsorted() : Sort.by(sortOrders));
+    }
+
 }

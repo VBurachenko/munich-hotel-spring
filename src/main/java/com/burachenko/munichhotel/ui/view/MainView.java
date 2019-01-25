@@ -1,84 +1,41 @@
 package com.burachenko.munichhotel.ui.view;
 
-import com.burachenko.munichhotel.dto.UserDto;
-import com.burachenko.munichhotel.service.UserService;
-import com.burachenko.munichhotel.ui.editor.UserEditor;
-import com.vaadin.icons.VaadinIcons;
+import com.burachenko.munichhotel.enumeration.UserRole;
+import com.burachenko.munichhotel.ui.annotation.AllowedTo;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
-@SpringView(name = MainView.NAME)
+import static com.burachenko.munichhotel.ui.view.MainView.NAME;
+
+@SpringView(name = NAME)
+@AllowedTo(value = UserRole.MODER)
 public class MainView extends VerticalLayout implements View {
 
     public static final String NAME = "main";
-    private final UserService userService;
-    private UserEditor userEditor;
-    private final Grid<UserDto> grid;
-    TextField filter;
-    private Button addNewBtn;
 
-    @Autowired
-    public MainView(final UserService userService, final UserEditor userEditor) {
-        this.userService = userService;
-        this.userEditor = userEditor;
-        this.grid = new Grid<>(UserDto.class);
-        this.filter = new TextField();
-        this.addNewBtn = new Button("New user", VaadinIcons.PLUS);
+    private final MenuBar menuBar = new MenuBar();
 
-        final HorizontalLayout actions = new HorizontalLayout(filter, addNewBtn);
-        addComponents(actions, grid, userEditor);
-
-        grid.setHeight("200px");
-        grid.setColumns("id", "firstName", "lastName");
-        grid.getColumn("id").setWidth(50.0);
-
-        filter.setPlaceholder("Filter by email");
-
-        filter.setValueChangeMode(ValueChangeMode.EAGER);
-        filter.addValueChangeListener(e -> getUserList(e.getValue()));
-
-        grid.asSingleSelect().addValueChangeListener(e -> userEditor.editUser(new UserDto()));
-
-        userEditor.setChangeHandler(() -> {
-            userEditor.setVisible(false);
-            getUserList(filter.getValue());
-        });
-
-        getUserList(null);
+    public MainView() {
+        setSizeFull();
+        addComponent(menuBar);
+        setComponentAlignment(menuBar, Alignment.MIDDLE_CENTER);
     }
-
-
-    public MainView(final UserService userService) {
-        this.userService = userService;
-        this.grid = new Grid<>(UserDto.class);
-        addComponent(grid);
-        getUserList();
-    }
-
-    private void getUserList(){
-        grid.setItems(userService.getUsersList());
-    }
-
-    private void getUserList(final String filterText){
-        if (StringUtils.isEmpty(filterText)){
-            getUserList();
-        } else {
-            grid.setItems(userService.findUserByEmail(filterText));
-        }
-    }
-
 
     @Override
     public void enter(final ViewChangeListener.ViewChangeEvent event) {
-
+        menuBar.addItem("Users",
+                (MenuBar.Command) selectedItem -> getUI().getNavigator().navigateTo(UserView.NAME));
+        menuBar.addItem("Rooms",
+                (MenuBar.Command) selectedItem -> getUI().getNavigator().navigateTo(RoomView.NAME));
+        menuBar.addItem("Bookings",
+                (MenuBar.Command) selectedItem -> getUI().getNavigator().navigateTo(BookingView.NAME));
+        menuBar.addItem("Invoices",
+                (MenuBar.Command) selectedItem -> getUI().getNavigator().navigateTo(InvoiceView.NAME));
+        Notification.show("Main view", Notification.Type.HUMANIZED_MESSAGE);
     }
 }

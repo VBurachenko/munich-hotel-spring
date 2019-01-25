@@ -8,23 +8,18 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class BookingDto extends IdentifiableDto {
+public class BookingDto extends AbstractDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate checkIn;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate checkOut;
-
-    private Integer adultCount = 1;
-
-    private Integer childCount = 0;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -38,5 +33,5 @@ public class BookingDto extends IdentifiableDto {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<RoomDto> roomSet = new HashSet<>();
+    private List<RoomDto> roomList;
 }
